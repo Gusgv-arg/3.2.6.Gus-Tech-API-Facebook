@@ -21,7 +21,7 @@ export const postMessengerWebhookController = (req, res) => {
 
 			if (webhook_event.message) {
 				//Handle the message sent by the user
-				const userMessage = webhook_event.messsage.text;
+				//const userMessage = webhook_event.messsage.text;
 
 				// Process the message with the assistant
 				//const response  = await processMessageWithAssistant(userMessage)
