@@ -15,17 +15,13 @@ export const handleMessage = async (sender_psid, mensajeHarcodeado) => {
 
 		// Save the sent message in the database
 		/* await saveMessageInDb(
-			name,
-			senderId,
-			role,
-			messageGpt,
-			messageId,
-			channel,
-			threadId
+			name,senderId,
+			role,messageGpt,
+			messageId,channel,threadId
 		); */
 
 		// Posts the message to Facebook
-		const url = `https://graph.facebook.com/v18.0/${FACEBOOK_PAGE_ID}/messages?access_token=${PAGE_ACCESS_TOKEN}`;
+		const url = `"https://graph.facebook.com/v18.0/${FACEBOOK_PAGE_ID}/messages?access_token=${PAGE_ACCESS_TOKEN}"`;
 		const data = {
 			recipient: {
 				id: sender_psid,
