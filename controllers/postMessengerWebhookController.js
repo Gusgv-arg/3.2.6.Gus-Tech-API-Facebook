@@ -4,6 +4,7 @@ import { handleMessage } from "../utils/handleMessage.js";
 export const postMessengerWebhookController = (req, res) => {
 	const body = req.body;
 	console.log("Lo que recibo de la API de facebook", body);
+	console.log("Messaging---->", body.entry[0].messaging[0]);
 
 	// Check if this is an event from a page subscription
 	if (body.object === "page") {
