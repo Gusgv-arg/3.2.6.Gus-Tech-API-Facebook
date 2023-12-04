@@ -1,23 +1,20 @@
 import dotenv from "dotenv";
 import axios from "axios";
-import { saveMessageInDb } from "./saveMessageInDb.js";
+//import { saveMessageInDb } from "./saveMessageInDb.js";
 
 dotenv.config();
 
-export const handleMessage = async (
-	senderPage,
-	senderId,
-	messageGpt,
-	threadId,
-	messageId
-) => {
+const FACEBOOK_PAGE_ID = process.env.FACEBOOK_PAGE_ID;
+const PAGE_ACCESS_TOKEN = process.env.FACEBOOK_PAGE_ACCESS_TOKEN;
+
+export const handleMessage = async (sender_psid, mensajeHarcodeado) => {
 	try {
 		const name = "AI-Megamoto";
 		const role = "assistant";
 		const channel = "facebook";
 
 		// Save the sent message in the database
-		await saveMessageInDb(
+		/* await saveMessageInDb(
 			name,
 			senderId,
 			role,
@@ -25,10 +22,36 @@ export const handleMessage = async (
 			messageId,
 			channel,
 			threadId
-		);
+		); */
 
-		// Posts the message to Zenvia
-		const response = await axios.post(
+		// Posts the message to Facebook
+		const axios = require("axios");
+
+		const url = `https://graph.facebook.com/v18.0/${FACEBOOK_PAGE_ID}/messages?access_token=${PAGE_ACCESS_TOKEN}`;
+		const data = {
+			recipient: {
+				id: sender_psid,
+			},
+			messaging_type: "RESPONSE",
+			message: {
+				text: mensajeHarcodeado,
+			},
+		};
+
+		const response = axios
+			.post(url, data, {
+				headers: {
+					"Content-Type": "application/json",
+				},
+			})
+			.then((response) => {
+				console.log("Response:", response.data);
+			})
+			.catch((error) => {
+				console.error("Error:", error);
+			});
+
+		/* const response = await axios.post(
 			"https://api.zenvia.com/v2/channels/facebook/messages",
 			{
 				//from: process.env.ZENVIA_FACEBOOK_PAGE_ID,
@@ -47,12 +70,12 @@ export const handleMessage = async (
 					"X-API-TOKEN": process.env.ZENVIA_API_TOKEN,
 				},
 			}
-		);
+		); 
 		if (response.data) {
 			console.log("Message sent successfully to Zenvia", response.data);
 		} else {
 			console.log("Error sending message to Zenvia");
-		}
+		}*/
 	} catch (error) {
 		console.log("Error en handleMessage", error.message);
 		throw new Error(error.message);

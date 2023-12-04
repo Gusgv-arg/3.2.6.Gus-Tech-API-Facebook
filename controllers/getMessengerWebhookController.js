@@ -3,7 +3,8 @@ import dotenv from "dotenv"
 
 dotenv.config()
 
-export const getWebhookController = (req, res) => {
+//Facebook hace un GET a este endpoint y verifica que mi clave coincida con la cargada en la APP
+export const getMessengerWebhookController = (req, res) => {
 	let VERIFY_TOKEN = process.env.FACEBOOK_MY_VERIFY_TOKEN
     
     // Parse the query params
