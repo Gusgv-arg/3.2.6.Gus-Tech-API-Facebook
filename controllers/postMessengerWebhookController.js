@@ -1,4 +1,4 @@
-
+import { handleMessage } from "../utils/handleMessage.js";
 
 // Webhook que recibe el mensaje de facebook messenger
 export const postMessengerWebhookController = (req, res) => {
@@ -10,7 +10,7 @@ export const postMessengerWebhookController = (req, res) => {
 		//Verificar que facebook me manda un array con mas de 1 registro
 		//Xq no puedo solo agarrar el msje????
 		//body.entry.forEach(function (entry) {
-		body.entry.forEach(async (entry)=> {
+		body.entry.forEach(async (entry) => {
 			// Gets body of the webhook event
 			let webhook_event = entry.messaging[0];
 			console.log("webhook event", webhook_event);
@@ -25,10 +25,11 @@ export const postMessengerWebhookController = (req, res) => {
 
 				// Process the message with the assistant
 				//const response  = await processMessageWithAssistant(userMessage)
-				
+
 				// Send the response back to the user
-				const mensajeHarcodeado= "hola desde AI Bots!!"
-				handleMessage(sender_psid, mensajeHarcodeado )
+				const mensajeHarcodeado = "hola desde AI Bots!!";
+				//const response = handleMessage(sender_psid, mensajeHarcodeado);
+				handleMessage(sender_psid, mensajeHarcodeado);
 			}
 		});
 

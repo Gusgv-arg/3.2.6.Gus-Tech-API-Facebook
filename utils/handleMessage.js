@@ -25,8 +25,6 @@ export const handleMessage = async (sender_psid, mensajeHarcodeado) => {
 		); */
 
 		// Posts the message to Facebook
-		const axios = require("axios");
-
 		const url = `https://graph.facebook.com/v18.0/${FACEBOOK_PAGE_ID}/messages?access_token=${PAGE_ACCESS_TOKEN}`;
 		const data = {
 			recipient: {
@@ -38,7 +36,7 @@ export const handleMessage = async (sender_psid, mensajeHarcodeado) => {
 			},
 		};
 
-		const response = axios
+		const response = await axios
 			.post(url, data, {
 				headers: {
 					"Content-Type": "application/json",
@@ -78,6 +76,6 @@ export const handleMessage = async (sender_psid, mensajeHarcodeado) => {
 		}*/
 	} catch (error) {
 		console.log("Error en handleMessage", error.message);
-		throw new Error(error.message);
+		res.status(404).send(error.message);
 	}
 };
