@@ -21,7 +21,7 @@ export const handleMessage = async (sender_psid, mensajeHarcodeado) => {
 		); */
 
 		// Posts the message to Facebook
-		const url = `"https://graph.facebook.com/v18.0/${FACEBOOK_PAGE_ID}/messages?access_token=${PAGE_ACCESS_TOKEN}"`;
+		const url = `https://graph.facebook.com/v18.0/${FACEBOOK_PAGE_ID}/messages?access_token=${PAGE_ACCESS_TOKEN}`;
 		const data = {
 			recipient: {
 				id: sender_psid,
