@@ -1,23 +1,25 @@
+import OpenAI from "openai";
 import dotenv from "dotenv";
-import Messages from "../models/messages.js";
+import Leads from "../models/leads.js";
 import { saveMessageInDb } from "./saveMessageInDb.js";
 
 dotenv.config();
 
-export const processMessageWithAssistant = async (data, openai) => {
+const API_KEY = process.env.OPENAI_API_KEY;
+
+const openai = new OpenAI({
+	apiKey: API_KEY,
+});
+
+export const processMessageWithAssistant = async (sender_psid, userMessage) => {
 	const assistantId = process.env.OPENAI_ASSISTANT_ID;
-	const senderId = data.message.from;
-	const receivedMessage = data.message.contents[0].text;
-	const messageId = data.message.id;
-	const name = data.message.visitor.name;
-	const channel = data.message.channel;
 	let threadId;
 
 	// Check if there is an existing thread for the user
 	let existingThread;
 	try {
-		existingThread = await Messages.findOne({
-			id_user: senderId,
+		existingThread = await Leads.findOne({
+			id_user: sender_psid,
 			thread_id: { $exists: true },
 		});
 	} catch (error) {
@@ -53,7 +55,7 @@ export const processMessageWithAssistant = async (data, openai) => {
 			}
 
 			console.log(
-				"Run status is completed. Proceeding with sending the message to Zenvia."
+				"Run status is completed. Proceeding with sending the message to the user."
 			);
 			break; // Exit the loop if the run is completed
 		} catch (error) {
@@ -76,28 +78,17 @@ export const processMessageWithAssistant = async (data, openai) => {
 		)
 		.pop();
 
-	// Send the assistants response
-	if (receivedMessage && lastMessageForRun) {
-		
+	// Save the received message from the user and send the assistants response
+	if (userMessage && lastMessageForRun) {
 		let messageGpt = lastMessageForRun.content[0].text.value;
-		
-		// If the user is not ME, send another message. Modify this in PRODUCTION!!!!!!!!!!!
-		if (senderId != 6874624262580365){
-			messageGpt =
-			"!Hola! Estamos trabajando para que en los próximos días los mensajes sean respondidos por nuestro Asistente de IA y te ayudemos a responder tus consultas más rápido. En breve te contestamos. !Gracias por esperar! ";
-		}
 
 		// Save the received message to the database
-		const role = "user";
+		
 		await saveMessageInDb(
-			name,
-			senderId,
-			role,
-			receivedMessage,
-			messageId,
-			channel,
+			sender_psid,
+			userMessage,
 			threadId
 		);
 		return { messageGpt, threadId };
-	} 
+	}
 };

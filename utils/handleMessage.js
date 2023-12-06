@@ -45,31 +45,7 @@ export const handleMessage = async (sender_psid, mensajeHarcodeado) => {
 				console.error("Error:", error);
 			});
 
-		/* const response = await axios.post(
-			"https://api.zenvia.com/v2/channels/facebook/messages",
-			{
-				//from: process.env.ZENVIA_FACEBOOK_PAGE_ID,
-				//from: "126769713862973",
-				from: senderPage,
-				to: senderId,
-				contents: [
-					{
-						type: "text",
-						text: messageGpt,
-					},
-				],
-			},
-			{
-				headers: {
-					"X-API-TOKEN": process.env.ZENVIA_API_TOKEN,
-				},
-			}
-		); 
-		if (response.data) {
-			console.log("Message sent successfully to Zenvia", response.data);
-		} else {
-			console.log("Error sending message to Zenvia");
-		}*/
+		
 	} catch (error) {
 		console.log("Error en handleMessage", error.message);
 		res.status(404).send(error.message);
