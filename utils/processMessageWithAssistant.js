@@ -29,11 +29,22 @@ export const processMessageWithAssistant = async (sender_psid, userMessage) => {
 
 	if (existingThread) {
 		threadId = existingThread.thread_id;
+		
+		// Pass in the user question into the existing thread
+		await openai.beta.threads.messages.create(threadId, {
+			role: "user",
+			content: userMessage,
+		});
 	} else {
 		// Create a new thread
 		const thread = await openai.beta.threads.create();
 		threadId = thread.id;
-		console.log("New thread created:", thread);
+		
+		// Pass in the user question into the new thread
+		await openai.beta.threads.messages.create(threadId, {
+			role: "user",
+			content: userMessage,
+		});
 	}
 
 	// Run the assistant and wait for completion
@@ -57,6 +68,7 @@ export const processMessageWithAssistant = async (sender_psid, userMessage) => {
 			console.log(
 				"Run status is completed. Proceeding with sending the message to the user."
 			);
+
 			break; // Exit the loop if the run is completed
 		} catch (error) {
 			console.error("Error running the assistant:", error.message);
@@ -82,13 +94,12 @@ export const processMessageWithAssistant = async (sender_psid, userMessage) => {
 	if (userMessage && lastMessageForRun) {
 		let messageGpt = lastMessageForRun.content[0].text.value;
 
-		// Save the received message to the database
-		
+		// Save the received message to the database		
 		await saveMessageInDb(
 			sender_psid,
 			userMessage,
 			threadId
 		);
-		return { messageGpt, threadId };
+		return { messageGpt, sender_psid, threadId };
 	}
 };

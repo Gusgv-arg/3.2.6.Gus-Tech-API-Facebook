@@ -1,24 +1,21 @@
 import dotenv from "dotenv";
 import axios from "axios";
-//import { saveMessageInDb } from "./saveMessageInDb.js";
+import { saveMessageInDb } from "./saveMessageInDb.js";
 
 dotenv.config();
 
 const FACEBOOK_PAGE_ID = process.env.FACEBOOK_PAGE_ID;
 const PAGE_ACCESS_TOKEN = process.env.FACEBOOK_PAGE_ACCESS_TOKEN;
 
-export const handleMessage = async (sender_psid, mensajeHarcodeado) => {
+// Función que recibe la respuesta del GPT, guarda en BD y envía al usuario la respuesta
+export const handleMessage = async (sender_psid, messageGpt, thread_id) => {
 	try {
-		const name = "AI-Megamoto";
-		const role = "assistant";
+		const name = "AI-Bots";
+		//const role = "assistant";
 		const channel = "facebook";
 
 		// Save the sent message in the database
-		/* await saveMessageInDb(
-			name,senderId,
-			role,messageGpt,
-			messageId,channel,threadId
-		); */
+		await saveMessageInDb(sender_psid, messageGpt, thread_id, name, channel);
 
 		// Posts the message to Facebook
 		const url = `https://graph.facebook.com/v18.0/${FACEBOOK_PAGE_ID}/messages?access_token=${PAGE_ACCESS_TOKEN}`;
@@ -28,7 +25,7 @@ export const handleMessage = async (sender_psid, mensajeHarcodeado) => {
 			},
 			messaging_type: "RESPONSE",
 			message: {
-				text: mensajeHarcodeado,
+				text: messageGpt,
 			},
 		};
 
@@ -39,13 +36,11 @@ export const handleMessage = async (sender_psid, mensajeHarcodeado) => {
 				},
 			})
 			.then((response) => {
-				console.log("Response:", response.data);
+				console.log("Response from Facebook:", response.data);
 			})
 			.catch((error) => {
 				console.error("Error:", error);
 			});
-
-		
 	} catch (error) {
 		console.log("Error en handleMessage", error.message);
 		res.status(404).send(error.message);

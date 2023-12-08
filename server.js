@@ -8,14 +8,14 @@ import { errorHandler } from "./utils/errorHandler.js";
 
 dotenv.config();
 
-/* mongoose
+mongoose
 	.connect(process.env.MONGODB_URI)
 	.then(() => {
-		console.log("Connected to data base MegamotoDB");
+		console.log("Connected to data base IA-Bots");
 	})
 	.catch((err) => {
 		console.log(err.message);
-	}); */
+	});
 
 const app = express();
 
@@ -34,7 +34,7 @@ app.use("/webhook", iaChatbotRouter);
 // Middleware de manejo de errores
 app.use(errorHandler);
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 80;
 
 app.listen(port, () => {
 	console.log(`Server running at http://localhost:${port}`);
