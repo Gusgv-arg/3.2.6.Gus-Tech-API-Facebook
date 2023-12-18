@@ -22,6 +22,7 @@ export const postMessengerWebhookController = (req, res) => {
 				//Handle the message sent by the user
 				const userMessage = webhook_event.message.text;
 				
+				console.log("sender_psid", sender_psid)
 				// Process the message with the assistant
 				const response  = await processMessageWithAssistant(sender_psid, userMessage)
 				console.log("Mensaje recibido de openai:", response)

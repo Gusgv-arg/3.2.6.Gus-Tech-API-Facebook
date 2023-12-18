@@ -17,7 +17,7 @@ export const saveMessageInDb = async (
 		if (lead === null) {
 			lead = await Leads.create({
 				id_user: sender_psid,
-				content: `Usuario ${sender_psid}: ${userMessage}\n`,
+				content: `Usuario ${sender_psid}: ${userMessage}`,
 				thread_id: threadId,
 			});
 			console.log("Lead created in Leads DB");
@@ -25,7 +25,13 @@ export const saveMessageInDb = async (
 		}
 
 		// Concatenate the new message to the existing content
-		const newContent = `${lead.content}\n ${userMessage}\n`;
+		// If there is name its because is GPT
+		let newContent
+		if (name){
+			newContent = `${lead.content}\n${name}: ${userMessage}\n`;
+		} else {
+			newContent = `${lead.content}\n Usuario: ${userMessage}`;
+		}
 
 		// Update the lead content
 		lead.content = newContent;
