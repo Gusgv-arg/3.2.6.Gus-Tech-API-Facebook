@@ -1,10 +1,10 @@
 import express from "express";
-import { getMessengerWebhookController } from "../controllers/getMessengerWebhookController.js";
-import { postMessengerWebhookController } from "../controllers/postMessengerWebhookController.js";
+import { getWabWebhookController } from "../controllers/getWabWebhookController.js";
+import { postWabWebhookController } from "../controllers/postWabWebhookController.js";
 
 const iaChatbotRouter = express.Router();
 
-iaChatbotRouter.get("/", getMessengerWebhookController);
-iaChatbotRouter.post("/", postMessengerWebhookController);
+iaChatbotRouter.get("/", getWabWebhookController);
+iaChatbotRouter.post("/", postWabWebhookController);
 
 export default iaChatbotRouter;
