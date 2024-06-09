@@ -49,7 +49,7 @@ export const processMessageWithAssistant = async (sender_psid, userMessage) => {
 		});
 	}
 console.log("threadId:", threadId)
-	//******************************METODO ORIGINAL**************************************/
+	//******************************METODO ORIGINAL MAS ACCIONES**************************************/
 	// Run the assistant and wait for completion
 	let maxAttempts = 5;
 	let currentAttempt = 0;

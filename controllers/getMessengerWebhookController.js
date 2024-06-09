@@ -1,13 +1,14 @@
-import { doesNotThrow } from "assert";
-import dotenv from "dotenv"
+import dotenv from "dotenv";
 
-dotenv.config()
+dotenv.config();
 
 //Facebook hace un GET y verifica que mi clave FACEBOOK_MY_VERIFY_TOKEN coincida con la cargada en la APP
 export const getMessengerWebhookController = (req, res) => {
-	let VERIFY_TOKEN = process.env.FACEBOOK_MY_VERIFY_TOKEN
-    
-    // Parse the query params
+	let VERIFY_TOKEN = process.env.FACEBOOK_MY_VERIFY_TOKEN;
+	console.log("req.query", req.query);
+	console.log("req.body", req.body);
+
+	// Parse the query params
 	let mode = req.query["hub.mode"];
 	let token = req.query["hub.verify_token"];
 	let challenge = req.query["hub.challenge"];
@@ -23,5 +24,7 @@ export const getMessengerWebhookController = (req, res) => {
 			// Respond with '403 Forbidden' if verify tokens do not match
 			res.sendStatus(403);
 		}
+	} else {
+		res.sendStatus(403);
 	}
 };
