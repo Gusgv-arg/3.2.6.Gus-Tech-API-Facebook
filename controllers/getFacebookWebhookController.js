@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // With a GET Facebook verifies that my password is the one I defined in the APP
-export const getWabWebhookController = (req, res) => {
+export const getFacebookWebhookController = (req, res) => {
 	let WHATSAPP_VERIFY_TOKEN = process.env.WHATSAPP_MY_VERIFY_TOKEN;
 	let MESSENGER_VERIFY_TOKEN = process.env.MESSENGER_MY_VERIFY_TOKEN;
 	console.log("req.query", req.query);

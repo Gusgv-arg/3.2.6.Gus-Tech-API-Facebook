@@ -2,7 +2,7 @@ import { handleMessage } from "../utils/handleMessage.js";
 import { processMessageWithAssistant } from "../utils/processMessageWithAssistant.js";
 
 // Webhook que recibe el mensaje de facebook messenger
-export const postWabWebhookController = (req, res) => {
+export const postFacebookWebhookController = (req, res) => {
 	const body = req.body;
 	console.log("Lo que recibo de la API de facebook", body);
 	console.log("Mensaje del usuario ---->", body.entry[0].messaging[0].message.text);

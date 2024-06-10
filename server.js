@@ -11,7 +11,7 @@ dotenv.config();
 mongoose
 	.connect(process.env.MONGODB_URI)
 	.then(() => {
-		console.log("Connected to data base IA-Bots");
+		console.log("Connected to MegaBot data base");
 	})
 	.catch((err) => {
 		console.log(err.message);
