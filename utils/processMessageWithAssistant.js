@@ -12,7 +12,7 @@ const openai = new OpenAI({
 	apiKey: API_KEY,
 });
 
-export const processMessageWithAssistant = async (sender_psid, userMessage) => {
+export const processMessageWithAssistant = async (sender_psid, userMessage, channel) => {
 	const assistantId = process.env.OPENAI_ASSISTANT_ID;
 	let threadId;
 	console.log("sender_psid:", sender_psid, "userMessage:", userMessage)
@@ -199,7 +199,7 @@ console.log("x entrar en interval.ThreadId:", threadId, "runId:", run.id)
 		let messageGpt = lastMessageForRun.content[0].text.value;
 
 		// Save the received message to the database
-		await saveMessageInDb(sender_psid, userMessage, threadId);
+		await saveMessageInDb(sender_psid, userMessage, threadId, channel);
 		return { messageGpt, sender_psid, threadId };
 	}
 };

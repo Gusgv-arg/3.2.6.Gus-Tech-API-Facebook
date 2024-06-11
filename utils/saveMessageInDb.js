@@ -13,12 +13,15 @@ export const saveMessageInDb = async (
 		// Find the lead by threadId
 		let lead = await Leads.findOne({ thread_id: threadId });
 		
-		// If the lead does not exist for that thread, create it and return
+		// If the lead does not exist for that thread, create it and return.
 		if (lead === null) {
 			lead = await Leads.create({
+				name: "Messenger user name",
 				id_user: sender_psid,
 				content: `Usuario ${sender_psid}: ${userMessage}`,
 				thread_id: threadId,
+				botSwitch: "ON",
+				channel: channel
 			});
 			console.log("Lead created in Leads DB");
 			return;
