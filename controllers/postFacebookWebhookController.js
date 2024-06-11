@@ -14,7 +14,7 @@ export const postFacebookWebhookController = (req, res) => {
 		body.entry.forEach(async (entry) => {
 			// Gets body of the webhook event
 			let webhook_event = entry.messaging[0];
-			console.log("entry:", entry)
+			console.log("entry.messaging[0].sender:", entry.messaging[0].sender)
 			// Get the sender PSID
 			let sender_psid = webhook_event.sender.id;
 			
