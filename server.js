@@ -5,6 +5,7 @@ import cors from "cors";
 import morgan from "morgan";
 import iaChatbotRouter from "./routers/iaChatbotRouter.js";
 import { errorHandler } from "./utils/errorHandler.js";
+import testingRouter from "./routers/testingRouter.js";
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/webhook", iaChatbotRouter);
+app.use("/testing", testingRouter);
 
 // Middleware de manejo de errores
 app.use(errorHandler);
