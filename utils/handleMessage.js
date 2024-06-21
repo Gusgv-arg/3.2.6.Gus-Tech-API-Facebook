@@ -39,7 +39,10 @@ export const handleMessage = async (sender_psid, messageGpt, thread_id) => {
 				console.log("Response from Facebook:", response.data);
 			})
 			.catch((error) => {
-				console.error("Error:", error);
+				console.error(
+					"Error enviando a Facebook------------>",
+					error.response ? error.response.data : error.message
+				);
 			});
 	} catch (error) {
 		console.log("Error en handleMessage", error.message);
