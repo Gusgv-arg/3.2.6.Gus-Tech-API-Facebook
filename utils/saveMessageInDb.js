@@ -33,7 +33,7 @@ export const saveMessageInDb = async (
 		if (name){
 			newContent = `${lead.content}\n${name}: ${userMessage}\n`;
 		} else {
-			newContent = `${lead.content}\n Usuario: ${userMessage}`;
+			newContent = `${lead.content}\nUsuario: ${userMessage}`;
 		}
 
 		// Update the lead content
