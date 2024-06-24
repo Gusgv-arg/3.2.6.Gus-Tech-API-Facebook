@@ -31,6 +31,15 @@ export const postFacebookWebhookController2 = (req, res) => {
 				const userMessage = webhook_event.message.text;
 				
 				// Add message to the Queue
+				/* Steps:
+				   1- Enqueues the message to the Queue
+				   2- Calls processQueue to process the message
+				   3- processQueue takes the first message
+				   4- Calls processMessageWithAssistant to get the response for the user
+				   5- processMessagewithAssistant calls saveMessageInDb and saves the user question in DB  
+				   6- Calls handleMessage that calls saveMessageInDb to save GPT response in DB
+				   7- Then posts the message to the user in Facebook
+				*/
                 messageQueue.enqueueMessage(userMessage, sender_psid)                
 			}
 		});

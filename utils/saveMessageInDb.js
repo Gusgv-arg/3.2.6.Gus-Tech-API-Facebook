@@ -27,13 +27,16 @@ export const saveMessageInDb = async (
 			return;
 		}
 
+		// Obtain current date and hour
+		const currentDateTime = new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+		
 		// Concatenate the new message to the existing content
-		// If there is name its because is GPT
 		let newContent
+		// If there is name its because is GPT
 		if (name){
-			newContent = `${lead.content}\n${name}: ${userMessage}\n`;
+			newContent = `${lead.content}\n${currentDateTime} - ${name}: ${userMessage}\n`;
 		} else {
-			newContent = `${lead.content}\nUsuario: ${userMessage}`;
+			newContent = `${lead.content}\n${currentDateTime} - Usuario: ${userMessage}`;
 		}
 
 		// Update the lead content
