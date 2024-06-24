@@ -18,7 +18,7 @@ export const handleMessage = async (sender_psid, messageGpt, thread_id) => {
 		await saveMessageInDb(sender_psid, messageGpt, thread_id, name, channel);
 
 		// Posts the message to Facebook
-		const url = `https://graph.facebook.com/v18.0/${FACEBOOK_PAGE_ID}/messages?access_token=${PAGE_ACCESS_TOKEN}`;
+		const url = `https://graph.facebook.com/v20.0/${FACEBOOK_PAGE_ID}/messages?access_token=${PAGE_ACCESS_TOKEN}`;
 		const data = {
 			recipient: {
 				id: sender_psid,
