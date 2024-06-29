@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // With a GET Facebook verifies my Messenger && Whatsapp webhook
-export const getFacebookWebhookController = (req, res) => {
+export const getMessengerWebhookController = (req, res) => {
 	let WHATSAPP_VERIFY_TOKEN = process.env.WHATSAPP_MY_VERIFY_TOKEN;
 	let MESSENGER_VERIFY_TOKEN = process.env.MESSENGER_MY_VERIFY_TOKEN;
 	console.log("req.query", req.query);

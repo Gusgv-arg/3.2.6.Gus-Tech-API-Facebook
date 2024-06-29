@@ -7,7 +7,7 @@ import { processMessageWithAssistant } from "../utils/processMessageWithAssistan
 const messageQueue = new MessageQueue();
 
 // Webhook that receives message from Facebook messenger
-export const postFacebookWebhookController = (req, res) => {
+export const postMessengerWebhookController = (req, res) => {
 	const body = req.body;
 	console.log("Lo que recibo de la API de facebook", body);
 	console.log("Mensaje del usuario ---->", body.entry[0].messaging[0].message.text);
