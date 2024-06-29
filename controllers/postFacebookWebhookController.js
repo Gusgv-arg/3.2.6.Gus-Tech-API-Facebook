@@ -1,7 +1,12 @@
 import { handleMessage } from "../utils/handleMessage.js";
+import { MessageQueue } from "../utils/messageQueue.js";
 import { processMessageWithAssistant } from "../utils/processMessageWithAssistant.js";
 
-// Webhook que recibe el mensaje de facebook messenger
+
+// Define a new instance of MessageQueue
+const messageQueue = new MessageQueue();
+
+// Webhook that receives message from Facebook messenger
 export const postFacebookWebhookController = (req, res) => {
 	const body = req.body;
 	console.log("Lo que recibo de la API de facebook", body);
@@ -9,8 +14,7 @@ export const postFacebookWebhookController = (req, res) => {
 	
 	// Check if its Messenger App
 	if (body.object === "page") {
-		const channel = "Messenger"
-		
+				
 		// Facebook sends an array that can have more than 1 
 		body.entry.forEach(async (entry) => {
 			
@@ -23,15 +27,20 @@ export const postFacebookWebhookController = (req, res) => {
 			console.log("sender_psid", sender_psid)
 			
 			if (webhook_event.message) {
-				//Handle the message sent by the user
+				// Get the message sent by the user
 				const userMessage = webhook_event.message.text;
 				
-				// Process the message with the assistant
-				const response  = await processMessageWithAssistant(sender_psid, userMessage, channel)
-				console.log("Mensaje recibido de openai:", response)
-
-				// Send the response back to the user
-				handleMessage(response.sender_psid, response.messageGpt, response.threadId);
+				// Add message to the Queue
+				/* Steps:
+				   1- Enqueues the message to the Queue
+				   2- Calls processQueue to process the message
+				   3- processQueue takes the first message
+				   4- Calls processMessageWithAssistant to get the response for the user
+				   5- processMessagewithAssistant calls saveMessageInDb and saves the user question in DB  
+				   6- Calls handleMessage that calls saveMessageInDb to save GPT response in DB
+				   7- Then posts the message to the user in Facebook
+				*/
+                messageQueue.enqueueMessage(userMessage, sender_psid)                
 			}
 		});
 
