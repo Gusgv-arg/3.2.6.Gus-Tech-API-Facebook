@@ -6,6 +6,7 @@ import morgan from "morgan";
 import { errorHandler } from "./utils/errorHandler.js";
 import testingRouter from "./routers/testingRouter.js";
 import messengerRouter from "./routers/messengerRouter.js"
+import whatsappRouter from "./routers/whatsappRouter.js";
 
 dotenv.config();
 
@@ -31,7 +32,7 @@ app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/webhook", messengerRouter);
-//app.use("/webhook_wab", iaChatbotRouter);
+app.use("/webhook_wab", whatsappRouter);
 app.use("/testing", testingRouter);
 
 // Middleware de manejo de errores
