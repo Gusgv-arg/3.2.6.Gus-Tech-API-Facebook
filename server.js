@@ -3,9 +3,9 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
-import iaChatbotRouter from "./routers/messengerRouter.js";
 import { errorHandler } from "./utils/errorHandler.js";
 import testingRouter from "./routers/testingRouter.js";
+import messengerRouter from "./routers/messengerRouter.js"
 
 dotenv.config();
 
@@ -30,8 +30,8 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/webhook", iaChatbotRouter);
-app.use("/webhook_wab", iaChatbotRouter);
+app.use("/webhook", messengerRouter);
+//app.use("/webhook_wab", iaChatbotRouter);
 app.use("/testing", testingRouter);
 
 // Middleware de manejo de errores

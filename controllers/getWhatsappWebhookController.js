@@ -2,9 +2,9 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-// With a GET Facebook verifies my Messenger webhook
-export const getMessengerWebhookController = (req, res) => {
-	let MESSENGER_VERIFY_TOKEN = process.env.MESSENGER_MY_VERIFY_TOKEN;
+// With a GET Facebook verifies my Whatsapp webhook
+export const getWhatsappWebhookController = (req, res) => {
+	let WHATSAPP_VERIFY_TOKEN = process.env.WHATSAPP_MY_VERIFY_TOKEN;
 	console.log("req.query", req.query);
 	console.log("req.body", req.body);
 
@@ -15,9 +15,9 @@ export const getMessengerWebhookController = (req, res) => {
 
 	if (mode && token) {
 		// Check the mode and token sent is correct
-		if (mode === "subscribe" && token === MESSENGER_VERIFY_TOKEN) {
+		if (mode === "subscribe" && token === WHATSAPP_VERIFY_TOKEN) {
 			// Respond with the challenge token from the request
-			console.log("MESSENGER WEBHOOK VERIFIED");
+			console.log("WHATSAPP WEBHOOK VERIFIED");
 			res.status(200).send(challenge);
 		} else {
 			// Respond with '403 Forbidden' if verify tokens do not match
