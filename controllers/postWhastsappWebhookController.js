@@ -18,10 +18,10 @@ export const postWhatsappWebhookController = async (req, res) => {
         field: 'messages'
     } */
 
-	/* console.log(
+	console.log(
 		"body.entry[0].changes[0].value.contacts[0]:",
 		body.entry[0].changes[0].value.contacts[0]
-	); */
+	); 
 	/* Object received
         {
             profile: { name: 'gustavo gomez villafane' },
@@ -38,8 +38,8 @@ export const postWhatsappWebhookController = async (req, res) => {
             type: 'text'
         }
     */
-	const userName = body.entry[0].changes[0].value.contacts[0].profile.name;
-	console.log("User name-->", userName);
+	//const userName = body.entry[0].changes[0].value.contacts[0].profile.name;
+	//console.log("User name-->", userName);
 	const userMessage = body.entry[0].changes[0].value.messages[0].text.body;
 	console.log("User message-->", userMessage);
 	const userMessageId = body.entry[0].changes[0].value.messages[0].id;
