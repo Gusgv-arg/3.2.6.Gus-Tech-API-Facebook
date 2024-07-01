@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const postWhatsappWebhookController = async (req, res) => {
 	const body = req.body;
 	console.log("Lo que recibo x WhatsApp de la API de facebook -->", body);
@@ -18,10 +20,10 @@ export const postWhatsappWebhookController = async (req, res) => {
         field: 'messages'
     } */
 
-	console.log(
+	/* console.log(
 		"body.entry[0].changes[0].value.contacts[0]:",
 		body.entry[0].changes[0].value.contacts[0]
-	); 
+	); */ 
 	/* Object received
         {
             profile: { name: 'gustavo gomez villafane' },
@@ -46,6 +48,36 @@ export const postWhatsappWebhookController = async (req, res) => {
 	console.log("User message ID-->", userMessageId);
 	const userPhone = body.entry[0].changes[0].value.messages[0].from;
 	console.log("User message phone-->", userPhone);
+
+    const myPhoneNumberId="312359751967984"
+    const whatsappToken = "EAAOCUBAegw4BO4SHrHMKt4ieYqAin3xm0kFSwRyGzxXabXRgpMFFOHX6LO6m6oUSRjwRZCwJdx9J3u30EnC3VizlGZAgnKnSoPaCZCCQEpasWkCb24XtsBiZBTT9fEZCUXFZBYJKQdBRyDVF9hZAyqeQs2tQAicoCEO4HsYiWZBj9OPKMWzrpwTEKM3UGLtxDRMomzqIzC2XLWcIjDct"
+    const url = `https://graph.facebook.com/v20.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`
+    const data = {
+        "messaging_product": "whatsapp",
+        "recipient_type": "individual",
+        "to": userPhone,
+        "type": "text",
+        "text": {
+          "preview_url": true,
+          "body": "Hola desde https://www.gus-tech.com"
+        }
+      }
+
+    const response = await axios
+        .post(url, data, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+        .then((response) => {
+            console.log("Response from Facebook:", response.data);
+        })
+        .catch((error) => {
+            console.error(
+                "Error enviando a Facebook------------>",
+                error.response ? error.response.data : error.message
+            );
+        });
 
 	res.status(200).send("Received");
 };
