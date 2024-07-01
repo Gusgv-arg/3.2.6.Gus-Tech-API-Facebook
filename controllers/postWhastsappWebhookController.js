@@ -50,7 +50,7 @@ export const postWhatsappWebhookController = async (req, res) => {
 	console.log("User message phone-->", userPhone);
 
     const myPhoneNumberId="312359751967984" // este es el id de mi cel declarado en la api
-    const whatsappToken = "EAAOCUBAegw4BO4SHrHMKt4ieYqAin3xm0kFSwRyGzxXabXRgpMFFOHX6LO6m6oUSRjwRZCwJdx9J3u30EnC3VizlGZAgnKnSoPaCZCCQEpasWkCb24XtsBiZBTT9fEZCUXFZBYJKQdBRyDVF9hZAyqeQs2tQAicoCEO4HsYiWZBj9OPKMWzrpwTEKM3UGLtxDRMomzqIzC2XLWcIjDct"
+    const whatsappToken = "EAAOCUBAegw4BO6ff2alBNxXFYKKFNYPdjWuaYi582VkR3JtEBpRJBbTL6ybciHMZAbtpP0z5ZAsy5ZAHAuTvkevD7JYoZCtZAfVIYzis3mPkYpi1qkbpJp8ZChZB1aiTToHWhDn3at3Gr33XjauZBGIOBEjlQRkR3OKqlMrgZAHxNDvsZAm9AcGuZAR7Ks4i5tADZATqpQ75yrdpWmTLYBLz1QZDZD"
     const url = `https://graph.facebook.com/v20.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`
     const data = {
         "messaging_product": "whatsapp",
