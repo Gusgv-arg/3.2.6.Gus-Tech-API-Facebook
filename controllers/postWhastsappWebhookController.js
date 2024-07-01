@@ -30,7 +30,7 @@ export const postWhatsappWebhookController = async (req, res) => {
             wa_id: '5491161405589'
         }
     */
-   const userName = body.entry[0].changes[0].value.contacts[0].profile.name;
+   const userName = body.entry[0]?.changes[0]?.value?.contacts[0]?.profile?.name;
    console.log("User name-->", userName);
 	//console.log("body.entry[0].changes[0].value.messages[0]:", body.entry[0].changes[0].value.messages[0]);
 	/*  Object received
@@ -49,7 +49,7 @@ export const postWhatsappWebhookController = async (req, res) => {
 	const userPhone = body.entry[0].changes[0].value.messages[0].from;
 	console.log("User message phone-->", userPhone);
 
-    const myPhoneNumberId="312359751967984"
+    const myPhoneNumberId="312359751967984" // este es el id de mi cel declarado en la api
     const whatsappToken = "EAAOCUBAegw4BO4SHrHMKt4ieYqAin3xm0kFSwRyGzxXabXRgpMFFOHX6LO6m6oUSRjwRZCwJdx9J3u30EnC3VizlGZAgnKnSoPaCZCCQEpasWkCb24XtsBiZBTT9fEZCUXFZBYJKQdBRyDVF9hZAyqeQs2tQAicoCEO4HsYiWZBj9OPKMWzrpwTEKM3UGLtxDRMomzqIzC2XLWcIjDct"
     const url = `https://graph.facebook.com/v20.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`
     const data = {
