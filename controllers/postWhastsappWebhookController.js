@@ -1,83 +1,92 @@
 import axios from "axios";
+import dotenv from "dotenv";
+
+dotenv.config();
+const whatsappToken = process.env.WHATSAPP_TOKEN;
 
 export const postWhatsappWebhookController = async (req, res) => {
 	const body = req.body;
 	console.log("Lo que recibo x WhatsApp de la API de facebook -->", body);
-	//console.log("body.entry[0].changes[0]:", body.entry[0].changes[0]);
-	/* Object received
-    {
-        value:
-        {
-            messaging_product: 'whatsapp',
-            metadata:
-            {
-                display_phone_number: '15550480577', --> phone from where the msge is sent
-                phone_number_id: '312359751967984'
+	/* Object from Webhook
+     {
+        "object": "whatsapp_business_account",
+        "entry": [{
+          "id": "WHATSAPP_BUSINESS_ACCOUNT_ID",
+          "changes": [{
+            "value": {
+              "messaging_product": "whatsapp",
+              "metadata": {
+                "display_phone_number": PHONE_NUMBER,
+                "phone_number_id": PHONE_NUMBER_ID
+              },
+              "contacts": [{
+                "profile": {
+                  "name": "NAME"
+                },
+                "wa_id": PHONE_NUMBER
+              }],
+              "messages": [{
+                "from": PHONE_NUMBER,
+                "id": "wamid.ID",
+                "timestamp": TIMESTAMP,
+                "text": {
+                  "body": "MESSAGE_BODY"
+                },
+                "type": "text"
+              }]
             },
-            contacts: [ [Object] ],
-            messages: [ [Object] ]
-        },
-        field: 'messages'
-    } */
-
-	/* console.log(
-		"body.entry[0].changes[0].value.contacts[0]:",
-		body.entry[0].changes[0].value.contacts[0]
-	); */ 
-	/* Object received
-        {
-            profile: { name: 'gustavo gomez villafane' },
-            wa_id: '5491161405589'
-        }
-    */
-   const userName = body.entry[0]?.changes[0]?.value?.contacts[0]?.profile?.name;
-   console.log("User name-->", userName);
-	//console.log("body.entry[0].changes[0].value.messages[0]:", body.entry[0].changes[0].value.messages[0]);
-	/*  Object received
-        {
-            from: '5491161405589',
-            id: 'wamid.HBgNNTQ5MTE2MTQwNTU4ORUCABIYEjc4NzVFMkNFMDQ4REE5OTlERgA=',
-            timestamp: '1719857256',
-            text: { body: 'todo bien?' },
-            type: 'text'
-        }
-    */
-	const userMessage = body.entry[0].changes[0].value.messages[0].text.body;
-	console.log("User message-->", userMessage);
-	const userMessageId = body.entry[0].changes[0].value.messages[0].id;
-	console.log("User message ID-->", userMessageId);
-	const userPhone = body.entry[0].changes[0].value.messages[0].from;
-	console.log("User message phone-->", userPhone);
-
-    const myPhoneNumberId="312359751967984" // este es el id de mi cel declarado en la api
-    const whatsappToken = "EAAOCUBAegw4BO6ff2alBNxXFYKKFNYPdjWuaYi582VkR3JtEBpRJBbTL6ybciHMZAbtpP0z5ZAsy5ZAHAuTvkevD7JYoZCtZAfVIYzis3mPkYpi1qkbpJp8ZChZB1aiTToHWhDn3at3Gr33XjauZBGIOBEjlQRkR3OKqlMrgZAHxNDvsZAm9AcGuZAR7Ks4i5tADZATqpQ75yrdpWmTLYBLz1QZDZD"
-    const url = `https://graph.facebook.com/v20.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`
-    const data = {
-        "messaging_product": "whatsapp",
-        "recipient_type": "individual",
-        "to": userPhone,
-        "type": "text",
-        "text": {
-          "preview_url": true,
-          "body": "Hola desde https://www.gus-tech.com"
-        }
+            "field": "messages"
+          }]
+        }]
       }
+     */
 
-    const response = await axios
-        .post(url, data, {
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-        .then((response) => {
-            console.log("Response from Facebook:", response.data);
-        })
-        .catch((error) => {
-            console.error(
-                "Error enviando a Facebook------------>",
-                error.response ? error.response.data : error.message
-            );
-        });
+	if (body.entry[0]) {
+		if (
+			body.entry &&
+			body.entry[0].changes &&
+			body.entry[0].changes[0].value.messages &&
+			body.entry[0].changes[0].value.messages[0]
+		) {
+			const userMessage = body.entry[0].changes[0].value.messages[0].text.body;
+			const userPhone = body.entry[0].changes[0].value.messages[0].from;
+			const myPhoneNumberId =
+				body.entry[0].changes[0].value.metadata.phone_number_id; // este es el id de mi cel declarado en la api
+			console.log("User message-->", userMessage);
+			console.log("User message phone-->", userPhone);
+			console.log("y phone number Id-->", myPhoneNumberId);
 
-	res.status(200).send("Received");
+			const url = `https://graph.facebook.com/v20.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
+			const data = {
+				messaging_product: "whatsapp",
+				recipient_type: "individual",
+				to: userPhone,
+				type: "text",
+				text: {
+					preview_url: true,
+					body: "Hola desde https://www.gus-tech.com",
+				},
+			};
+
+			const response = await axios
+				.post(url, data, {
+					headers: {
+						"Content-Type": "application/json",
+					},
+				})
+				.then((response) => {
+					console.log("Response from Facebook:", response.data);
+				})
+				.catch((error) => {
+					console.error(
+						"Error enviando a Facebook------------>",
+						error.response ? error.response.data : error.message
+					);
+				});
+
+			res.status(200).send("Received");
+		}
+	} else {
+		res.status(400).send("Not found");
+	}
 };
