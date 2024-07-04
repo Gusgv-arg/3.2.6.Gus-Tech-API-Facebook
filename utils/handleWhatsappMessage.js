@@ -23,7 +23,7 @@ export const handleWhatsappMessage = async (senderId, messageGpt, thread_id)=>{
 			const data = {
 				messaging_product: "whatsapp",
 				recipient_type: "individual",
-				to: `+${senderId}`,
+				to: senderId,
 				type: "text",
 				text: {
 					preview_url: true,
