@@ -1,15 +1,23 @@
 import dotenv from "dotenv"
 import axios from "axios"
+import { saveMessageInDb } from "./saveMessageInDb.js";
 
 dotenv.config()
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
+const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID
 
-
-export const handleWhatsappMessage = async ()=>{
-
+// Función que recibe la respuesta del GPT, guarda en BD y envía al usuario la respuesta
+export const handleWhatsappMessage = async (senderId, messageGpt, thread_id)=>{
 
     try {
+        const name = "MegaBot";
+		const channel = "whatsapp";
+
+		// Save the sent message in the database
+		await saveMessageInDb(senderId, messageGpt, thread_id, name, channel);
+
+        // Posts the message to Whatsapp
         const url = `https://graph.facebook.com/v20.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
 			const data = {
 				messaging_product: "whatsapp",

@@ -7,7 +7,8 @@ const messageQueue = new MessageQueue();
 export const postWhatsappWebhookController = async (req, res) => {
 	const body = req.body;
 	console.log("Lo que recibo x WhatsApp de la API de facebook -->", body);
-	/* Object from Webhook
+  console.log("Phone number Id", body.entry[0].changes[0].value.metadata.phone_number_id)
+  /* Object from Webhook
      {
         "object": "whatsapp_business_account",
         "entry": [{
@@ -50,7 +51,6 @@ export const postWhatsappWebhookController = async (req, res) => {
 		) {
 			const message = body.entry[0].changes[0].value.messages[0].text.body;
 			const userPhone = body.entry[0].changes[0].value.messages[0].from;
-			const myPhoneNumberId = "312359751967984"; // este es el id de mi cel declarado en la api
 			const channel = "whatsapp";
 			console.log("User message-->", message);
 			console.log("User message phone-->", userPhone);
