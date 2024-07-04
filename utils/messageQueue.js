@@ -27,10 +27,12 @@ export class MessageQueue {
 				// PARA REPENSAR EL PROCESO
 
 				// Process the message with the Assistant
-				const response = await processMessageWithAssistant(sender_psid, newMessage);
+				const response = await processMessageWithAssistant(sender_psid, newMessage.message);
 
-				// Send the response back to the user
-				handleMessage(response.sender_psid, response.messageGpt, response.threadId);
+				if (newMessage.channel === "messenger"){
+					// Send the response back to the user
+					handleMessage(response.sender_psid, response.messageGpt, response.threadId);
+				}
 
 			} catch (error) {
 				console.error(
@@ -63,7 +65,7 @@ export class MessageQueue {
 			this.queues.set(sender_psid, {
 				messages: [],
 				processing: false,
-				responseCallback: null,
+				responseCallback: null,				
 			});
 		}
 
