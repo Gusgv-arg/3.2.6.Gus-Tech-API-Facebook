@@ -52,7 +52,7 @@ export const postWhatsappWebhookController = async (req, res) => {
 			const userPhone = body.entry[0].changes[0].value.messages[0].from;
 			const myPhoneNumberId = "312359751967984"; // este es el id de mi cel declarado en la api
 			const channel = "whatsapp";
-			console.log("User message-->", userMessage);
+			console.log("User message-->", message);
 			console.log("User message phone-->", userPhone);
 
 			// Get the message sent by the user & create an object to send it to the queue
