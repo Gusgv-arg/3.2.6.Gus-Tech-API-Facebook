@@ -60,7 +60,7 @@ export const postWhatsappWebhookController = async (req, res) => {
 			const data = {
 				messaging_product: "whatsapp",
 				recipient_type: "individual",
-				to: +userPhone,
+				to: `+${userPhone}`,
 				type: "text",
 				text: {
 					preview_url: true,
