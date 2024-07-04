@@ -8,7 +8,7 @@ const FACEBOOK_PAGE_ID = process.env.FACEBOOK_PAGE_ID;
 const PAGE_ACCESS_TOKEN = process.env.FACEBOOK_PAGE_ACCESS_TOKEN;
 
 // Función que recibe la respuesta del GPT, guarda en BD y envía al usuario la respuesta
-export const handleMessage = async (sender_psid, messageGpt, thread_id) => {
+export const handleMessengerMessage = async (sender_psid, messageGpt, thread_id) => {
 	try {
 		const name = "MegaBot";
 		//const role = "assistant";

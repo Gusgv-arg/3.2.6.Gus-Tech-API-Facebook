@@ -1,8 +1,8 @@
 import axios from "axios";
-import dotenv from "dotenv";
+import { MessageQueue } from "../utils/messageQueue.js";
 
-dotenv.config();
-const whatsappToken = process.env.WHATSAPP_TOKEN;
+// Define a new instance of MessageQueue
+const messageQueue = new MessageQueue();
 
 export const postWhatsappWebhookController = async (req, res) => {
 	const body = req.body;
@@ -48,43 +48,23 @@ export const postWhatsappWebhookController = async (req, res) => {
 			body.entry[0].changes[0].value.messages &&
 			body.entry[0].changes[0].value.messages[0]
 		) {
-			const userMessage = body.entry[0].changes[0].value.messages[0].text.body;
+			const message = body.entry[0].changes[0].value.messages[0].text.body;
 			const userPhone = body.entry[0].changes[0].value.messages[0].from;
-			const myPhoneNumberId =
-				body.entry[0].changes[0].value.metadata.phone_number_id; // este es el id de mi cel declarado en la api
+			const myPhoneNumberId = "312359751967984"; // este es el id de mi cel declarado en la api
+			const channel = "whatsapp";
 			console.log("User message-->", userMessage);
 			console.log("User message phone-->", userPhone);
-			console.log("Phone number Id-->", myPhoneNumberId);
 
-			const url = `https://graph.facebook.com/v20.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
-			const data = {
-				messaging_product: "whatsapp",
-				recipient_type: "individual",
-				to: `+${userPhone}`,
-				type: "text",
-				text: {
-					preview_url: true,
-					body: "Hola desde https://www.gus-tech.com",
-				},
+			// Get the message sent by the user & create an object to send it to the queue
+			const userMessage = {
+				channel: channel,
+				message: message,
 			};
 
-			const response = await axios
-				.post(url, data, {
-					headers: {
-						"Content-Type": "application/json",
-					},
-				})
-				.then((response) => {
-					console.log("Response from Facebook:", response.data);
-				})
-				.catch((error) => {
-					console.error(
-						"Error enviando a Facebook------------>",
-						error.response ? error.response.data : error.message
-					);
-				});
+			messageQueue.enqueueMessage(userMessage, userPhone);
 
-			res.status(200).send("Received");
+			// Returns a '200 OK' response to all requests
+			res.status(200).send("EVENT_RECEIVED");
 		}
 	} else {
 		res.status(400).send("Not found");
