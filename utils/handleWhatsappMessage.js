@@ -47,7 +47,8 @@ export const handleWhatsappMessage = async (senderId, messageGpt, thread_id)=>{
 					);
 				});
     } catch (error) {
-        
+        console.log("Error en handleWhatsappMessage", error.message);
+		res.status(404).send(error.message);
     }
 
 }
