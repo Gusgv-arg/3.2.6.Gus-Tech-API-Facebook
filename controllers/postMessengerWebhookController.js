@@ -21,9 +21,9 @@ export const postMessengerWebhookController = (req, res) => {
 			let webhook_event = entry.messaging[0];
 			console.log("entry.messaging[0].sender:", entry.messaging[0].sender);
 
-			// Get the sender PSID
-			let sender_psid = webhook_event.sender.id;
-			console.log("sender_psid", sender_psid);
+			// Get the sender ID
+			let senderId = webhook_event.sender.id;
+			console.log("sender_psid", senderId);
 
 			if (webhook_event.message) {
 				const channel = "messenger";
@@ -43,7 +43,7 @@ export const postMessengerWebhookController = (req, res) => {
 				   6- Calls handleMessenger/WhatsappMessage that calls saveMessageInDb to save GPT response in DB
 				   7- Then posts the message to the user in Facebook
 				*/
-				messageQueue.enqueueMessage(userMessage, sender_psid);
+				messageQueue.enqueueMessage(userMessage, senderId);
 			}
 		});
 

@@ -8,8 +8,8 @@ export class MessageQueue {
 	}
 
 	// Function to process the Queue
-	async processQueue(sender_psid) {
-		const queue = this.queues.get(sender_psid);
+	async processQueue(senderId) {
+		const queue = this.queues.get(senderId);
 		//console.log("Queue:", queue);
 
 		//If there is no queue or there is no processing return
@@ -26,14 +26,14 @@ export class MessageQueue {
 				
 				// Process the message with the Assistant
 				const response = await processMessageWithAssistant(
-					sender_psid,
+					senderId,
 					newMessage.message
 				);
 
 				if (newMessage.channel === "messenger") {
 					// Send the response back to the user by Messenger
 					handleMessengerMessage(
-						response.sender_psid,
+						response.senderId,
 						response.messageGpt,
 						response.threadId
 					);
@@ -64,10 +64,10 @@ export class MessageQueue {
 	}
 
 	// Function to add messages to the Queue
-	enqueueMessage(userMessage, sender_psid, responseCallback = null) {
+	enqueueMessage(userMessage, senderId, responseCallback = null) {
 		// If the queue has no ID it saves it && creates messages, processing and resposeCallbach properties
-		if (!this.queues.has(sender_psid)) {
-			this.queues.set(sender_psid, {
+		if (!this.queues.has(senderId)) {
+			this.queues.set(senderId, {
 				messages: [],
 				processing: false,
 				responseCallback: null,
@@ -75,13 +75,13 @@ export class MessageQueue {
 		}
 
 		// Look for the queue with the sender ID
-		const queue = this.queues.get(sender_psid);
+		const queue = this.queues.get(senderId);
 		console.log("Queue:", queue)
 
 		// Add the message to the Queue
 		queue.messages.push(userMessage);
 
 		// Process the queue
-		this.processQueue(sender_psid);
+		this.processQueue(senderId);
 	}
 }

@@ -13,19 +13,19 @@ const openai = new OpenAI({
 });
 
 export const processMessageWithAssistant = async (
-	sender_psid,
+	senderId,
 	userMessage,
 	channel
 ) => {
 	const assistantId = process.env.OPENAI_ASSISTANT_ID;
 	let threadId;
-	console.log("sender_psid:", sender_psid, "userMessage:", userMessage);
+	console.log("sender_psid:", senderId, "userMessage:", userMessage);
 
 	// Check if there is an existing thread for the user
 	let existingThread;
 	try {
 		existingThread = await Leads.findOne({
-			id_user: sender_psid,
+			id_user: senderId,
 			thread_id: { $exists: true },
 		});
 	} catch (error) {
@@ -138,7 +138,7 @@ export const processMessageWithAssistant = async (
 		}
 
 		// Save the received message to the database
-		await saveMessageInDb(sender_psid, userMessage, threadId, channel);
-		return { messageGpt, sender_psid, threadId };
+		await saveMessageInDb(senderId, userMessage, threadId, channel);
+		return { messageGpt, senderId, threadId };
 	}
 };

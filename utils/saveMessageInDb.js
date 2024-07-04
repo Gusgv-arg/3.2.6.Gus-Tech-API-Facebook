@@ -2,7 +2,7 @@ import Leads from "../models/leads.js";
 import { logError } from "./logError.js";
 
 export const saveMessageInDb = async (
-	sender_psid,
+	senderId,
 	userMessage,
 	threadId,
 	name,
@@ -17,8 +17,8 @@ export const saveMessageInDb = async (
 		if (lead === null) {
 			lead = await Leads.create({
 				name: "Messenger user name",
-				id_user: sender_psid,
-				content: `Usuario ${sender_psid}: ${userMessage}`,
+				id_user: senderId,
+				content: `Usuario ${senderId}: ${userMessage}`,
 				thread_id: threadId,
 				botSwitch: "ON",
 				channel: channel
