@@ -54,13 +54,13 @@ export const postWhatsappWebhookController = async (req, res) => {
 				body.entry[0].changes[0].value.metadata.phone_number_id; // este es el id de mi cel declarado en la api
 			console.log("User message-->", userMessage);
 			console.log("User message phone-->", userPhone);
-			console.log("y phone number Id-->", myPhoneNumberId);
+			console.log("Phone number Id-->", myPhoneNumberId);
 
 			const url = `https://graph.facebook.com/v20.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
 			const data = {
 				messaging_product: "whatsapp",
 				recipient_type: "individual",
-				to: userPhone,
+				to: +userPhone,
 				type: "text",
 				text: {
 					preview_url: true,
