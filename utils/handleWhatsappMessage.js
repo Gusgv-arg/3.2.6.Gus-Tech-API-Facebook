@@ -10,6 +10,7 @@ const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID
 // Función que recibe la respuesta del GPT, guarda en BD y envía al usuario la respuesta
 export const handleWhatsappMessage = async (senderId, messageGpt, thread_id)=>{
 
+    console.log("senderId", senderId)
     try {
         const name = "MegaBot";
 		const channel = "whatsapp";
@@ -22,7 +23,7 @@ export const handleWhatsappMessage = async (senderId, messageGpt, thread_id)=>{
 			const data = {
 				messaging_product: "whatsapp",
 				recipient_type: "individual",
-				to: `+${userPhone}`,
+				to: `+${senderId}`,
 				type: "text",
 				text: {
 					preview_url: true,

@@ -1,4 +1,5 @@
 import { handleMessengerMessage } from "./handleMessengerMessage.js";
+import { handleWhatsappMessage } from "./handleWhatsappMessage.js";
 import { processMessageWithAssistant } from "./processMessageWithAssistant.js";
 
 // Class definition for the Queue
@@ -23,7 +24,6 @@ export class MessageQueue {
 			const newMessage = queue.messages.shift();
 
 			try {
-				
 				// Process the message with the Assistant
 				const response = await processMessageWithAssistant(
 					senderId,
@@ -39,8 +39,11 @@ export class MessageQueue {
 					);
 				} else if (newMessage.channel === "whatsapp") {
 					// Send the response back to the user by Whatsapp
-					console.log("llegue hasta aca!!. Me falta la funcion de handleWhatsappMessage");
-					return
+					handleWhatsappMessage(
+						response.senderId,
+						response.messageGpt,
+						response.threadId
+					);
 				}
 			} catch (error) {
 				console.error(`14. Error processing message: ${error.message}`);
@@ -76,7 +79,7 @@ export class MessageQueue {
 
 		// Look for the queue with the sender ID
 		const queue = this.queues.get(senderId);
-		console.log("Queue:", queue)
+		console.log("Queue:", queue);
 
 		// Add the message to the Queue
 		queue.messages.push(userMessage);
