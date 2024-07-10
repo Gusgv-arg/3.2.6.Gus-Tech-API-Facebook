@@ -8,6 +8,8 @@ export const postWhatsappWebhookController = async (req, res) => {
 	const body = req.body;
 	console.log("Lo que recibo x WhatsApp de la API de facebook -->", body);
   console.log("Phone number Id", body.entry[0].changes[0].value.metadata.phone_number_id)
+  console.log("Changes-->", body.entry[0].changes[0])
+  console.log("Messages-->", body.entry[0].changes[0].messages[0])
   /* Object from Webhook
      {
         "object": "whatsapp_business_account",
