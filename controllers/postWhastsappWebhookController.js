@@ -54,7 +54,7 @@ export const postWhatsappWebhookController = async (req, res) => {
 		) {
 			const message = body.entry[0].changes[0].value.messages[0].text.body;
 			//const userPhone = body.entry[0].changes[0].value.messages[0].from;
-			const userPhone = "+54961405589";
+			const userPhone = "+5491161405589";
 			const channel = "whatsapp";
 			console.log("User message-->", message);
 			console.log("User message phone-->", userPhone);
