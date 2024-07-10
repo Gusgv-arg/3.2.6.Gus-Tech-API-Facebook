@@ -54,15 +54,16 @@ export const postWhatsappWebhookController = async (req, res) => {
 		) {
 			const message = body.entry[0].changes[0].value.messages[0].text.body;
 			const userPhone = body.entry[0].changes[0].value.messages[0].from;
-			//const userPhone = "+5491161405589";
 			const channel = "whatsapp";
-			console.log("User message-->", message);
+			const name = body.entry[0].changes[0].value.contacts[0].profile.name
+      console.log("User message-->", message);
 			console.log("User message phone-->", userPhone);
 
 			// Get the message sent by the user & create an object to send it to the queue
 			const userMessage = {
 				channel: channel,
 				message: message,
+        name: name
 			};
 
 			messageQueue.enqueueMessage(userMessage, userPhone);

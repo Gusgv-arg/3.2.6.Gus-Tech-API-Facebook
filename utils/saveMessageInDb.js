@@ -8,6 +8,7 @@ export const saveMessageInDb = async (
 	name,
 	channel
 ) => {
+	
 	// Save the sent message to the database
 	try {
 		// Find the lead by threadId
@@ -16,7 +17,7 @@ export const saveMessageInDb = async (
 		// If the lead does not exist for that thread, create it and return.
 		if (lead === null) {
 			lead = await Leads.create({
-				name: "Messenger user name",
+				name: userMessage.name ? userMessage.name : "Messenger user",
 				id_user: senderId,
 				content: `Usuario ${senderId}: ${userMessage}`,
 				thread_id: threadId,

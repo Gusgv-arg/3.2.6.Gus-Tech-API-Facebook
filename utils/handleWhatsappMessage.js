@@ -27,7 +27,8 @@ export const handleWhatsappMessage = async (senderId, messageGpt, thread_id)=>{
 				type: "text",
 				text: {
 					preview_url: true,
-					body: "Hola desde https://www.gus-tech.com",
+					body: messageGpt,
+					//body: "Hola desde https://www.gus-tech.com",
 				},
 			};
 
