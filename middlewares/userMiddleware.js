@@ -3,6 +3,7 @@ import Leads from "../models/leads.js";
 export const userMiddleware = async (req, res, next) => {
 	const body = req.body;
     console.log("Lo que recibo x WhatsApp de la API de facebook -->", body);
+    console.log("Changes -->", body.entry[0].changes[0]);
 
 	if (body.entry[0]) {
 		if (
@@ -44,18 +45,18 @@ export const userMiddleware = async (req, res, next) => {
 				});
 				console.log("Lead created in Leads DB");
 				next();
+			} else {
+				// Concatenate the new message to the existing content
+				let newContent;
+				newContent = `${lead.content}\n${currentDateTime} - ${name}: ${message}\n`;
+				
+				// Update the lead content
+				lead.content = newContent;
+				
+				// Save the updated lead
+				await lead.save();
+				console.log("Lead updated with user message in Leads DB");
 			}			
-
-			// Concatenate the new message to the existing content
-			let newContent;
-			newContent = `${lead.content}\n${currentDateTime} - ${name}: ${message}\n`;
-			
-			// Update the lead content
-			lead.content = newContent;
-			
-			// Save the updated lead
-			await lead.save();
-			console.log("Lead updated with user message in Leads DB");
 		}
 	} else {
         console.log("Not processed by API:", body)
