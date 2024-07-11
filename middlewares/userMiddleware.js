@@ -55,7 +55,7 @@ export const userMiddleware = async (req, res, next) => {
 			
 			// Save the updated lead
 			await lead.save();
-			console.log("Lead updated in Leads DB");
+			console.log("Lead updated with user message in Leads DB");
 		}
 	} else {
         console.log("Not processed by API:", body)
