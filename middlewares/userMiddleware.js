@@ -1,4 +1,5 @@
 import Leads from "../models/leads.js";
+import { handleWhatsappGreeting } from "../utils/handleWhatsappGreeting.js";
 
 export const userMiddleware = async (req, res, next) => {
 	const body = req.body;
@@ -44,7 +45,14 @@ export const userMiddleware = async (req, res, next) => {
 					channel: channel,
 				});
 				console.log("Lead created in Leads DB");
-				next();
+				
+				// Post greeting to the new customer
+				await handleWhatsappGreeting(name, userPhone)
+				
+				// Create a Thread sending user message and greeting to GPT
+				// Save thread in DB
+				
+				res.status(200).send("EVENT_RECEIVED")
 			} else {
 				// Concatenate the new message to the existing content
 				let newContent;
@@ -56,11 +64,11 @@ export const userMiddleware = async (req, res, next) => {
 				// Save the updated lead
 				await lead.save();
 				console.log("Lead updated with user message in Leads DB");
+				next()
 			}			
 		}
 	} else {
         console.log("Not processed by API:", body)
         res.status(400).send("Not processed by this API");
-
     }
 };
