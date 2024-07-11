@@ -1,4 +1,5 @@
 import Leads from "../models/leads.js";
+import { greeting } from "../utils/greeting.js";
 import { createGptThread } from "../utils/createGptThread.js";
 import { handleWhatsappGreeting } from "../utils/handleWhatsappGreeting.js";
 
@@ -40,12 +41,12 @@ export const userMiddleware = async (req, res, next) => {
 			// Find the lead by id_user / phone number
 			let lead = await Leads.findOne({ id_user: userPhone });
 
-			// If the lead does not exist for that thread, create it and do next()
+			// If the lead does not exist for that phone, create it && save message && greeting
 			if (lead === null) {
 				lead = await Leads.create({
 					name: name ? name : "WhatsApp User",
 					id_user: userPhone,
-					content: `${currentDateTime} - ${name}: ${message}`,
+					content: `${currentDateTime} - ${name}: ${message}\n${currentDateTime} - MegaBot: ¡Hola ${name}${greeting}`,
 					botSwitch: "ON",
 					channel: channel,
 				});
