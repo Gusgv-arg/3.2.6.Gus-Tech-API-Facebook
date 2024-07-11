@@ -6,11 +6,12 @@ const messageQueue = new MessageQueue();
 
 export const postWhatsappWebhookController = async (req, res) => {
 	const body = req.body;
-	console.log("Lo que recibo x WhatsApp de la API de facebook -->", body);
-  //console.log("Phone number Id", body.entry[0].changes[0].value.metadata.phone_number_id)
-  console.log("Changes-->", body.entry[0].changes[0])
-  console.log("Contacts-->", body.entry[0].changes[0].value.contacts)
-  //console.log("Statuses-->", body.entry[0]?.changes[0]?.statuses[0] ? body.entry[0].changes[0].statuses[0] : "no hay statuses")
+	//console.log("Lo que recibo x WhatsApp de la API de facebook -->", body);
+  //console.log("Changes-->", body.entry[0].changes[0])
+  //console.log("Contacts-->", body.entry[0].changes[0].value.contacts)
+
+  //LO PRIMERO QUE TENGO QUE HACER ES GRABAR EL MENSAJE DEL USUARIO EN LA BD!!!!
+
   /* Object from Webhook
      {
         "object": "whatsapp_business_account",
@@ -56,8 +57,8 @@ export const postWhatsappWebhookController = async (req, res) => {
 			const userPhone = body.entry[0].changes[0].value.messages[0].from;
 			const channel = "whatsapp";
 			const name = body.entry[0].changes[0].value.contacts[0].profile.name
-      console.log("User message-->", message);
-			console.log("User message phone-->", userPhone);
+      //console.log("User message-->", message);
+			//console.log("User message phone-->", userPhone);
 
 			// Get the message sent by the user & create an object to send it to the queue
 			const userMessage = {
@@ -72,6 +73,6 @@ export const postWhatsappWebhookController = async (req, res) => {
 			res.status(200).send("EVENT_RECEIVED");
 		}
 	} else {
-		res.status(400).send("Not found");
+		res.status(400).send("Not processed by this API");
 	}
 };

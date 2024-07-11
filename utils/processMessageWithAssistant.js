@@ -131,10 +131,7 @@ export const processMessageWithAssistant = async (
 
 	// Save the received message from the user and send the assistants response
 	if (userMessage && lastMessageForRun) {
-		let messageGpt = lastMessageForRun.content[0].text.value;
-		
-		// Save the received message to the database
-		await saveMessageInDb(senderId, userMessage, threadId, channel);
+		let messageGpt = lastMessageForRun.content[0].text.value;		
 		return { messageGpt, senderId, threadId };
 	}
 };
