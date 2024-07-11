@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import axios from "axios";
-import {greeting} from "../utils/greeting.js" 
+import { greeting } from "../utils/greeting.js";
 import { saveMessageInDb } from "./saveMessageInDb.js";
 
 dotenv.config();
@@ -11,7 +11,6 @@ const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
 // Function that sends GPT message to the user and saves in DB
 export const handleWhatsappGreeting = async (name, userPhone) => {
 	try {
-		
 		// Posts the message to Whatsapp
 		const url = `https://graph.facebook.com/v20.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
 		const data = {
@@ -21,7 +20,7 @@ export const handleWhatsappGreeting = async (name, userPhone) => {
 			type: "text",
 			text: {
 				preview_url: true,
-				body: `!Hola ${name}${greeting}`,				
+				body: `¡Hola ${name}${greeting}`,
 			},
 		};
 
@@ -43,7 +42,6 @@ export const handleWhatsappGreeting = async (name, userPhone) => {
 
 		// Save the message in the database
 		//await saveMessageInDb(senderId, messageGpt, thread_id, name, channel);
-
 	} catch (error) {
 		console.log("Error en handleWhatsappGreeting", error.message);
 		res.status(404).send(error.message);

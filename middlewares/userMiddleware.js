@@ -1,10 +1,15 @@
 import Leads from "../models/leads.js";
+import { createGptThread } from "../utils/createGptThread.js";
 import { handleWhatsappGreeting } from "../utils/handleWhatsappGreeting.js";
 
 export const userMiddleware = async (req, res, next) => {
 	const body = req.body;
-    console.log("Lo que recibo x WhatsApp de la API de facebook -->", body);
-    console.log("Changes -->", body.entry[0].changes[0]);
+	console.log("Lo que recibo x WhatsApp de la API de facebook -->", body);
+	console.log("Changes -->", body.entry[0].changes[0]);
+
+	if (body.entry[0].changes[0].value.statuses) {
+		console.log("Statuses--->", body.entry[0].changes[0].value.statuses[0]);
+	}
 
 	if (body.entry[0]) {
 		if (
@@ -21,7 +26,7 @@ export const userMiddleware = async (req, res, next) => {
 			console.log("User message-->", message);
 			console.log("User phone---->", userPhone);
 
-            // Obtain current date and hour
+			// Obtain current date and hour
 			const currentDateTime = new Date().toLocaleString("es-AR", {
 				timeZone: "America/Argentina/Buenos_Aires",
 				day: "2-digit",
@@ -45,30 +50,35 @@ export const userMiddleware = async (req, res, next) => {
 					channel: channel,
 				});
 				console.log("Lead created in Leads DB");
-				
+
 				// Post greeting to the new customer
-				await handleWhatsappGreeting(name, userPhone)
-				
+				await handleWhatsappGreeting(name, userPhone);
+
 				// Create a Thread sending user message and greeting to GPT
+				const thread = await createGptThread(name, message)
+
 				// Save thread in DB
-				
-				res.status(200).send("EVENT_RECEIVED")
+				lead.thread_id = thread
+				await lead.save();
+				console.log("Lead updated with threadId");
+
+				res.status(200).send("EVENT_RECEIVED");
 			} else {
 				// Concatenate the new message to the existing content
 				let newContent;
 				newContent = `${lead.content}\n${currentDateTime} - ${name}: ${message}\n`;
-				
+
 				// Update the lead content
 				lead.content = newContent;
-				
+
 				// Save the updated lead
 				await lead.save();
 				console.log("Lead updated with user message in Leads DB");
-				next()
-			}			
+				next();
+			}
 		}
 	} else {
-        console.log("Not processed by API:", body)
-        res.status(400).send("Not processed by this API");
-    }
+		console.log("Not processed by API:", body);
+		res.status(400).send("Not processed by this API");
+	}
 };
