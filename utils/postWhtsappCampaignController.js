@@ -13,7 +13,6 @@ export const postWhatsappCampaignController = async (req, res) => {
 		const url = `https://graph.facebook.com/v20.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
 		const data = {
 			messaging_product: "whatsapp",
-			recipient_type: "individual",
 			to: 541161405589,
 			type: "template",
 			template: {
@@ -51,6 +50,6 @@ export const postWhatsappCampaignController = async (req, res) => {
 				);
 			});
 
-		res.status(200).send(response.data);
+		res.status(200).send("EVENT_RECEIVED");
 	} catch (error) {}
 };
