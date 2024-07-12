@@ -13,7 +13,7 @@ export const postWhatsappCampaignController = async (req, res) => {
 		const url = `https://graph.facebook.com/v20.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
 		const data = {
 			messaging_product: "whatsapp",
-			to: 541161405589,
+			to: 5491161405589,
 			type: "template",
 			template: {
 				name: "lanzamiento_gustech",
