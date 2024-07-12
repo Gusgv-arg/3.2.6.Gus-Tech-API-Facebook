@@ -7,27 +7,31 @@ dotenv.config();
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
 
-// Function that sends GPT message to the user and saves in DB
-export const handleWhatsappMessage = async (
-	senderId,
-	messageGpt,
-	thread_id
-) => {
+export const postWhatsappCampaignController = async (req, res) => {
 	try {
-		const name = "MegaBot";
-		const channel = "whatsapp";
-		
 		// Posts the message to Whatsapp
 		const url = `https://graph.facebook.com/v20.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
 		const data = {
 			messaging_product: "whatsapp",
 			recipient_type: "individual",
-			to: senderId,
-			type: "text",
-			text: {
-				preview_url: true,
-				body: messageGpt,
-				//body: "Hola desde https://www.gus-tech.com",
+			to: 541161405589,
+			type: "template",
+			template: {
+				name: "lanzamiento_gustech",
+				language: {
+					code: "es_AR",
+				},
+				components: [
+					{
+						type: "body",
+						parameters: [
+							{
+								type: "text",
+								text: "Gustavo", // Reemplaza con la variable requerida
+							},
+						],
+					},
+				],
 			},
 		};
 
@@ -47,11 +51,6 @@ export const handleWhatsappMessage = async (
 				);
 			});
 
-		// Save the message in the database
-		await saveMessageInDb(senderId, messageGpt, thread_id, name, channel);
-
-	} catch (error) {
-		console.log("Error en handleWhatsappMessage", error.message);
-		res.status(404).send(error.message);
-	}
+		res.status(200).send(response.data);
+	} catch (error) {}
 };

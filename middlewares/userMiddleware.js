@@ -80,6 +80,6 @@ export const userMiddleware = async (req, res, next) => {
 		}
 	} else {
 		console.log("Not processed by API:", body);
-		res.status(400).send("Not processed by this API");
+		res.status(200).send("EVENT_RECEIVED");
 	}
 };

@@ -39,9 +39,7 @@ export const handleWhatsappGreeting = async (name, userPhone) => {
 					error.response ? error.response.data : error.message
 				);
 			});
-
-		// Save the message in the database
-		//await saveMessageInDb(senderId, messageGpt, thread_id, name, channel);
+		
 	} catch (error) {
 		console.log("Error en handleWhatsappGreeting", error.message);
 		res.status(404).send(error.message);
