@@ -10,6 +10,7 @@ export const userMiddleware = async (req, res, next) => {
 
 	if (body.entry[0].changes[0].value.statuses) {
 		console.log("Statuses--->", body.entry[0].changes[0].value.statuses[0]);
+		res.status(200).send("EVENT_RECEIVED");
 	}
 
 	if (body.entry[0]) {
