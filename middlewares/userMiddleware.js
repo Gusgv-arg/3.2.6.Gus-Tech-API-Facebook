@@ -5,14 +5,16 @@ import { handleWhatsappGreeting } from "../utils/handleWhatsappGreeting.js";
 
 export const userMiddleware = async (req, res, next) => {
 	const body = req.body;
-	console.log("Lo que recibo x WhatsApp de la API de facebook -->", body);
+	console.log("Lo que recibo de la API de facebook -->", body);
 	console.log("Changes -->", body.entry[0].changes[0]);
 
+	// WhatsApp
 	if (body.entry[0].changes[0].value.statuses) {
 		console.log("Statuses--->", body.entry[0].changes[0].value.statuses[0]);
 		res.status(200).send("EVENT_RECEIVED");
 	}
 
+	// ------ WhatsApp -------//
 	if (body.entry[0]) {
 		if (
 			body.entry &&
@@ -57,10 +59,10 @@ export const userMiddleware = async (req, res, next) => {
 				await handleWhatsappGreeting(name, userPhone);
 
 				// Create a Thread sending user message and greeting to GPT
-				const thread = await createGptThread(name, message)
+				const thread = await createGptThread(name, message);
 
 				// Save thread in DB
-				lead.thread_id = thread
+				lead.thread_id = thread;
 				await lead.save();
 				console.log("Lead updated with threadId");
 
@@ -78,6 +80,50 @@ export const userMiddleware = async (req, res, next) => {
 				console.log("Lead updated with user message in Leads DB");
 				next();
 			}
+		}
+
+		//-------- Messenger ----------//
+	} else if (body.object === "page") {
+		const senderId = body?.entry?.messaging[0].sender.id;
+		const messengerMessage = body?.entry?.messaging[0].message.text;
+		const name = "Messenger user";
+		const channel = "messenger";
+
+		// Obtain current date and hour
+		const currentDateTime = new Date().toLocaleString("es-AR", {
+			timeZone: "America/Argentina/Buenos_Aires",
+			day: "2-digit",
+			month: "2-digit",
+			year: "numeric",
+			hour: "2-digit",
+			minute: "2-digit",
+			second: "2-digit",
+		});
+
+		// Find the lead by id
+		let lead = await Leads.findOne({ id_user: senderId });
+		if (lead === null) {
+			lead = await Leads.create({
+				name: name,
+				id_user: senderId,
+				content: `${currentDateTime} - ${name}: ${messengerMessage}\n${currentDateTime} - MegaBot: ¡Hola ${name}${greeting}`,
+				botSwitch: "ON",
+				channel: channel,
+			});
+			console.log("Lead created in Leads DB");
+			next();
+		} else {
+			// Concatenate the new message to the existing content
+			let newContent;
+			newContent = `${lead.content}\n${currentDateTime} - ${name}: ${message}\n`;
+
+			// Update the lead content
+			lead.content = newContent;
+
+			// Save the updated lead
+			await lead.save();
+			console.log("Lead updated with user message in Leads DB");
+			next();
 		}
 	} else {
 		console.log("Not processed by API:", body);

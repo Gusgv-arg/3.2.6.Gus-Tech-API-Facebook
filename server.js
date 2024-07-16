@@ -13,7 +13,7 @@ dotenv.config();
 mongoose
 	.connect(process.env.MONGODB_URI)
 	.then(() => {
-		console.log("Connected to MegaBot data base");
+		console.log("Connected to GusTech data base");
 	})
 	.catch((err) => {
 		console.log(err.message);
