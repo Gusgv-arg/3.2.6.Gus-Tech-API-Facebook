@@ -6,18 +6,21 @@ import { handleWhatsappGreeting } from "../utils/handleWhatsappGreeting.js";
 export const userMiddleware = async (req, res, next) => {
 	const body = req.body;
 	console.log("Lo que recibo de la API de facebook -->", body);
-	let channel = body.entry[0].changes? "WhatsApp" : "Messenger"
-	console.log("Channel:", channel)
+	let channel = body.entry[0].changes ? "WhatsApp" : "Messenger";
+	console.log("Channel:", channel);
+	let status = body.entry[0].changes[0].value.statuses[0] ? "status" : null;
 
 	// WhatsApp
-	if (channel === "WhatsApp" && body?.entry[0]?.changes[0]?.value) {
+	if (channel === "WhatsApp") {
 		console.log(
-			"body.entry[0].changes[0].value.statuses[0] --->",
+			"Whatsapp --->",
 			body.entry[0].changes[0].value.statuses[0]
+				? body.entry[0].changes[0].value.statuses[0]
+				: body?.entry[0]?.changes[0]
 		);
-		res.status(200).send("EVENT_RECEIVED");
-	} else if (channel === "WhatsApp" && body?.entry[0]?.changes[0]) {
-		console.log("body.entry[0].changes[0] -->", body.entry[0].changes[0]);
+		if (status !== null) {
+			res.status(200).send("EVENT_RECEIVED");
+		}
 	} else if (channel === "Messenger" && body?.entry[0]?.messaging[0]) {
 		console.log("body.entry[0].messaging[0] -->", body.entry[0].messaging[0]);
 	} else {
@@ -96,7 +99,7 @@ export const userMiddleware = async (req, res, next) => {
 		const senderId = body?.entry[0]?.messaging[0].sender.id;
 		const messengerMessage = body?.entry[0]?.messaging[0].message.text;
 		const name = "Messenger user";
-		
+
 		// Obtain current date and hour
 		const currentDateTime = new Date().toLocaleString("es-AR", {
 			timeZone: "America/Argentina/Buenos_Aires",
