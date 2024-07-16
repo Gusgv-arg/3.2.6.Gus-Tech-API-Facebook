@@ -8,7 +8,7 @@ export const userMiddleware = async (req, res, next) => {
 	console.log("Lo que recibo de la API de facebook -->", body);
 
 	// WhatsApp
-	if (body?.entry[0]?.changes[0].value.statuses) {
+	if (body?.entry[0]?.changes[0]?.value?.statuses) {
 		console.log(
 			"WhatsApp Statuses--->",
 			body.entry[0].changes[0].value.statuses[0]
