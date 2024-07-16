@@ -6,12 +6,20 @@ import { handleWhatsappGreeting } from "../utils/handleWhatsappGreeting.js";
 export const userMiddleware = async (req, res, next) => {
 	const body = req.body;
 	console.log("Lo que recibo de la API de facebook -->", body);
-	console.log("Changes -->", body.entry[0].changes[0]);
 
 	// WhatsApp
 	if (body.entry[0].changes[0].value.statuses) {
-		console.log("Statuses--->", body.entry[0].changes[0].value.statuses[0]);
+		console.log(
+			"WhatsApp Statuses--->",
+			body.entry[0].changes[0].value.statuses[0]
+		);
 		res.status(200).send("EVENT_RECEIVED");
+	} else if (body.entry[0].changes[0]) {
+		console.log("WhatsApp Changes -->", body.entry[0].changes[0]);
+	} else if (body.page && body.entry[0]) {
+		console.log("Messenger Messaging -->", body.entry[0].messaging[0]);
+	} else {
+		console.log("Other object");
 	}
 
 	// ------ WhatsApp -------//
@@ -84,8 +92,8 @@ export const userMiddleware = async (req, res, next) => {
 
 		//-------- Messenger ----------//
 	} else if (body.object === "page") {
-		const senderId = body?.entry?.messaging[0].sender.id;
-		const messengerMessage = body?.entry?.messaging[0].message.text;
+		const senderId = body?.entry[0]?.messaging[0].sender.id;
+		const messengerMessage = body?.entry[0]?.messaging[0].message.text;
 		const name = "Messenger user";
 		const channel = "messenger";
 
