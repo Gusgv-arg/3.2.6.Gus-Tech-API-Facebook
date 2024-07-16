@@ -12,14 +12,14 @@ export const userMiddleware = async (req, res, next) => {
 	// WhatsApp
 	if (channel === "WhatsApp" && body?.entry[0]?.changes[0]?.value) {
 		console.log(
-			"WhatsApp Statuses--->",
+			"body.entry[0].changes[0].value.statuses[0] --->",
 			body.entry[0].changes[0].value.statuses[0]
 		);
 		res.status(200).send("EVENT_RECEIVED");
 	} else if (channel === "WhatsApp" && body?.entry[0]?.changes[0]) {
-		console.log("WhatsApp Changes -->", body.entry[0].changes[0]);
+		console.log("body.entry[0].changes[0] -->", body.entry[0].changes[0]);
 	} else if (channel === "Messenger" && body?.entry[0]?.messaging[0]) {
-		console.log("Messenger Messaging -->", body.entry[0].messaging[0]);
+		console.log("body.entry[0].messaging[0] -->", body.entry[0].messaging[0]);
 	} else {
 		console.log("Other object");
 	}
@@ -114,7 +114,7 @@ export const userMiddleware = async (req, res, next) => {
 			lead = await Leads.create({
 				name: name,
 				id_user: senderId,
-				content: `${currentDateTime} - ${name}: ${messengerMessage}\n${currentDateTime} - MegaBot: ¡Hola ${name}${greeting}`,
+				content: `${currentDateTime} - ${name}: ${messengerMessage}\n${currentDateTime}`,
 				botSwitch: "ON",
 				channel: channel,
 			});
@@ -123,7 +123,7 @@ export const userMiddleware = async (req, res, next) => {
 		} else {
 			// Concatenate the new message to the existing content
 			let newContent;
-			newContent = `${lead.content}\n${currentDateTime} - ${name}: ${message}\n`;
+			newContent = `${lead.content}\n${currentDateTime} - ${name}: ${messengerMessage}\n`;
 
 			// Update the lead content
 			lead.content = newContent;
