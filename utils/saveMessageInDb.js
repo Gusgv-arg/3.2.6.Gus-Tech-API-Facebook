@@ -36,6 +36,7 @@ export const saveMessageInDb = async (
 			// Update the lead content
 			lead.content = newContent;
 			lead.channel = channel;
+			lead.thread_id = threadId
 
 			// Save the updated lead
 			await lead.save();
