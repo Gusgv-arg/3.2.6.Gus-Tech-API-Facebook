@@ -79,7 +79,7 @@ export const userMiddleware = async (req, res, next) => {
 			} else {
 				// Concatenate the new message to the existing content
 				let newContent;
-				newContent = `${lead.content}\n${currentDateTime} - ${name}: ${message}\n`;
+				newContent = `${lead.content}\n${currentDateTime} - ${name}: ${message}`;
 
 				// Update the lead content
 				lead.content = newContent;
@@ -114,7 +114,7 @@ export const userMiddleware = async (req, res, next) => {
 			lead = await Leads.create({
 				name: name,
 				id_user: senderId,
-				content: `${currentDateTime} - ${name}: ${messengerMessage}\n${currentDateTime}`,
+				content: `${currentDateTime} - ${name}: ${messengerMessage}`,
 				botSwitch: "ON",
 				channel: channel,
 			});
@@ -123,7 +123,7 @@ export const userMiddleware = async (req, res, next) => {
 		} else {
 			// Concatenate the new message to the existing content
 			let newContent;
-			newContent = `${lead.content}\n${currentDateTime} - ${name}: ${messengerMessage}\n`;
+			newContent = `${lead.content}\n${currentDateTime} - ${name}: ${messengerMessage}`;
 
 			// Update the lead content
 			lead.content = newContent;

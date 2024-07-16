@@ -31,7 +31,7 @@ export const saveMessageInDb = async (
 
 			// Concatenate the new message to the existing content
 			let newContent;
-			newContent = `${lead.content}\n${currentDateTime} - ${name}: ${messageGpt}\n`;
+			newContent = `${lead.content}\n${currentDateTime} - ${name}: ${messageGpt}`;
 			
 			// Update the lead content
 			lead.content = newContent;
