@@ -8,13 +8,13 @@ export const userMiddleware = async (req, res, next) => {
 	console.log("Lo que recibo de la API de facebook -->", body);
 	let channel = body.entry[0].changes ? "WhatsApp" : "Messenger";
 	console.log("Channel:", channel);
-	let status = body?.entry[0]?.changes[0]?.value?.statuses[0] ? "status" : null;
+	let status = body?.entry[0]?.changes[0]?.value?.statuses?.[0] ? "status" : null;
 
 	// WhatsApp
 	if (channel === "WhatsApp") {
 		console.log(
 			"Whatsapp --->",
-			body.entry[0].changes[0].value.statuses[0]
+			body?.entry?.[0].changes?.[0].value?.statuses?.[0]
 				? body.entry[0].changes[0].value.statuses[0]
 				: body?.entry[0]?.changes[0]
 		);
