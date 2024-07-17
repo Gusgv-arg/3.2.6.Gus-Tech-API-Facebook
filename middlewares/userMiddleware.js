@@ -15,14 +15,14 @@ export const userMiddleware = async (req, res, next) => {
 		console.log(
 			"Whatsapp --->",
 			body?.entry?.[0].changes?.[0].value?.statuses?.[0]
-				? body.entry[0].changes[0].value.statuses[0]
-				: body?.entry[0]?.changes[0]
+				? `Status: ${body.entry[0].changes[0].value.statuses[0].status}`
+				: `Llegó un mensaje nuevo!}`
 		);
 		if (status !== null) {
 			res.status(200).send("EVENT_RECEIVED");
 		}
 	} else if (channel === "Messenger" && body?.entry[0]?.messaging[0]) {
-		console.log("body.entry[0].messaging[0] -->", body.entry[0].messaging[0]);
+		console.log("Messenger --> body.entry[0].messaging[0] -->", body.entry[0].messaging[0]);
 	} else {
 		console.log("Other object");
 	}

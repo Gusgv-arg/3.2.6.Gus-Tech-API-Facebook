@@ -79,7 +79,7 @@ export class MessageQueue {
 
 		// Look for the queue with the sender ID
 		const queue = this.queues.get(senderId);
-		console.log("Queue:", queue);
+		//console.log("Queue:", queue);
 
 		// Add the message to the Queue
 		queue.messages.push(userMessage);

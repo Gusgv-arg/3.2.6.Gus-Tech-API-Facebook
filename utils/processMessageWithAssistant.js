@@ -19,7 +19,7 @@ export const processMessageWithAssistant = async (
 ) => {
 	const assistantId = process.env.OPENAI_ASSISTANT_ID;
 	let threadId;
-	console.log("sender_psid:", senderId, "userMessage:", userMessage);
+	//console.log("sender_psid:", senderId, "userMessage:", userMessage);
 
 	// Check if there is an existing thread for the user
 	let existingThread;
@@ -52,7 +52,7 @@ export const processMessageWithAssistant = async (
 			content: userMessage,
 		});
 	}
-	console.log("threadId:", threadId);
+	//console.log("threadId:", threadId);
 
 	//******************************METODO ORIGINAL MAS ACCIONES**************************************/
 	// Run the assistant and wait for completion
