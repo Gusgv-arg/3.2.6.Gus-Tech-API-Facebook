@@ -34,8 +34,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/", (req, res) => {
 	res.status(200).send("Estoy prendido!!");
 });
-app.use("/webhook", messengerRouter);
-app.use("/webhook_wab", whatsappRouter);
+//app.use("/webhook", messengerRouter);
+app.use("/webhook", whatsappRouter);
 app.use("/testing", testingRouter);
 
 // Middleware de manejo de errores
