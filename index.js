@@ -31,6 +31,9 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }));
 
+app.use("/", (req, res) => {
+	res.status(200).send("Estoy prendido!!");
+});
 app.use("/webhook", messengerRouter);
 app.use("/webhook_wab", whatsappRouter);
 app.use("/testing", testingRouter);
