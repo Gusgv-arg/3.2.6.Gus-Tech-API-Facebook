@@ -8,6 +8,9 @@ export const getWhatsappWebhookController = (req, res) => {
 	console.log("req.query", req.query);
 	console.log("req.body", req.body);
 
+	const reqQuery= req.query
+	console.log("reqQuery:", reqQuery)
+	
 	// Parse the query params
 	let mode = req.query["hub.mode"];
 	let token = req.query["hub.verify_token"];
