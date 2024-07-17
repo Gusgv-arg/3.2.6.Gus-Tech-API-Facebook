@@ -16,7 +16,7 @@ export const userMiddleware = async (req, res, next) => {
 			"Whatsapp --->",
 			body?.entry?.[0].changes?.[0].value?.statuses?.[0]
 				? `Status: ${body.entry[0].changes[0].value.statuses[0].status}`
-				: `Llegó un mensaje nuevo!}`
+				: `Mensaje nuevo!: ${body.entry[0].changes[0].value.messages[0]}`
 		);
 		if (status !== null) {
 			res.status(200).send("EVENT_RECEIVED");
