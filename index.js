@@ -32,6 +32,7 @@ app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/", (req, res) => {
+	console.log("Quiero ver el console log!!")
 	res.status(200).send("Estoy prendido!!");
 });
 //app.use("/webhook", messengerRouter);
