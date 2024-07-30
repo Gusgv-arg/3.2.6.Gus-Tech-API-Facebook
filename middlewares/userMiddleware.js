@@ -102,11 +102,11 @@ export const userMiddleware = async (req, res, next) => {
 			console.log("Objeto Audio", audioObject)
 			const value = body.entry[0].changes[0].value
 			console.log("Value", value) 
-			const audioId = body.entry[0].changes[0].value.messages[0].id
+			const audioId = audioObject.id
 			console.log("Audio Id:", audioId)
 			// Make a get request to access the audio URL
 			const audioUrl = await getAudioWhatsappUrl(audioId)
-			console.log("AudioURL:", audioUrl)
+			console.log("AudioURL:", audioUrl.data)
 			// Download the URL
 
 		}
