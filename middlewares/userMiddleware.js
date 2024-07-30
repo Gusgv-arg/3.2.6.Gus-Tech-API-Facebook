@@ -8,7 +8,9 @@ export const userMiddleware = async (req, res, next) => {
 	console.log("Lo que recibo de la API de facebook -->", body);
 	let channel = body.entry[0].changes ? "WhatsApp" : "Messenger";
 	console.log("Channel:", channel);
-	let status = body?.entry?.[0].changes?.[0].value?.statuses?.[0] ? "status" : null;
+	let status = body?.entry?.[0].changes?.[0].value?.statuses?.[0]
+		? "status"
+		: null;
 
 	// WhatsApp
 	if (channel === "WhatsApp") {
@@ -22,19 +24,19 @@ export const userMiddleware = async (req, res, next) => {
 			res.status(200).send("EVENT_RECEIVED");
 		}
 	} else if (channel === "Messenger" && body?.entry[0]?.messaging[0]) {
-		console.log("Messenger --> body.entry[0].messaging[0] -->", body.entry[0].messaging[0]);
+		console.log(
+			"Messenger --> body.entry[0].messaging[0] -->",
+			body.entry[0].messaging[0]
+		);
 	} else {
 		console.log("Other object");
 	}
 
 	// ------ WhatsApp -------//
 	if (channel === "WhatsApp" && body?.entry[0]) {
-		if (
-			body.entry &&
-			body.entry[0].changes &&
-			body.entry[0].changes[0].value.messages &&
-			body.entry[0].changes[0].value.messages[0]
-		) {
+		let typeOfWhatsappMessage = body.entry[0].changes[0].messages[0].type;
+		console.log("Type of WA message:", typeOfWhatsappMessage);
+		if (typeOfWhatsappMessage === "text") {
 			const message = body.entry[0].changes[0].value.messages[0].text.body;
 			const userPhone = body.entry[0].changes[0].value.messages[0].from;
 			const name = body.entry[0].changes[0].value.contacts[0].profile.name;
@@ -92,6 +94,8 @@ export const userMiddleware = async (req, res, next) => {
 				console.log("Lead updated with user message in Leads DB");
 				next();
 			}
+		} else if (typeOfWhatsappMessage === "audio") {
+			console.log("Entre en else if de audio");
 		}
 
 		//-------- Messenger ----------//
