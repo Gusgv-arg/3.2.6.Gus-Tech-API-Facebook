@@ -5,8 +5,10 @@ dotenv.config();
 // With a GET Facebook verifies my Whatsapp webhook
 export const getWhatsappWebhookController = (req, res) => {
 	let WHATSAPP_VERIFY_TOKEN = process.env.WHATSAPP_MY_VERIFY_TOKEN;
+	console.log("entre en webhook!")
 	console.log("req.query", req.query);
 	console.log("req.body", req.body);
+	console.log("Whatsapp verify token", WHATSAPP_VERIFY_TOKEN)
 
 	const reqQuery= req.query
 	console.log("reqQuery:", reqQuery)
