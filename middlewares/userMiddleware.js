@@ -97,6 +97,10 @@ export const userMiddleware = async (req, res, next) => {
 			}
 		} else if (typeOfWhatsappMessage === "audio") {
 			console.log("Entre en else if de audio");
+			const audioObject = body.entry[0].changes[0].value.messages[0].audio ? body.entry[0].changes[0].value.messages[0].audio : "otro formato" 
+			console.log("Objeto Audio", audioObject)
+			const value = body.entry[0].changes[0].value
+			console.log("Value", value) 
 		}
 
 		//-------- Messenger ----------//
