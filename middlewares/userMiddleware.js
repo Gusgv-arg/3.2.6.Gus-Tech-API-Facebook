@@ -2,6 +2,7 @@ import Leads from "../models/leads.js";
 import { greeting } from "../utils/greeting.js";
 import { createGptThread } from "../utils/createGptThread.js";
 import { handleWhatsappGreeting } from "../utils/handleWhatsappGreeting.js";
+import { getAudioWhatsappUrl } from "../utils/getAudioWhatsappUrl.js";
 
 export const userMiddleware = async (req, res, next) => {
 	const body = req.body;
@@ -101,6 +102,13 @@ export const userMiddleware = async (req, res, next) => {
 			console.log("Objeto Audio", audioObject)
 			const value = body.entry[0].changes[0].value
 			console.log("Value", value) 
+			const audioId = body.entry[0].changes[0].value.messages[0].id
+			console.log("Audio Id:", audioId)
+			// Make a get request to access the audio URL
+			const audioUrl = await getAudioWhatsappUrl(audioId)
+			console.log("AudioURL:", audioUrl)
+			// Download the URL
+
 		}
 
 		//-------- Messenger ----------//
