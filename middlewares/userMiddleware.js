@@ -33,9 +33,9 @@ export const userMiddleware = async (req, res, next) => {
 		console.log("Other object");
 	}
 
-	// ------ WhatsApp -------//
+	// ------ WhatsApp --------//
 	if (channel === "WhatsApp" && body?.entry[0]) {
-		let typeOfWhatsappMessage = body.entry[0].changes[0].value.messages[0].type;
+		let typeOfWhatsappMessage = body.entry[0].changes[0]?.value?.messages[0]?.type ? body.entry[0].changes[0].value.messages[0].type : "other type" 
 		console.log("Type of WA message:", typeOfWhatsappMessage);
 		if (typeOfWhatsappMessage === "text") {
 			const message = body.entry[0].changes[0].value.messages[0].text.body;
