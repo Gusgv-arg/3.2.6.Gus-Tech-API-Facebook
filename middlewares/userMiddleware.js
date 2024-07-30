@@ -22,6 +22,7 @@ export const userMiddleware = async (req, res, next) => {
 		);
 		if (status !== null) {
 			res.status(200).send("EVENT_RECEIVED");
+			return
 		}
 	} else if (channel === "Messenger" && body?.entry[0]?.messaging[0]) {
 		console.log(
