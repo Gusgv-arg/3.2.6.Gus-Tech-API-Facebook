@@ -14,7 +14,7 @@ export const getAudioWhatsappUrl = async (audioId) => {
 				'Authorization': `Bearer ${whatsappToken}`
 			}
 		});
-		console.log("Audio URL en getAudioWhatsappUrl", audioUrl);
+		//console.log("Audio URL en getAudioWhatsappUrl", audioUrl);
 		return audioUrl;
 	} catch (error) {
 		console.log("Error en getAudioWhatsappUrl", error.message);

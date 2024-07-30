@@ -106,7 +106,10 @@ export const userMiddleware = async (req, res, next) => {
 			console.log("Audio Id:", audioId)
 			// Make a get request to access the audio URL
 			const audioUrl = await getAudioWhatsappUrl(audioId)
-			console.log("AudioURL:", audioUrl)
+			console.log("AudioURL:", audioUrl.data.url)
+
+			//----ESTO DESPUES SACARLO!! TIENE QUE HACER EL RES CON LA RESPUESTA DEL GPT ----//
+			res.status(200).send("EVENT_RECEIVED")
 			// Download the URL
 
 		}
