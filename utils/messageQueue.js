@@ -37,13 +37,19 @@ export class MessageQueue {
 						response.messageGpt,
 						response.threadId
 					);
+
+					// Save the message in the database
+					await saveMessageInDb(senderId, response.messageGpt, response.threadId, newMessage);
+				
 				} else if (newMessage.channel === "whatsapp") {
 					// Send the response back to the user by Whatsapp
-					handleWhatsappMessage(
+					await handleWhatsappMessage(
 						response.senderId,
-						response.messageGpt,
-						response.threadId
+						response.messageGpt						
 					);
+
+					// Save the message in the database
+					await saveMessageInDb(senderId, response.messageGpt, response.threadId, newMessage);
 				}
 			} catch (error) {
 				console.error(`14. Error processing message: ${error.message}`);

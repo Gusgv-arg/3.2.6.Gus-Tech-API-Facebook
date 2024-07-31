@@ -1,7 +1,6 @@
 import OpenAI from "openai";
 import dotenv from "dotenv";
 import Leads from "../models/leads.js";
-import { saveMessageInDb } from "./saveMessageInDb.js";
 import { getStockPrice } from "../functions/getStockPrice.js";
 
 dotenv.config();

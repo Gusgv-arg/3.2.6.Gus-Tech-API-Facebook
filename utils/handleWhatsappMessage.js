@@ -8,11 +8,7 @@ const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
 
 // Function that sends GPT message to the user and saves in DB
-export const handleWhatsappMessage = async (
-	senderId,
-	messageGpt,
-	thread_id
-) => {
+export const handleWhatsappMessage = async (senderId, messageGpt) => {
 	try {
 		const name = "MegaBot";
 		const channel = "whatsapp";
@@ -45,10 +41,7 @@ export const handleWhatsappMessage = async (
 					"Error enviando a Facebook------------>",
 					error.response ? error.response.data : error.message
 				);
-			});
-
-		// Save the message in the database
-		await saveMessageInDb(senderId, messageGpt, thread_id, name, channel);
+			});		
 
 	} catch (error) {
 		console.log("Error en handleWhatsappMessage", error.message);

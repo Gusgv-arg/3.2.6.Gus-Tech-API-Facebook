@@ -6,15 +6,15 @@ const messageQueue = new MessageQueue();
 
 export const postWhatsappWebhookController = async (req, res) => {
 	const body = req.body;
-	const type = req.type
-  console.log("Type:", type)
-  //console.log("Lo que recibo x WhatsApp de la API de facebook -->", body);
-  //console.log("Changes-->", body.entry[0].changes[0])
-  //console.log("Contacts-->", body.entry[0].changes[0].value.contacts)
+	const type = req.type;
+	console.log("Type:", type);
+	//console.log("Lo que recibo x WhatsApp de la API de facebook -->", body);
+	//console.log("Changes-->", body.entry[0].changes[0])
+	//console.log("Contacts-->", body.entry[0].changes[0].value.contacts)
 
-  //LO PRIMERO QUE TENGO QUE HACER ES GRABAR EL MENSAJE DEL USUARIO EN LA BD!!!!
+	//LO PRIMERO QUE TENGO QUE HACER ES GRABAR EL MENSAJE DEL USUARIO EN LA BD!!!!
 
-  /* Object from Webhook
+	/* Object from Webhook
      {
         "object": "whatsapp_business_account",
         "entry": [{
@@ -55,18 +55,19 @@ export const postWhatsappWebhookController = async (req, res) => {
 			body.entry[0].changes[0].value.messages &&
 			body.entry[0].changes[0].value.messages[0]
 		) {
-			const message = body.entry[0].changes[0].value.messages[0].text.body;
+			const message = type === "audio" ? "Audio message" : body.entry[0].changes[0].value.messages[0].text.body;
 			const userPhone = body.entry[0].changes[0].value.messages[0].from;
 			const channel = "whatsapp";
-			const name = body.entry[0].changes[0].value.contacts[0].profile.name
-      //console.log("User message-->", message);
+			const name = body.entry[0].changes[0].value.contacts[0].profile.name;
+			//console.log("User message-->", message);
 			//console.log("User message phone-->", userPhone);
 
 			// Get the message sent by the user & create an object to send it to the queue
 			const userMessage = {
 				channel: channel,
 				message: message,
-        name: name
+				name: name,
+				type: type,
 			};
 
 			messageQueue.enqueueMessage(userMessage, userPhone);
@@ -75,6 +76,7 @@ export const postWhatsappWebhookController = async (req, res) => {
 			res.status(200).send("EVENT_RECEIVED");
 		}
 	} else {
+		console.log("Object send by WhatsApp not processed by this API", body);
 		res.status(400).send("Not processed by this API");
 	}
 };
