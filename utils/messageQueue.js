@@ -1,3 +1,5 @@
+import audioToText from "./audioToText.js";
+import { getAudioWhatsappUrl } from "./getAudioWhatsappUrl.js";
 import { handleMessengerMessage } from "./handleMessengerMessage.js";
 import { handleWhatsappMessage } from "./handleWhatsappMessage.js";
 import { processMessageWithAssistant } from "./processMessageWithAssistant.js";
@@ -21,9 +23,24 @@ export class MessageQueue {
 
 		while (queue.messages.length > 0) {
 			// Take the first record and delete it from the queue
-			const newMessage = queue.messages.shift();
+			let newMessage = queue.messages.shift();
 
 			try {
+				
+				// Check if its an audio and transcribe it to text
+				if (newMessage.type === "audio"){
+					// Get the Audio URL from WhatApp
+					const audioUrl = await getAudioWhatsappUrl(newMessage.audioId)
+					console.log("Audio URL:", audioUrl)
+
+					// Call whisper GPT to transcribe audio to text 
+					const audioTranscription = await audioToText(audioUrl)
+					console.log("Audio transcription:", audioTranscription)
+					
+					// Replace message with transcription
+					newMessage.message = audioTranscription
+				}
+
 				// Process the message with the Assistant
 				const response = await processMessageWithAssistant(
 					senderId,
