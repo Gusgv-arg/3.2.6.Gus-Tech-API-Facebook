@@ -6,7 +6,9 @@ const messageQueue = new MessageQueue();
 
 export const postWhatsappWebhookController = async (req, res) => {
 	const body = req.body;
-	//console.log("Lo que recibo x WhatsApp de la API de facebook -->", body);
+	const type = req.type
+  console.log("Type:", type)
+  //console.log("Lo que recibo x WhatsApp de la API de facebook -->", body);
   //console.log("Changes-->", body.entry[0].changes[0])
   //console.log("Contacts-->", body.entry[0].changes[0].value.contacts)
 
