@@ -8,9 +8,9 @@ export const postWhatsappWebhookController = async (req, res) => {
 	const body = req.body;
 	const type = req.type;
 	console.log("Type:", type);
-
+	let audioId
 	if (type === "audio") {
-		const audioId = body.entry[0].changes[0].value.messages[0].audio
+		audioId = body.entry[0].changes[0].value.messages[0].audio
 			? body.entry[0].changes[0].value.messages[0].audio.id
 			: "otro formato";
 		console.log("Audio ID:", audioId);		
