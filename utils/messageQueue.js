@@ -3,6 +3,7 @@ import { getAudioWhatsappUrl } from "./getAudioWhatsappUrl.js";
 import { handleMessengerMessage } from "./handleMessengerMessage.js";
 import { handleWhatsappMessage } from "./handleWhatsappMessage.js";
 import { processMessageWithAssistant } from "./processMessageWithAssistant.js";
+import { saveMessageInDb } from "./saveMessageInDb.js";
 
 // Class definition for the Queue
 export class MessageQueue {
