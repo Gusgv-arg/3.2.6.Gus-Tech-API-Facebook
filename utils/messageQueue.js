@@ -32,10 +32,10 @@ export class MessageQueue {
 				if (newMessage.type === "audio"){
 					// Get the Audio URL from WhatApp
 					const audioUrl = await getAudioWhatsappUrl(newMessage.audioId)
-					console.log("Audio URL:", audioUrl)
+					console.log("Audio URL:", audioUrl.data.url)
 
 					// Call whisper GPT to transcribe audio to text 
-					const audioTranscription = await audioToText(audioUrl)
+					const audioTranscription = await audioToText(audioUrl.data.url)
 					console.log("Audio transcription:", audioTranscription)
 					
 					// Replace message with transcription
