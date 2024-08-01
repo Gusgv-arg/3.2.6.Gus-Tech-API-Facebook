@@ -48,9 +48,10 @@ export class MessageQueue {
 					// Create a FormData object
 					/* let formData = new FormData();
 					formData.append("file", buffer, {
-						filename: "grabacion.ogg",
+						filename: "audio.ogg",
 						contentType: "audio/ogg",
-					}); */
+					});
+					formData.append("model", "whisper-1"); */
 
 					// Call whisper GPT to transcribe audio to text
 					const audioTranscription = await audioToText(buffer);
