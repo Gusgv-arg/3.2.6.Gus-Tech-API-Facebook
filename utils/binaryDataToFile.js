@@ -4,8 +4,6 @@ import os from "os";
 import { fileTypeFromBuffer } from 'file-type';
 import ffmpeg from 'fluent-ffmpeg';
 
-const COMPATIBLE_FORMATS = ['flac', 'm4a', 'mp3', 'mp4', 'mpeg', 'mpga', 'oga', 'ogg', 'wav', 'webm'];
-
 export const binaryDataToFile = async (binaryData) => {
     const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "audio-"));
     
@@ -23,20 +21,6 @@ export const binaryDataToFile = async (binaryData) => {
 
     console.log(`Original file type: ${type.ext}, size: ${binaryData.length} bytes`);
 
-    try {
-        const audioInfo = await getAudioInfo(originalFilePath);
-        console.log('Audio info:', audioInfo);
-
-        const currentFormat = audioInfo.format.format_name.split(',')[0];
-        
-        if (COMPATIBLE_FORMATS.includes(currentFormat)) {
-            console.log(`File is already in a compatible format (${currentFormat}), no conversion needed`);
-            return { filePath: originalFilePath, mimeType: `audio/${currentFormat}` };
-        }
-    } catch (error) {
-        console.error('Error getting audio info:', error.message);
-    }
-
     const convertedFilename = 'converted.mp3';
     const convertedFilePath = path.join(tempDir, convertedFilename);
 
@@ -51,25 +35,11 @@ export const binaryDataToFile = async (binaryData) => {
     const convertedStats = await fs.stat(convertedFilePath);
     console.log(`Converted file size: ${convertedStats.size} bytes`);
 
-    // Clean up the original file if it was converted
-    if (originalFilePath !== convertedFilePath) {
-        await fs.unlink(originalFilePath);
-    }
+    // Clean up the original file
+    await fs.unlink(originalFilePath);
 
     return { filePath: convertedFilePath, mimeType: 'audio/mpeg' };
 };
-
-function getAudioInfo(filePath) {
-    return new Promise((resolve, reject) => {
-        ffmpeg.ffprobe(filePath, (err, info) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(info);
-            }
-        });
-    });
-}
 
 async function convertAudio(inputPath, outputPath) {
     return new Promise((resolve, reject) => {

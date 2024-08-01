@@ -43,7 +43,9 @@ export class MessageQueue {
 					// Download audio from WhatsApp
 					const audioDownload = await downloadWhatsAppAudio(audioUrl)
 					console.log("Audio download:", audioDownload.data)
-
+					console.log("Audio download data type:", typeof audioDownload.data);
+					console.log("Audio download data length:", audioDownload.data.length);
+			
 					// Transform binary data to file
 					const {filePath, mimeType} = await binaryDataToFile(audioDownload.data)
 					console.log("Audio File:", filePath)
