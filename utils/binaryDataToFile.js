@@ -2,9 +2,13 @@ import { promises as fs } from "fs";
 import path from "path";
 import os from "os";
 import { fileTypeFromBuffer } from 'file-type';
+import ffmpeg from 'fluent-ffmpeg';
+import { promisify } from 'util';
+
+const ffmpegAsync = promisify(ffmpeg);
 
 export const binaryDataToFile = async (binaryData) => {
-	const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "audio-"));
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "audio-"));
     
     // Detect file type
     const type = await fileTypeFromBuffer(Buffer.from(binaryData));
@@ -13,10 +17,25 @@ export const binaryDataToFile = async (binaryData) => {
         throw new Error('Unable to determine file type');
     }
 
-    const filename = `audio.${type.ext}`;
-    const filePath = path.join(tempDir, filename);
+    const originalFilename = `original.${type.ext}`;
+    const originalFilePath = path.join(tempDir, originalFilename);
 
-    await fs.writeFile(filePath, Buffer.from(binaryData));
+    await fs.writeFile(originalFilePath, Buffer.from(binaryData));
 
-    return { filePath, mimeType: type.mime };
+    // Convert to ogg
+    const convertedFilename = 'converted.ogg';
+    const convertedFilePath = path.join(tempDir, convertedFilename);
+
+    await new Promise((resolve, reject) => {
+        ffmpeg(originalFilePath)
+            .toFormat('ogg')
+            .on('error', (err) => reject(err))
+            .on('end', () => resolve())
+            .save(convertedFilePath);
+    });
+
+    // Clean up the original file
+    await fs.unlink(originalFilePath);
+
+    return { filePath: convertedFilePath, mimeType: 'audio/ogg' };
 };
