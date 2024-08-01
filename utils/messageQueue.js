@@ -1,5 +1,4 @@
 import audioToText from "./audioToText.js";
-import { binaryDataToFile } from "./binaryDataToFile.js";
 import { downloadWhatsAppAudio } from "./downloadWhatsAppAudio.js";
 import { getAudioWhatsappUrl } from "./getAudioWhatsappUrl.js";
 import { handleMessengerMessage } from "./handleMessengerMessage.js";
@@ -8,6 +7,7 @@ import { processMessageWithAssistant } from "./processMessageWithAssistant.js";
 import { saveMessageInDb } from "./saveMessageInDb.js";
 import { promises as fs } from "fs";
 import path from "path";
+import FormData from "form-data";
 
 // Class definition for the Queue
 export class MessageQueue {
@@ -41,35 +41,19 @@ export class MessageQueue {
 					// Download audio from WhatsApp
 					const audioDownload = await downloadWhatsAppAudio(audioUrl);
 					console.log("Audio download:", audioDownload.data);
-					console.log("Audio download data type:", typeof audioDownload.data);
-					console.log("Audio download data length:", audioDownload.data.length);
 
-					let audioBuffer;
-					if (typeof audioDownload.data === "string") {
-						// If it's a base64 string, convert it to a buffer
-						audioBuffer = Buffer.from(audioDownload.data, "base64");
-					} else if (audioDownload.data instanceof Buffer) {
-						audioBuffer = audioDownload.data;
-					} else {
-						throw new Error("Unexpected audio data format");
-					}
+					// Create a buffer
+					const buffer = Buffer.from(audioDownload.data);
 
-					console.log("Audio buffer length:", audioBuffer.length);
-
-					// Transform binary data to file
-					const { filePath, mimeType } = await binaryDataToFile(audioBuffer);
-					console.log("Audio File:", filePath);
-
-					// Read the file
-					const fileBuffer = await fs.readFile(filePath);
-					console.log("FileBuffer:", fileBuffer);
+					// Create a FormData object
+					let formData = new FormData();
+					formData.append("file", buffer, {
+						filename: "grabacion.ogg",
+						contentType: "audio/ogg",
+					});
 
 					// Call whisper GPT to transcribe audio to text
-					const audioTranscription = await audioToText({
-						buffer: fileBuffer,
-						originalFilename: path.basename(filePath),
-						mimeType: mimeType,
-					});
+					const audioTranscription = await audioToText(formData);
 
 					console.log("Audio transcription:", audioTranscription);
 
