@@ -14,8 +14,7 @@ const openai = new OpenAI({
 async function audioToText(file) {
 	try {
 		const transcription = await openai.audio.transcriptions.create({
-			//file: fs.createReadStream(file.path),
-			file: file,
+			file: fs.createReadStream(file.path),
 			model: "whisper-1",
 		});
 		console.log("Audio transcription:", transcription.text)
