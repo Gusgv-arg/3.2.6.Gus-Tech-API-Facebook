@@ -1,4 +1,5 @@
 import audioToText from "./audioToText.js";
+import { downloadWhatsAppAudio } from "./downloadWhatsAppAudio.js";
 import { getAudioWhatsappUrl } from "./getAudioWhatsappUrl.js";
 import { handleMessengerMessage } from "./handleMessengerMessage.js";
 import { handleWhatsappMessage } from "./handleWhatsappMessage.js";
@@ -30,13 +31,17 @@ export class MessageQueue {
 				
 				// Check if its an audio and transcribe it to text
 				if (newMessage.type === "audio"){
-					// Get the Audio URL from WhatApp
-					const audioUrl = await getAudioWhatsappUrl(newMessage.audioId)
-					const audio = audioUrl.data.url
-					console.log("Audio URL:", audio)
+					// Get the Audio URL from WhatsApp
+					const audio = await getAudioWhatsappUrl(newMessage.audioId)
+					const audioUrl = audio.data.url
+					console.log("Audio URL:", audioUrl)
+
+					// Download audio from WhatsApp
+					const audioDownload = await downloadWhatsAppAudio(audioUrl)
+					console.log("Audio download:", audioDownload.data)
 
 					// Call whisper GPT to transcribe audio to text 
-					const audioTranscription = await audioToText(audio)
+					const audioTranscription = await audioToText(audioDownload.data)
 					
 					console.log("Audio transcription:", audioTranscription)
 					
