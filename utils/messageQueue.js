@@ -50,10 +50,15 @@ export class MessageQueue {
 					const fileBuffer = await fs.readFile(audioFile);
 					console.log("FileBuffer:", fileBuffer)
 
+					// Get the file extension
+    				const fileExtension = audioFile.split('.').pop().toLowerCase();
+					console.log("File extension:", fileExtension)
+
 					// Call whisper GPT to transcribe audio to text 
 					const audioTranscription = await audioToText({
 						buffer: fileBuffer,
-						originalFilename: 'audio.ogg'
+						originalFilename: `audio.${fileExtension}`,
+						mimeType: `audio/${fileExtension}`
 					})
 					
 					console.log("Audio transcription:", audioTranscription)

@@ -12,10 +12,10 @@ const openai = new OpenAI({
 	project: "proj_cLySVdd60XL8zbjd9zc8gGMH",
 });
 
-async function audioToText({ buffer, originalFilename }) {
+async function audioToText({ buffer, originalFilename, mimeType }) {
 	try {
-		const blob = new Blob([buffer], { type: 'audio/ogg' });
-        const file = new File([blob], originalFilename, { type: 'audio/ogg' });
+		const blob = new Blob([buffer], { type: mimeType });
+        const file = new File([blob], originalFilename, { type: mimeType });
 
         const transcription = await openai.audio.transcriptions.create({
             file: file,
