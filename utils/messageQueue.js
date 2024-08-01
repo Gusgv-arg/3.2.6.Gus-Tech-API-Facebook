@@ -34,6 +34,7 @@ export class MessageQueue {
 				
 				// Check if its an audio and transcribe it to text
 				if (newMessage.type === "audio"){
+					
 					// Get the Audio URL from WhatsApp
 					const audio = await getAudioWhatsappUrl(newMessage.audioId)
 					const audioUrl = audio.data.url
