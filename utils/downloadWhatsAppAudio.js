@@ -8,15 +8,12 @@ const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
 
 export const downloadWhatsAppAudio = async (audioUrl) => {
 	try {
-		const download = await axios.get(
-			audioUrl,
-			{ responseType: "arraybuffer" },
-			{
-				headers: {
-					Authorization: `Bearer ${whatsappToken}`,
-				},
-			}
-		);
+		const download = await axios.get(audioUrl, {
+			responseType: "arraybuffer",
+			headers: {
+				Authorization: `Bearer ${whatsappToken}`,
+			},
+		});
 		//console.log("Audio URL en getAudioWhatsappUrl", audioUrl);
 		return download;
 	} catch (error) {

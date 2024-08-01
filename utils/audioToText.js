@@ -12,11 +12,16 @@ const openai = new OpenAI({
 });
 
 async function audioToText(file) {
-	const transcription = await openai.audio.transcriptions.create({
-		file: fs.createReadStream(file.path),
-		model: "whisper-1",
-	});
-	return transcription.text;
+	try {		
+		const transcription = await openai.audio.transcriptions.create({
+			file: fs.createReadStream(file.path),
+			model: "whisper-1",
+		});
+		return transcription.text;
+	} catch (error) {
+		console.log("Error in audioToText:", error.message)
+		throw error
+	}
 }
 
 export default audioToText;
