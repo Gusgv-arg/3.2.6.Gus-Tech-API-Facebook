@@ -48,6 +48,7 @@ export class MessageQueue {
 
 					// Read the file
 					const fileBuffer = await fs.readFile(audioFile);
+					console.log("FileBuffer:", fileBuffer)
 
 					// Call whisper GPT to transcribe audio to text 
 					const audioTranscription = await audioToText({

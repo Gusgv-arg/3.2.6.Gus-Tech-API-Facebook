@@ -11,7 +11,7 @@ const openai = new OpenAI({
 	project: "proj_cLySVdd60XL8zbjd9zc8gGMH",
 });
 
-async function audioToText() {{ buffer, originalFilename }
+async function audioToText({ buffer, originalFilename }) {
 	try {
 		const stream = Readable.from(buffer);
         stream.path = originalFilename;
