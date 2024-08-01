@@ -55,7 +55,7 @@ export class MessageQueue {
 					// Call whisper GPT to transcribe audio to text 
 					const audioTranscription = await audioToText({
 						buffer: fileBuffer,
-						originalFilename: "audio.ogg",
+						originalFilename: path.basename(filePath),
 						mimeType: mimeType
 					})
 					
