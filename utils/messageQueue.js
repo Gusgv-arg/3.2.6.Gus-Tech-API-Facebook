@@ -7,6 +7,7 @@ import { handleWhatsappMessage } from "./handleWhatsappMessage.js";
 import { processMessageWithAssistant } from "./processMessageWithAssistant.js";
 import { saveMessageInDb } from "./saveMessageInDb.js";
 import { promises as fs } from 'fs';
+import path from "path";
 
 // Class definition for the Queue
 export class MessageQueue {
