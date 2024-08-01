@@ -43,22 +43,22 @@ export class MessageQueue {
 					console.log("Audio download:", audioDownload.data)
 
 					// Transform binary data to file
-					const audioFile = await binaryDataToFile(audioDownload.data, 'audio.ogg')
-					console.log("Audio File:", audioFile)
+					const {filePath, mimeType} = await binaryDataToFile(audioDownload.data)
+					console.log("Audio File:", filePath)
 
 					// Read the file
-					const fileBuffer = await fs.readFile(audioFile);
+					const fileBuffer = await fs.readFile(filePath);
 					console.log("FileBuffer:", fileBuffer)
 
 					// Get the file extension
-    				const fileExtension = audioFile.split('.').pop().toLowerCase();
+    				const fileExtension = path.extname(filePath).slice(1);
 					console.log("File extension:", fileExtension)
 
 					// Call whisper GPT to transcribe audio to text 
 					const audioTranscription = await audioToText({
 						buffer: fileBuffer,
 						originalFilename: `audio.${fileExtension}`,
-						mimeType: `audio/${fileExtension}`
+						mimeType: mimeType
 					})
 					
 					console.log("Audio transcription:", audioTranscription)
@@ -67,7 +67,7 @@ export class MessageQueue {
 					newMessage.message = audioTranscription
 
 					// Clean up: remove the temporary file
-					await fs.unlink(audioFile);
+					await fs.unlink(filePath);
 				}
 
 				// Process the message with the Assistant
