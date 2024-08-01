@@ -6,7 +6,7 @@ import { handleMessengerMessage } from "./handleMessengerMessage.js";
 import { handleWhatsappMessage } from "./handleWhatsappMessage.js";
 import { processMessageWithAssistant } from "./processMessageWithAssistant.js";
 import { saveMessageInDb } from "./saveMessageInDb.js";
-import { promises as fs } from 'fs';
+import { promises as fs } from "fs";
 import path from "path";
 
 // Class definition for the Queue
@@ -31,40 +31,50 @@ export class MessageQueue {
 			let newMessage = queue.messages.shift();
 
 			try {
-				
 				// Check if its an audio and transcribe it to text
-				if (newMessage.type === "audio"){
-					
+				if (newMessage.type === "audio") {
 					// Get the Audio URL from WhatsApp
-					const audio = await getAudioWhatsappUrl(newMessage.audioId)
-					const audioUrl = audio.data.url
-					console.log("Audio URL:", audioUrl)
+					const audio = await getAudioWhatsappUrl(newMessage.audioId);
+					const audioUrl = audio.data.url;
+					console.log("Audio URL:", audioUrl);
 
 					// Download audio from WhatsApp
-					const audioDownload = await downloadWhatsAppAudio(audioUrl)
-					console.log("Audio download:", audioDownload.data)
+					const audioDownload = await downloadWhatsAppAudio(audioUrl);
+					console.log("Audio download:", audioDownload.data);
 					console.log("Audio download data type:", typeof audioDownload.data);
 					console.log("Audio download data length:", audioDownload.data.length);
-			
+
+					let audioBuffer;
+					if (typeof audioDownload.data === "string") {
+						// If it's a base64 string, convert it to a buffer
+						audioBuffer = Buffer.from(audioDownload.data, "base64");
+					} else if (audioDownload.data instanceof Buffer) {
+						audioBuffer = audioDownload.data;
+					} else {
+						throw new Error("Unexpected audio data format");
+					}
+
+					console.log("Audio buffer length:", audioBuffer.length);
+
 					// Transform binary data to file
-					const {filePath, mimeType} = await binaryDataToFile(audioDownload.data)
-					console.log("Audio File:", filePath)
+					const { filePath, mimeType } = await binaryDataToFile(audioBuffer);
+					console.log("Audio File:", filePath);
 
 					// Read the file
 					const fileBuffer = await fs.readFile(filePath);
-					console.log("FileBuffer:", fileBuffer)
-					
-					// Call whisper GPT to transcribe audio to text 
+					console.log("FileBuffer:", fileBuffer);
+
+					// Call whisper GPT to transcribe audio to text
 					const audioTranscription = await audioToText({
 						buffer: fileBuffer,
 						originalFilename: path.basename(filePath),
-						mimeType: mimeType
-					})
-					
-					console.log("Audio transcription:", audioTranscription)
-					
+						mimeType: mimeType,
+					});
+
+					console.log("Audio transcription:", audioTranscription);
+
 					// Replace message with transcription
-					newMessage.message = audioTranscription
+					newMessage.message = audioTranscription;
 
 					// Clean up: remove the temporary file
 					await fs.unlink(filePath);
@@ -85,22 +95,29 @@ export class MessageQueue {
 					);
 
 					// Save the message in the database
-					await saveMessageInDb(senderId, response.messageGpt, response.threadId, newMessage);
-				
+					await saveMessageInDb(
+						senderId,
+						response.messageGpt,
+						response.threadId,
+						newMessage
+					);
 				} else if (newMessage.channel === "whatsapp") {
 					// Send the response back to the user by Whatsapp
-					await handleWhatsappMessage(
-						response.senderId,
-						response.messageGpt						
-					);
+					await handleWhatsappMessage(response.senderId, response.messageGpt);
 
 					// Save the message in the database
-					await saveMessageInDb(senderId, response.messageGpt, response.threadId, newMessage);
+					await saveMessageInDb(
+						senderId,
+						response.messageGpt,
+						response.threadId,
+						newMessage
+					);
 				}
 			} catch (error) {
 				console.error(`14. Error processing message: ${error.message}`);
 				// Send error message to the user
-				const errorMessage = "¡Disculpas! Hubo un error en el procesamiento del mensaje. Por favor vuelve a intentar más tarde.";
+				const errorMessage =
+					"¡Disculpas! Hubo un error en el procesamiento del mensaje. Por favor vuelve a intentar más tarde.";
 
 				// Change flag to allow next message processing
 				queue.processing = false;
