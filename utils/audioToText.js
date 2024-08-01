@@ -11,11 +11,11 @@ const openai = new OpenAI({
 	project: "proj_cLySVdd60XL8zbjd9zc8gGMH",
 });
 
-async function audioToText(file) {
+async function audioToText(buffer) {
 	try {		
 		const transcription = await openai.audio.transcriptions.create({
 			//file: fs.createReadStream(file.path),
-			file: file,
+			file: buffer,
 			model: "whisper-1",
 		});
 		return transcription.text;

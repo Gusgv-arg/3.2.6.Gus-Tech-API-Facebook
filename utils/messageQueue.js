@@ -46,22 +46,19 @@ export class MessageQueue {
 					const buffer = Buffer.from(audioDownload.data);
 
 					// Create a FormData object
-					let formData = new FormData();
+					/* let formData = new FormData();
 					formData.append("file", buffer, {
 						filename: "grabacion.ogg",
 						contentType: "audio/ogg",
-					});
+					}); */
 
 					// Call whisper GPT to transcribe audio to text
-					const audioTranscription = await audioToText(formData);
+					const audioTranscription = await audioToText(buffer);
 
 					console.log("Audio transcription:", audioTranscription);
 
 					// Replace message with transcription
-					newMessage.message = audioTranscription;
-
-					// Clean up: remove the temporary file
-					await fs.unlink(filePath);
+					newMessage.message = audioTranscription;					
 				}
 
 				// Process the message with the Assistant
