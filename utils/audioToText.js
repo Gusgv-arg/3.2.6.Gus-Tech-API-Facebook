@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import dotenv from "dotenv";
-import { Readable } from 'stream';
+import { Blob } from 'buffer';
+import { File } from 'formdata-node';
 dotenv.config();
 
 const API_KEY = process.env.API_KEY_CHATGPT;
@@ -13,11 +14,11 @@ const openai = new OpenAI({
 
 async function audioToText({ buffer, originalFilename }) {
 	try {
-		const stream = Readable.from(buffer);
-        stream.path = originalFilename;
+		const blob = new Blob([buffer], { type: 'audio/ogg' });
+        const file = new File([blob], originalFilename, { type: 'audio/ogg' });
 
         const transcription = await openai.audio.transcriptions.create({
-            file: stream,
+            file: file,
             model: "whisper-1",
         });
         console.log("Audio transcription:", transcription.text)
