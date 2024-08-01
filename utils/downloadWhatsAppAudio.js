@@ -7,9 +7,9 @@ const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
 
 export const downloadWhatsAppAudio = async (audioUrl)=>{
-    const url = `https://graph.facebook.com/v20.0/${audioUrl}`;
+    
 	try {
-		const download = await axios.get(url, {
+		const download = await axios.get(audioUrl, {
 			headers: {
 				'Authorization': `Bearer ${whatsappToken}`
 			}
