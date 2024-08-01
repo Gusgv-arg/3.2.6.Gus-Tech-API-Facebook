@@ -57,9 +57,10 @@ export class MessageQueue {
 					// Create FormData object
 					const formData = new FormData();
 					formData.append('file', blob, 'audio.ogg');
+					console.log("FormData:", formData)
 
 					// Call whisper GPT to transcribe audio to text 
-					const audioTranscription = await audioToText(formData)
+					const audioTranscription = await audioToText(formData.file[0])
 					
 					console.log("Audio transcription:", audioTranscription)
 					
