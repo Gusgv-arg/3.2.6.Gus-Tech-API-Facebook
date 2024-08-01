@@ -35,7 +35,9 @@ export class MessageQueue {
 					console.log("Audio URL:", audioUrl.data.url)
 
 					// Call whisper GPT to transcribe audio to text 
-					const audioTranscription = await audioToText(audioUrl.data.url)
+					//const audioTranscription = await audioToText(audioUrl.data.url)
+					const audio = "https://lookaside.fbsbx.com/whatsapp_business/attachments/"
+					const audioTranscription = await audioToText(audio)
 					console.log("Audio transcription:", audioTranscription)
 					
 					// Replace message with transcription
@@ -72,7 +74,7 @@ export class MessageQueue {
 			} catch (error) {
 				console.error(`14. Error processing message: ${error.message}`);
 				// Send error message to the user
-				//const errorMessage = await sendErrorMessage(newMessage);
+				const errorMessage = "¡Disculpas! Hubo un error en el procesamiento del mensaje. Por favor vuelve a intentar más tarde.";
 
 				// Change flag to allow next message processing
 				queue.processing = false;
