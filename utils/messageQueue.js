@@ -1,4 +1,5 @@
 import audioToText from "./audioToText.js";
+import { binaryDataToFile } from "./binaryDataToFile.js";
 import { downloadWhatsAppAudio } from "./downloadWhatsAppAudio.js";
 import { getAudioWhatsappUrl } from "./getAudioWhatsappUrl.js";
 import { handleMessengerMessage } from "./handleMessengerMessage.js";
@@ -40,8 +41,12 @@ export class MessageQueue {
 					const audioDownload = await downloadWhatsAppAudio(audioUrl)
 					console.log("Audio download:", audioDownload.data)
 
+					// Transform binary data to file
+					const audioFile = await binaryDataToFile(audioDownload.data, 'audio.ogg')
+					console.log("Audio File:", audioFile)
+
 					// Call whisper GPT to transcribe audio to text 
-					const audioTranscription = await audioToText(audioDownload.data)
+					const audioTranscription = await audioToText(audioFile)
 					
 					console.log("Audio transcription:", audioTranscription)
 					
