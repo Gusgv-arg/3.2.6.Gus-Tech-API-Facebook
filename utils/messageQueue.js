@@ -6,6 +6,7 @@ import { handleMessengerMessage } from "./handleMessengerMessage.js";
 import { handleWhatsappMessage } from "./handleWhatsappMessage.js";
 import { processMessageWithAssistant } from "./processMessageWithAssistant.js";
 import { saveMessageInDb } from "./saveMessageInDb.js";
+import { promises as fs } from 'fs';
 
 // Class definition for the Queue
 export class MessageQueue {
@@ -45,13 +46,21 @@ export class MessageQueue {
 					const audioFile = await binaryDataToFile(audioDownload.data, 'audio.ogg')
 					console.log("Audio File:", audioFile)
 
+					// Create FormData object
+					const formData = new FormData();
+					formData.append('file', await fs.readFile(audioFile), 'audio.ogg');
+					console.log("FormData:", formData)
+
 					// Call whisper GPT to transcribe audio to text 
-					const audioTranscription = await audioToText(audioFile)
+					const audioTranscription = await audioToText(formData)
 					
 					console.log("Audio transcription:", audioTranscription)
 					
 					// Replace message with transcription
 					newMessage.message = audioTranscription
+
+					// Clean up: remove the temporary file
+					await fs.unlink(audioFile);
 				}
 
 				// Process the message with the Assistant
