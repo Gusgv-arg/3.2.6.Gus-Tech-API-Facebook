@@ -15,6 +15,6 @@ export const handleTestMessage = async (sender_psid, messageGpt, thread_id) => {
 		return
 	} catch (error) {
 		console.log("Error en handleMessage", error.message);
-		res.status(404).send(error.message);
+		throw error;
 	}
 };

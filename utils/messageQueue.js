@@ -36,22 +36,14 @@ export class MessageQueue {
 					// Get the Audio URL from WhatsApp
 					const audio = await getAudioWhatsappUrl(newMessage.audioId);
 					const audioUrl = audio.data.url;
-					console.log("Audio URL:", audioUrl);
+					//console.log("Audio URL:", audioUrl);
 
 					// Download audio from WhatsApp
 					const audioDownload = await downloadWhatsAppAudio(audioUrl);
-					console.log("Audio download:", audioDownload.data);
+					//console.log("Audio download:", audioDownload.data);
 
 					// Create a buffer
 					const buffer = Buffer.from(audioDownload.data);
-
-					// Create a FormData object
-					/* let formData = new FormData();
-					formData.append("file", buffer, {
-						filename: "audio.ogg",
-						contentType: "audio/ogg",
-					});
-					formData.append("model", "whisper-1"); */
 
 					// Call whisper GPT to transcribe audio to text
 					const audioTranscription = await audioToText(buffer);
@@ -59,7 +51,7 @@ export class MessageQueue {
 					console.log("Audio transcription:", audioTranscription);
 
 					// Replace message with transcription
-					newMessage.message = audioTranscription;					
+					newMessage.message = audioTranscription;
 				}
 
 				// Process the message with the Assistant

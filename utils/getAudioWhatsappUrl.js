@@ -11,12 +11,13 @@ export const getAudioWhatsappUrl = async (audioId) => {
 	try {
 		const audioUrl = await axios.get(url, {
 			headers: {
-				'Authorization': `Bearer ${whatsappToken}`
-			}
+				Authorization: `Bearer ${whatsappToken}`,
+			},
 		});
 		//console.log("Audio URL en getAudioWhatsappUrl", audioUrl);
 		return audioUrl;
 	} catch (error) {
 		console.log("Error en getAudioWhatsappUrl", error.message);
+		throw error;
 	}
 };

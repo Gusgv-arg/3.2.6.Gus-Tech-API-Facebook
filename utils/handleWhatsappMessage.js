@@ -12,7 +12,7 @@ export const handleWhatsappMessage = async (senderId, messageGpt) => {
 	try {
 		const name = "MegaBot";
 		const channel = "whatsapp";
-		
+
 		// Posts the message to Whatsapp
 		const url = `https://graph.facebook.com/v20.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
 		const data = {
@@ -41,10 +41,9 @@ export const handleWhatsappMessage = async (senderId, messageGpt) => {
 					"Error enviando a Facebook------------>",
 					error.response ? error.response.data : error.message
 				);
-			});		
-
+			});
 	} catch (error) {
 		console.log("Error en handleWhatsappMessage", error.message);
-		res.status(404).send(error.message);
+		throw error;
 	}
 };

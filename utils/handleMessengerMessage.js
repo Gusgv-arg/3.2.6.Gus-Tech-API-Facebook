@@ -42,6 +42,6 @@ export const handleMessengerMessage = async (senderId, messageGpt) => {
 			});
 	} catch (error) {
 		console.log("Error en handleMessengerMessage", error.message);
-		res.status(404).send(error.message);
+		throw error;
 	}
 };

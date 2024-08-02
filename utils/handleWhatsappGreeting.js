@@ -39,9 +39,8 @@ export const handleWhatsappGreeting = async (name, userPhone) => {
 					error.response ? error.response.data : error.message
 				);
 			});
-		
 	} catch (error) {
 		console.log("Error en handleWhatsappGreeting", error.message);
-		res.status(404).send(error.message);
+		throw error;
 	}
 };

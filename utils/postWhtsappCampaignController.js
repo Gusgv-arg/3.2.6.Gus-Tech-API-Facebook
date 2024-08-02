@@ -51,5 +51,8 @@ export const postWhatsappCampaignController = async (req, res) => {
 			});
 
 		res.status(200).send("EVENT_RECEIVED");
-	} catch (error) {}
+	} catch (error) {
+		console.log("Error in postWhatsappCampaignController.js:", error.message);
+		throw error;
+	}
 };

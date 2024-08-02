@@ -31,11 +31,11 @@ export const saveMessageInDb = async (
 			// Concatenate the new messages from user && GPT to the existing content
 			let newContent;
 			newContent = `${lead.content}\n${currentDateTime} - ${newMessage.name}: ${newMessage.message}\nMegaBot: ${messageGpt}`;
-			
+
 			// Update the lead content
 			lead.content = newContent;
 			lead.channel = newMessage.channel;
-			lead.thread_id = threadId
+			lead.thread_id = threadId;
 
 			// Save the updated lead
 			await lead.save();

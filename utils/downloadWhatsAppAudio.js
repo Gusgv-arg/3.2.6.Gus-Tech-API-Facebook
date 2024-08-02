@@ -18,5 +18,6 @@ export const downloadWhatsAppAudio = async (audioUrl) => {
 		return download;
 	} catch (error) {
 		console.log("Error en downloadWhatsAppAudio", error.message);
+		throw error;
 	}
 };
