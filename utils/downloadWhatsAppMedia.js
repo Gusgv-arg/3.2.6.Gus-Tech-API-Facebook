@@ -6,7 +6,7 @@ dotenv.config();
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
 
-export const downloadWhatsAppAudio = async (audioUrl) => {
+export const downloadWhatsAppMedia = async (audioUrl) => {
 	try {
 		const download = await axios.get(audioUrl, {
 			responseType: "arraybuffer",
@@ -17,7 +17,7 @@ export const downloadWhatsAppAudio = async (audioUrl) => {
 		//console.log("Audio URL en getAudioWhatsappUrl", audioUrl);
 		return download;
 	} catch (error) {
-		console.log("Error en downloadWhatsAppAudio", error.message);
+		console.log("Error en downloadWhatsAppMedia", error.message);
 		throw error;
 	}
 };

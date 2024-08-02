@@ -6,7 +6,7 @@ dotenv.config();
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
 
-export const getAudioWhatsappUrl = async (audioId) => {
+export const getMediaWhatsappUrl = async (audioId) => {
 	const url = `https://graph.facebook.com/v20.0/${audioId}?phone_number_id=${myPhoneNumberId}`;
 	try {
 		const audioUrl = await axios.get(url, {

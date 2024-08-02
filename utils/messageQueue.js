@@ -1,13 +1,10 @@
 import audioToText from "./audioToText.js";
-import { downloadWhatsAppAudio } from "./downloadWhatsAppAudio.js";
-import { getAudioWhatsappUrl } from "./getAudioWhatsappUrl.js";
+import { downloadWhatsAppMedia } from "./downloadWhatsAppMedia.js";
+import { getMediaWhatsappUrl } from "./getMediaWhatsappUrl.js";
 import { handleMessengerMessage } from "./handleMessengerMessage.js";
 import { handleWhatsappMessage } from "./handleWhatsappMessage.js";
 import { processMessageWithAssistant } from "./processMessageWithAssistant.js";
 import { saveMessageInDb } from "./saveMessageInDb.js";
-import { promises as fs } from "fs";
-import path from "path";
-import FormData from "form-data";
 
 // Class definition for the Queue
 export class MessageQueue {
@@ -34,12 +31,12 @@ export class MessageQueue {
 				// Check if its an audio and transcribe it to text
 				if (newMessage.type === "audio") {
 					// Get the Audio URL from WhatsApp
-					const audio = await getAudioWhatsappUrl(newMessage.audioId);
+					const audio = await getMediaWhatsappUrl(newMessage.audioId);
 					const audioUrl = audio.data.url;
 					//console.log("Audio URL:", audioUrl);
 
 					// Download audio from WhatsApp
-					const audioDownload = await downloadWhatsAppAudio(audioUrl);
+					const audioDownload = await downloadWhatsAppMedia(audioUrl);
 					//console.log("Audio download:", audioDownload.data);
 
 					// Create a buffer
@@ -52,6 +49,16 @@ export class MessageQueue {
 
 					// Replace message with transcription
 					newMessage.message = audioTranscription;
+				
+				} else if (newMessage.type === "image") {
+					// Get the Image URL from WhatsApp
+					const image = await getMediaWhatsappUrl(newMessage.imageId);
+					const imageUrl = image.data.url;
+					console.log("Image URL:", imageUrl);
+
+					// Download image from WhatsApp
+					const imageDownload = await downloadWhatsAppMedia(imageUrl);
+					console.log("Image download:", imageDownload.data);
 				}
 
 				// Process the message with the Assistant
