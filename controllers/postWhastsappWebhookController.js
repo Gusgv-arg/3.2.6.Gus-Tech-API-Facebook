@@ -7,13 +7,14 @@ const messageQueue = new MessageQueue();
 export const postWhatsappWebhookController = async (req, res) => {
 	const body = req.body;
 	const type = req.type;
-	console.log("Type:", type);
-	let audioId
+	console.log("Messages", body.entry[0].changes[0].value.messages[0]);
+	
+	let audioId;
 	if (type === "audio") {
 		audioId = body.entry[0].changes[0].value.messages[0].audio
 			? body.entry[0].changes[0].value.messages[0].audio.id
 			: "otro formato";
-		console.log("Audio ID:", audioId);		
+		console.log("Audio ID:", audioId);
 	}
 	//console.log("Lo que recibo x WhatsApp de la API de facebook -->", body);
 	//console.log("Changes-->", body.entry[0].changes[0])
@@ -65,7 +66,11 @@ export const postWhatsappWebhookController = async (req, res) => {
 			const message =
 				type === "audio"
 					? "Audio message"
-					: body.entry[0].changes[0].value.messages[0].text.body;
+					: type === "image"
+					? "image message"
+					: type === "text"
+					? body.entry[0].changes[0].value.messages[0].text.body
+					: "unknown message";
 			const userPhone = body.entry[0].changes[0].value.messages[0].from;
 			const channel = "whatsapp";
 			const name = body.entry[0].changes[0].value.contacts[0].profile.name;
@@ -78,7 +83,7 @@ export const postWhatsappWebhookController = async (req, res) => {
 				message: message,
 				name: name,
 				type: type,
-				audioId: audioId ? audioId : ""
+				audioId: audioId ? audioId : "",
 			};
 
 			messageQueue.enqueueMessage(userMessage, userPhone);

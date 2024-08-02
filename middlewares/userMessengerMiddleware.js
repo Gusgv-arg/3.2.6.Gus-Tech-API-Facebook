@@ -4,7 +4,7 @@ import { createGptThread } from "../utils/createGptThread.js";
 import { handleWhatsappGreeting } from "../utils/handleWhatsappGreeting.js";
 
 // Middleware that only creates the user in DB if it doesn't exist or next()
-export const userMiddleware = async (req, res, next) => {
+export const userMessengerMiddleware = async (req, res, next) => {
 	const body = req.body;
 	console.log("Lo que recibo de la API de facebook -->", body);
 	let channel = body.entry[0].changes ? "WhatsApp" : "Messenger";
@@ -96,36 +96,8 @@ export const userMiddleware = async (req, res, next) => {
 
 			res.status(200).send("EVENT_RECEIVED");
 		} else {
-			/* // Concatenate the new message to the existing content
-				let newContent;
-				newContent = `${lead.content}\n${currentDateTime} - ${name}: ${message}`;
-
-				// Update the lead content
-				lead.content = newContent;
-
-				// Save the updated lead
-				await lead.save();
-				console.log("Lead updated with user message in Leads DB"); */
 			next();
 		}
-		/* else if (typeOfWhatsappMessage === "audio") {
-			console.log("Entre en else if de audio");
-			const audioObject = body.entry[0].changes[0].value.messages[0].audio ? body.entry[0].changes[0].value.messages[0].audio : "otro formato" 
-			console.log("Objeto Audio", audioObject)
-			const value = body.entry[0].changes[0].value
-			console.log("Value", value) 
-			const audioId = audioObject.id
-			console.log("Audio Id:", audioId)
-			// Make a get request to access the audio URL
-			const audioUrl = await getAudioWhatsappUrl(audioId)
-			console.log("AudioURL:", audioUrl.data.url)
-
-			//----ESTO DESPUES SACARLO!! TIENE QUE HACER EL RES CON LA RESPUESTA DEL GPT ----//
-			res.status(200).send("EVENT_RECEIVED")
-			// Download the URL
-
-		} */
-
 		//-------- Messenger ----------//
 	} else if (channel === "Messenger" && body?.object === "page") {
 		const senderId = body?.entry[0]?.messaging[0].sender.id;
@@ -155,17 +127,7 @@ export const userMiddleware = async (req, res, next) => {
 			});
 			console.log("Lead created in Leads DB");
 			next();
-		} else {
-			/* // Concatenate the new message to the existing content
-			let newContent;
-			newContent = `${lead.content}\n${currentDateTime} - ${name}: ${messengerMessage}`;
-
-			// Update the lead content
-			lead.content = newContent;
-
-			// Save the updated lead
-			await lead.save();
-			console.log("Lead updated with user message in Leads DB"); */
+		} else {			
 			next();
 		}
 	} else {

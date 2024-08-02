@@ -42,8 +42,11 @@ export const userWhatsAppMiddleware = async (req, res, next) => {
 		} else if (typeOfWhatsappMessage === "audio") {
 			message = "Audio message";
 			console.log("User message-->", message);
-		} else {
-			message = "Message with another format than audio or text";
+		} else if(typeOfWhatsappMessage === "image"){
+			message = "Image Message";
+			console.log("User message-->", message);		
+		}else {
+			message = "Message with another format than audio, text or image";
 			console.log("User message-->", message);
 		}
 
@@ -85,24 +88,7 @@ export const userWhatsAppMiddleware = async (req, res, next) => {
 			res.status(200).send("EVENT_RECEIVED");
 		} else {
 			next();
-		}
-		/* else if (typeOfWhatsappMessage === "audio") {
-			console.log("Entre en else if de audio");
-			const audioObject = body.entry[0].changes[0].value.messages[0].audio ? body.entry[0].changes[0].value.messages[0].audio : "otro formato" 
-			console.log("Objeto Audio", audioObject)
-			const value = body.entry[0].changes[0].value
-			console.log("Value", value) 
-			const audioId = audioObject.id
-			console.log("Audio Id:", audioId)
-			// Make a get request to access the audio URL
-			const audioUrl = await getAudioWhatsappUrl(audioId)
-			console.log("AudioURL:", audioUrl.data.url)
-
-			//----ESTO DESPUES SACARLO!! TIENE QUE HACER EL RES CON LA RESPUESTA DEL GPT ----//
-			res.status(200).send("EVENT_RECEIVED")
-			// Download the URL
-
-		} */
+		}		
 	} else {
 		console.log("Object received from WhatsApp API not processed by this API:", body);
 		res.status(200).send("EVENT_RECEIVED");
