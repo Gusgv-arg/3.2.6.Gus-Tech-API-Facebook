@@ -1,6 +1,7 @@
 import audioToText from "./audioToText.js";
 import { convertBufferImageToUrl } from "./convertBufferImageToUrl.js";
 import { downloadWhatsAppMedia } from "./downloadWhatsAppMedia.js";
+import { errorMessage1 } from "./errorMessages.js";
 import { getMediaWhatsappUrl } from "./getMediaWhatsappUrl.js";
 import { handleMessengerMessage } from "./handleMessengerMessage.js";
 import { handleWhatsappMessage } from "./handleWhatsappMessage.js";
@@ -110,8 +111,7 @@ export class MessageQueue {
 			} catch (error) {
 				console.error(`14. Error processing message: ${error.message}`);
 				// Send error message to the user
-				const errorMessage =
-					"¡Disculpas! Hubo un error en el procesamiento del mensaje. Por favor vuelve a intentar más tarde.";
+				const errorMessage = errorMessage1;
 
 				// Change flag to allow next message processing
 				queue.processing = false;
@@ -119,6 +119,8 @@ export class MessageQueue {
 				// If there is an error for a web message, I use callback function to send the error to the user
 				if (newMessage.channel === "web" && queue.responseCallback) {
 					queue.responseCallback(error, null);
+				} else if (newMessage.channel === "whatsapp"){
+					handleWhatsappMessage(response.senderId, errorMessage)
 				}
 
 				// Return to webhookController that has res.
