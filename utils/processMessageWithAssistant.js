@@ -109,6 +109,9 @@ export const processMessageWithAssistant = async (
 			runStatus = await openai.beta.threads.runs.retrieve(threadId, run.id);
 
 			while (runStatus.status !== "completed") {
+				console.log("run status---->", runStatus.status);
+				console.log("run last_error---->", runStatus.last_error);
+
 				if (runStatus.status === "requires_action") {
 					console.log("Requires action");
 
@@ -138,6 +141,7 @@ export const processMessageWithAssistant = async (
 						tool_outputs: toolsOutput,
 					});
 				} else if (runStatus.status === "failed") {
+					
 					currentAttempt++;
 					const runMessages = await openai.beta.threads.messages.list(threadId);
 					if (
