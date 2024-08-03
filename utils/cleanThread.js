@@ -1,4 +1,4 @@
-import Leads from "./models/Leads.js";
+import Leads from "../models/leads.js"
 
 export const cleanThread = async (senderId) => {
 	
