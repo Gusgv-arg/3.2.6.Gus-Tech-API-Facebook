@@ -1,15 +1,22 @@
-import { Buffer } from 'buffer';
-import { fileTypeFromBuffer } from 'file-type';
+import { Buffer } from "buffer";
+import { fileTypeFromBuffer } from "file-type";
 
 // New function to convert image buffer to data URI
-export const convertBufferImageToUrl = async (imageBuffer)=> {
-    if (!imageBuffer) return null;
+export const convertBufferImageToUrl = async (imageBufferData) => {
 
-    const fileType = await fileTypeFromBuffer(imageBuffer);
-    if (!fileType) {
-        throw new Error('Unsupported file type');
-    }
+    if (!imageBufferData) return null;
 
-    const base64Image = Buffer.from(imageBuffer).toString('base64');
-    return `data:${fileType.mime};base64,${base64Image}`;
-}
+    try {
+		const fileType = await fileTypeFromBuffer(imageBufferData);
+		if (!fileType) {
+			throw new Error("Unsupported file type");
+		}
+
+		const base64Image = Buffer.from(imageBufferData).toString("base64");
+		return `data:${fileType.mime};base64,${base64Image}`;
+
+	} catch (error) {
+		console.log("Error in convertBufferImageToUrl:", error.message);
+		throw error;
+	}
+};
