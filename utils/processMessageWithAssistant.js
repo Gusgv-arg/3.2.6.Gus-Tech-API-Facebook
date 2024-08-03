@@ -21,6 +21,7 @@ export const processMessageWithAssistant = async (
 	const assistantId = process.env.OPENAI_ASSISTANT_ID;
 	let threadId;
 	//console.log("sender_psid:", senderId, "userMessage:", userMessage);
+	console.log("Image URL recibida en processmessageWith..:", imageURL)
 
 	// Check if there is an existing thread for the user
 	let existingThread;
@@ -39,6 +40,7 @@ export const processMessageWithAssistant = async (
 		threadId = existingThread.thread_id;
 
 		if (imageURL) {
+			console.log("Existing thread. Entre en el if de imagen para enviarlo a la thread")
 			await openai.beta.threads.messages.create(threadId, {
 				role: "user",
 				content: [
@@ -67,6 +69,7 @@ export const processMessageWithAssistant = async (
 		threadId = thread.id;
 
 		if (imageURL) {
+			console.log("New thread. Entre en el if de imagen para enviarlo a la thread")
 			await openai.beta.threads.messages.create(threadId, {
 				role: "user",
 				content: [

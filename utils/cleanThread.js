@@ -1,11 +1,16 @@
 import Leads from "../models/leads.js"
+import { createGptThread } from "./createGptThread.js";
 
+// Function that creates a new thread && saves it in DB
 export const cleanThread = async (senderId) => {
 	
     try {
 		let lead = await Leads.findOne({ id_user: senderId });
 		if (lead) {
-			lead.thread_id = "";
+			const name = "estimado cliente"
+            const message = "Hola"
+            const newThread = await createGptThread(name, message)
+            lead.thread_id = newThread;
 			await lead.save();
             return
 		} else {
