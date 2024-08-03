@@ -59,7 +59,7 @@ export class MessageQueue {
 					console.log("Image URL:", imageUrl);
 
 					// Download image from WhatsApp
-					imageBuffer = await downloadWhatsAppMedia(imageUrl);
+					const imageBuffer = await downloadWhatsAppMedia(imageUrl);
 					const imageBufferData = imageBuffer.data
 					console.log("Image download:", imageBufferData);
 
