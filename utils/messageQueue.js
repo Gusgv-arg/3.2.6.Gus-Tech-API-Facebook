@@ -96,7 +96,7 @@ export class MessageQueue {
 				} else if (newMessage.channel === "whatsapp") {
 					// Send response to user by Whatsapp (gpt or error message)
 					await handleWhatsappMessage(
-						response.senderId,
+						senderId,
 						response.messageGpt ? response.messageGpt : response.errorMessage
 					);
 
@@ -120,7 +120,7 @@ export class MessageQueue {
 				if (newMessage.channel === "web" && queue.responseCallback) {
 					queue.responseCallback(error, null);
 				} else if (newMessage.channel === "whatsapp"){
-					handleWhatsappMessage(response.senderId, errorMessage)
+					handleWhatsappMessage(senderId, errorMessage)
 				}
 
 				// Return to webhookController that has res.
