@@ -103,7 +103,7 @@ export class MessageQueue {
 					await saveMessageInDb(
 						senderId,
 						response.messageGpt ? response.messageGpt : response.errorMessage,
-						response.threadId,
+						response.threadId ? response.threadId : "",
 						newMessage
 					);
 				}

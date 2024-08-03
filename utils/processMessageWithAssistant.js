@@ -109,7 +109,6 @@ export const processMessageWithAssistant = async (
 			runStatus = await openai.beta.threads.runs.retrieve(threadId, run.id);
 
 			while (runStatus.status !== "completed") {
-
 				if (runStatus.status === "requires_action") {
 					console.log("Requires action");
 
@@ -145,13 +144,15 @@ export const processMessageWithAssistant = async (
 						runMessages.body.data[0].assistant_id === null ||
 						runStatus.last_error !== null
 					) {
-						errorMessage = errorMessage2
+						errorMessage = errorMessage2;
 
 						// Clean threadId for the user
-						cleanThread(senderId)
-							
+						cleanThread(senderId);
+
+						// Return error message to the user
+						return { errorMessage, senderId };
 					} else {
-						errorMessage = errorMessage1
+						errorMessage = errorMessage1;
 					}
 				} else {
 					console.log("Run is not completed yet.");
@@ -170,7 +171,7 @@ export const processMessageWithAssistant = async (
 			currentAttempt++;
 			if (currentAttempt >= maxAttempts) {
 				console.error("Exceeded maximum attempts. Exiting the loop.");
-				errorMessage = errorMessage1
+				errorMessage = errorMessage1;
 
 				return { errorMessage, threadId };
 			}
