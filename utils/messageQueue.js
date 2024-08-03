@@ -1,4 +1,5 @@
 import audioToText from "./audioToText.js";
+import { convertBufferImageToUrl } from "./convertBufferImageToUrl.js";
 import { downloadWhatsAppMedia } from "./downloadWhatsAppMedia.js";
 import { getMediaWhatsappUrl } from "./getMediaWhatsappUrl.js";
 import { handleMessengerMessage } from "./handleMessengerMessage.js";
@@ -26,7 +27,8 @@ export class MessageQueue {
 		while (queue.messages.length > 0) {
 			// Take the first record and delete it from the queue
 			let newMessage = queue.messages.shift();
-
+			let imageURL
+			
 			try {
 				// Check if its an audio and transcribe it to text
 				if (newMessage.type === "audio") {
@@ -57,14 +59,19 @@ export class MessageQueue {
 					console.log("Image URL:", imageUrl);
 
 					// Download image from WhatsApp
-					const imageDownload = await downloadWhatsAppMedia(imageUrl);
-					console.log("Image download:", imageDownload.data);
+					imageBuffer = await downloadWhatsAppMedia(imageUrl);
+					console.log("Image download:", imageBuffer.data);
+
+					// Convert buffer received from WhatsApp to a public URL
+					imageURL = await convertBufferImageToUrl(imageBuffer.data)
+					console.log("image URL:", imageURL)
 				}
 
 				// Process the message with the Assistant
 				const response = await processMessageWithAssistant(
 					senderId,
-					newMessage.message
+					newMessage.message,
+					imageURL
 				);
 
 				if (newMessage.channel === "messenger") {

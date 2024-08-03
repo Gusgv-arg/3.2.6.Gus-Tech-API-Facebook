@@ -14,7 +14,7 @@ const openai = new OpenAI({
 export const processMessageWithAssistant = async (
 	senderId,
 	userMessage,
-	channel
+	imageURL
 ) => {
 	const assistantId = process.env.OPENAI_ASSISTANT_ID;
 	let threadId;
@@ -35,11 +35,35 @@ export const processMessageWithAssistant = async (
 	// Pass in the user question into the existing thread
 	if (existingThread) {
 		threadId = existingThread.thread_id;
+		
+		if (imageURL){
+			if (!fileType) {
+				throw new Error('Unsupported file type');
+			}			
 
-		await openai.beta.threads.messages.create(threadId, {
-			role: "user",
-			content: userMessage,
-		});
+			await openai.beta.threads.messages.create(threadId, {
+				role: "user",
+				content: [
+					{
+						type: "text",
+						text: userMessage,
+					},
+					{
+						type: "image_url",
+						image_url: {
+							url: imageURL,
+							detail: "high"
+						},
+					},
+				],
+			});
+		} else {
+			await openai.beta.threads.messages.create(threadId, {
+				role: "user",
+				content: userMessage,
+			});
+		}
+
 	} else {
 		// Create a new thread
 		const thread = await openai.beta.threads.create();
