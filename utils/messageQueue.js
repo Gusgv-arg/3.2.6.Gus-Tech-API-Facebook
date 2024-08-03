@@ -64,7 +64,7 @@ export class MessageQueue {
 					console.log("Image download:", imageBufferData);
 
 					// Convert buffer received from WhatsApp to a public URL
-					imageURL = await convertBufferImageToUrl(imageBufferData)
+					imageURL = await convertBufferImageToUrl(imageBufferData, "https://three-2-12-messenger-api.onrender.com")
 					console.log("image URL:", imageURL)
 				}
 

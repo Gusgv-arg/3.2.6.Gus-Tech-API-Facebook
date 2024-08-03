@@ -1,11 +1,11 @@
-import { Buffer } from "buffer";
 import { fileTypeFromBuffer } from "file-type";
 import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs/promises';
 import path from 'path';
 
-export const convertBufferImageToUrl = async (imageBufferData) => {
+export const convertBufferImageToUrl = async (imageBufferData, baseUrl) => {
     if (!imageBufferData) return null;
+    if (!baseUrl) throw new Error("Base URL is required");
 
     try {
         const fileType = await fileTypeFromBuffer(imageBufferData);
@@ -20,8 +20,8 @@ export const convertBufferImageToUrl = async (imageBufferData) => {
         
         await fs.writeFile(filePath, imageBufferData);
 
-        // Asumiendo que tu servidor sirve archivos estáticos desde la carpeta 'public'
-        return `/temp/${fileName}`;
+        // Construir la URL completa
+        return new URL(`/temp/${fileName}`, baseUrl).toString();
 
     } catch (error) {
         console.log("Error in convertBufferImageToUrl:", error.message);
