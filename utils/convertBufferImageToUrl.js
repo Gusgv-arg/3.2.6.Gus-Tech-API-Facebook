@@ -20,6 +20,14 @@ export const convertBufferImageToUrl = async (imageBufferData, baseUrl) => {
         
         await fs.writeFile(filePath, imageBufferData);
 
+        // Verificar que el archivo se haya creado
+        const fileExists = await fs.access(filePath).then(() => true).catch(() => false);
+        if (!fileExists) {
+            throw new Error("Failed to save the file");
+        }
+
+        console.log(`File saved at: ${filePath}`);
+
         // Construir la URL completa
         return new URL(`/temp/${fileName}`, baseUrl).toString();
 
