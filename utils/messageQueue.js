@@ -27,8 +27,8 @@ export class MessageQueue {
 		while (queue.messages.length > 0) {
 			// Take the first record and delete it from the queue
 			let newMessage = queue.messages.shift();
-			let imageURL
-			
+			let imageURL;
+
 			try {
 				// Check if its an audio and transcribe it to text
 				if (newMessage.type === "audio") {
@@ -51,7 +51,6 @@ export class MessageQueue {
 
 					// Replace message with transcription
 					newMessage.message = audioTranscription;
-				
 				} else if (newMessage.type === "image") {
 					// Get the Image URL from WhatsApp
 					const image = await getMediaWhatsappUrl(newMessage.imageId);
@@ -60,12 +59,15 @@ export class MessageQueue {
 
 					// Download image from WhatsApp
 					const imageBuffer = await downloadWhatsAppMedia(imageUrl);
-					const imageBufferData = imageBuffer.data
+					const imageBufferData = imageBuffer.data;
 					console.log("Image download:", imageBufferData);
 
 					// Convert buffer received from WhatsApp to a public URL
-					imageURL = await convertBufferImageToUrl(imageBufferData, "https://three-2-12-messenger-api.onrender.com")
-					console.log("image URL:", imageURL)
+					imageURL = await convertBufferImageToUrl(
+						imageBufferData,
+						"https://three-2-12-messenger-api.onrender.com"
+					);
+					console.log("image URL:", imageURL);
 				}
 
 				// Process the message with the Assistant
@@ -91,13 +93,16 @@ export class MessageQueue {
 						newMessage
 					);
 				} else if (newMessage.channel === "whatsapp") {
-					// Send the response back to the user by Whatsapp
-					await handleWhatsappMessage(response.senderId, response.messageGpt);
+					// Send response to user by Whatsapp (gpt or error message)
+					await handleWhatsappMessage(
+						response.senderId,
+						response.messageGpt ? response.messageGpt : response.errorMessage
+					);
 
 					// Save the message in the database
 					await saveMessageInDb(
 						senderId,
-						response.messageGpt,
+						response.messageGpt ? response.messageGpt : response.errorMessage,
 						response.threadId,
 						newMessage
 					);

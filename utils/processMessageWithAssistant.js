@@ -2,6 +2,8 @@ import OpenAI from "openai";
 import dotenv from "dotenv";
 import Leads from "../models/leads.js";
 import { getStockPrice } from "../functions/getStockPrice.js";
+import { errorMessage1, errorMessage2 } from "./errorMessages.js";
+import { cleanThread } from "./cleanThread.js";
 
 dotenv.config();
 
@@ -35,8 +37,8 @@ export const processMessageWithAssistant = async (
 	// Pass in the user question into the existing thread
 	if (existingThread) {
 		threadId = existingThread.thread_id;
-		
-		if (imageURL){
+
+		if (imageURL) {
 			await openai.beta.threads.messages.create(threadId, {
 				role: "user",
 				content: [
@@ -48,7 +50,7 @@ export const processMessageWithAssistant = async (
 						type: "image_url",
 						image_url: {
 							url: imageURL,
-							detail: "high"
+							detail: "high",
 						},
 					},
 				],
@@ -59,13 +61,12 @@ export const processMessageWithAssistant = async (
 				content: userMessage,
 			});
 		}
-
 	} else {
 		// Create a new thread
 		const thread = await openai.beta.threads.create();
 		threadId = thread.id;
 
-		if (imageURL){
+		if (imageURL) {
 			await openai.beta.threads.messages.create(threadId, {
 				role: "user",
 				content: [
@@ -77,7 +78,7 @@ export const processMessageWithAssistant = async (
 						type: "image_url",
 						image_url: {
 							url: imageURL,
-							detail: "high"
+							detail: "high",
 						},
 					},
 				],
@@ -98,6 +99,7 @@ export const processMessageWithAssistant = async (
 	let currentAttempt = 0;
 	let runStatus;
 	let run;
+	let errorMessage;
 	do {
 		try {
 			run = await openai.beta.threads.runs.create(threadId, {
@@ -107,6 +109,7 @@ export const processMessageWithAssistant = async (
 			runStatus = await openai.beta.threads.runs.retrieve(threadId, run.id);
 
 			while (runStatus.status !== "completed") {
+
 				if (runStatus.status === "requires_action") {
 					console.log("Requires action");
 
@@ -135,6 +138,21 @@ export const processMessageWithAssistant = async (
 					await openai.beta.threads.runs.submitToolOutputs(threadId, run.id, {
 						tool_outputs: toolsOutput,
 					});
+				} else if (runStatus.status === "failed") {
+					currentAttempt++;
+					const runMessages = await openai.beta.threads.messages.list(threadId);
+					if (
+						runMessages.body.data[0].assistant_id === null ||
+						runStatus.last_error !== null
+					) {
+						errorMessage = errorMessage2
+
+						// Clean threadId for the user
+						cleanThread(senderId)
+							
+					} else {
+						errorMessage = errorMessage1
+					}
 				} else {
 					console.log("Run is not completed yet.");
 				}
@@ -152,7 +170,9 @@ export const processMessageWithAssistant = async (
 			currentAttempt++;
 			if (currentAttempt >= maxAttempts) {
 				console.error("Exceeded maximum attempts. Exiting the loop.");
-				break; // Exit the loop if maximum attempts are exceeded
+				errorMessage = errorMessage1
+
+				return { errorMessage, threadId };
 			}
 		}
 	} while (currentAttempt < maxAttempts);
@@ -169,7 +189,7 @@ export const processMessageWithAssistant = async (
 
 	// Save the received message from the user and send the assistants response
 	if (userMessage && lastMessageForRun) {
-		let messageGpt = lastMessageForRun.content[0].text.value;		
+		let messageGpt = lastMessageForRun.content[0].text.value;
 		return { messageGpt, senderId, threadId };
 	}
 };
