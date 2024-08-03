@@ -1,22 +1,30 @@
 import { Buffer } from "buffer";
 import { fileTypeFromBuffer } from "file-type";
+import { v4 as uuidv4 } from 'uuid';
+import fs from 'fs/promises';
+import path from 'path';
 
-// New function to convert image buffer to data URI
 export const convertBufferImageToUrl = async (imageBufferData) => {
-
     if (!imageBufferData) return null;
 
     try {
-		const fileType = await fileTypeFromBuffer(imageBufferData);
-		if (!fileType) {
-			throw new Error("Unsupported file type");
-		}
+        const fileType = await fileTypeFromBuffer(imageBufferData);
+        if (!fileType) {
+            throw new Error("Unsupported file type");
+        }
 
-		const base64Image = Buffer.from(imageBufferData).toString("base64");
-		return `data:${fileType.mime};base64,${base64Image}`;
+        const fileName = `${uuidv4()}.${fileType.ext}`;
+        const publicDir = path.join(process.cwd(), 'public', 'temp');
+        await fs.mkdir(publicDir, { recursive: true });
+        const filePath = path.join(publicDir, fileName);
+        
+        await fs.writeFile(filePath, imageBufferData);
 
-	} catch (error) {
-		console.log("Error in convertBufferImageToUrl:", error.message);
-		throw error;
-	}
+        // Asumiendo que tu servidor sirve archivos estáticos desde la carpeta 'public'
+        return `/temp/${fileName}`;
+
+    } catch (error) {
+        console.log("Error in convertBufferImageToUrl:", error.message);
+        throw error;
+    }
 };
