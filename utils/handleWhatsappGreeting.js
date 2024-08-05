@@ -1,14 +1,13 @@
 import dotenv from "dotenv";
 import axios from "axios";
 import { greeting } from "../utils/greeting.js";
-import { saveMessageInDb } from "./saveMessageInDb.js";
 
 dotenv.config();
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
 
-// Function that sends GPT message to the user and saves in DB
+// Function that sends greeting to WhatsApp user
 export const handleWhatsappGreeting = async (name, userPhone) => {
 	try {
 		// Posts the message to Whatsapp

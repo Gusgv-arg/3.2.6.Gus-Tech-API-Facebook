@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import dotenv from "dotenv";
-import { greeting } from "../utils/greeting.js";
+import { greeting, messengerGreeting } from "../utils/greeting.js";
+
 
 dotenv.config();
 
@@ -10,8 +11,9 @@ const openai = new OpenAI({
 	apiKey: API_KEY,
 });
 
-export const createGptThread = async (name, message) => {
+export const createGptThread = async (name, message, channel) => {
 	try {
+
 		// Create a new thread
 		const thread = await openai.beta.threads.create();
 		const threadId = thread.id;
@@ -25,7 +27,7 @@ export const createGptThread = async (name, message) => {
 			},
 			{
 				role: "assistant",
-				content: `¡Hola ${name}${greeting}`,
+				content: channel === "WhatsApp" ? `¡Hola ${name}${greeting}` : `${messengerGreeting}`,
 			}
 		);
 		return threadId;

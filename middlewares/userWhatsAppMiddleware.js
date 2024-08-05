@@ -65,6 +65,7 @@ export const userWhatsAppMiddleware = async (req, res, next) => {
 				minute: "2-digit",
 				second: "2-digit",
 			});
+			
 			lead = await Leads.create({
 				name: name ? name : "WhatsApp User",
 				id_user: userPhone,
