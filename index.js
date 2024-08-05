@@ -32,7 +32,7 @@ app.use(morgan("dev"));
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 
-//app.use("/webhook", messengerRouter);
+app.use("/webhook_messenger", messengerRouter);
 app.use("/webhook", whatsappRouter);
 app.use("/testing", testingRouter);
 

@@ -40,7 +40,6 @@ export const processMessageWithAssistant = async (
 		threadId = existingThread.thread_id;
 
 		if (imageURL) {
-			console.log("Existing thread. Entre en el if de imagen para enviarlo a la thread")
 			await openai.beta.threads.messages.create(threadId, {
 				role: "user",
 				content: [
@@ -69,7 +68,6 @@ export const processMessageWithAssistant = async (
 		threadId = thread.id;
 
 		if (imageURL) {
-			console.log("New thread. Entre en el if de imagen para enviarlo a la thread")
 			await openai.beta.threads.messages.create(threadId, {
 				role: "user",
 				content: [
@@ -153,7 +151,7 @@ export const processMessageWithAssistant = async (
 					) {
 						errorMessage = errorMessage2;
 
-						// Clean threadId for the user
+						// Clean threadId for the user due to Openai bug
 						cleanThread(senderId);
 
 						// Return error message to the user
