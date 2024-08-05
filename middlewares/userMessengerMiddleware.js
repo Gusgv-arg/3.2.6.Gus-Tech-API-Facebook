@@ -1,6 +1,7 @@
 import Leads from "../models/leads.js";
 import { greeting } from "../utils/greeting.js";
 import { createGptThread } from "../utils/createGptThread.js";
+import { handleMessengerGreeting } from "../utils/handleMessengerGreeting.js";
 
 // Middleware that creates the user in DB if it doesn't exist || next()
 export const userMessengerMiddleware = async (req, res, next) => {
