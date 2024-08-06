@@ -27,10 +27,12 @@ export const postMessengerWebhookController = (req, res) => {
 
 			if (webhook_event.message) {
 				const channel = "messenger";
+				const name = "Messenger user"
 				// Get the message sent by the user & create an object to send it to the queue
 				const userMessage = {
 					channel: channel,
 					message: webhook_event.message.text,
+					name: name
 				};
 
 				// Add message to the Queue
