@@ -82,15 +82,14 @@ export class MessageQueue {
 					// Send the response back to the user by Messenger
 					handleMessengerMessage(
 						response.senderId,
-						response.messageGpt,
-						response.threadId
+						response.messageGpt ? response.messageGpt : response.errorMessage,						
 					);
 
 					// Save the message in the database
 					await saveMessageInDb(
 						senderId,
-						response.messageGpt,
-						response.threadId,
+						response.messageGpt ? response.messageGpt : response.errorMessage,
+						response.threadId ? response.threadId : "",
 						newMessage
 					);
 				} else if (newMessage.channel === "whatsapp") {
