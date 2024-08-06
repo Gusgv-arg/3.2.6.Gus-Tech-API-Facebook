@@ -11,20 +11,28 @@ const openai = new OpenAI({
 	project: "proj_cLySVdd60XL8zbjd9zc8gGMH",
 });
 
-async function audioToText(audioBuffer) {
+async function audioToText(audioFile, channel) {
 	try {		
-		// Write buffer to a tempory file
-        const tempFilePath = `/tmp/audio_${Date.now()}.ogg`;
-        await fs.promises.writeFile(tempFilePath, audioBuffer);
-
-		const transcription = await openai.audio.transcriptions.create({
-			file: fs.createReadStream(tempFilePath),
-			model: "whisper-1",
-		});
-		// Erase temporary file
-        await fs.promises.unlink(tempFilePath);
-
-		return transcription.text;
+		if (channel === "whatsapp"){
+			// Write buffer to a tempory file
+			const tempFilePath = `/tmp/audio_${Date.now()}.ogg`;
+			await fs.promises.writeFile(tempFilePath, audioFile);
+	
+			const transcription = await openai.audio.transcriptions.create({
+				file: fs.createReadStream(tempFilePath),
+				model: "whisper-1",
+			});
+			// Erase temporary file
+			await fs.promises.unlink(tempFilePath);
+			return transcription.text;
+		
+		} else if(channel === "messenger"){
+			const transcription = await openai.audio.transcriptions.create({
+				file: audioFile,
+				model: "whisper-1",
+			});	
+			return transcription.text;
+		}
 	} catch (error) {
 		console.log("Error in audioToText:", error.message)
 		throw error

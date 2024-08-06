@@ -16,6 +16,8 @@ export const userMessengerMiddleware = async (req, res, next) => {
 			body.entry[0].messaging[0]
 		);
 		console.log("Attachments -->", body.entry[0].messaging[0].message.attachments[0] )
+		const type = body.entry[0].messaging[0].message.attachments[0].type
+		req.type = type
 	} else {
 		console.log("Other object");
 	}

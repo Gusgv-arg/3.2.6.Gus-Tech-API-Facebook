@@ -31,44 +31,71 @@ export class MessageQueue {
 			let imageURL;
 
 			try {
-				// Check if its an audio and transcribe it to text
+				// ---------- Audio ---------- //
 				if (newMessage.type === "audio") {
-					// Get the Audio URL from WhatsApp
-					const audio = await getMediaWhatsappUrl(newMessage.audioId);
-					const audioUrl = audio.data.url;
-					//console.log("Audio URL:", audioUrl);
+					// --- WhatsApp Audio --- //
+					if (newMessage.channel === "whatsapp") {
+						// Get the Audio URL from WhatsApp
+						const audio = await getMediaWhatsappUrl(newMessage.audioId);
+						const audioUrl = audio.data.url;
+						//console.log("Audio URL:", audioUrl);
 
-					// Download audio from WhatsApp
-					const audioDownload = await downloadWhatsAppMedia(audioUrl);
-					//console.log("Audio download:", audioDownload.data);
+						// Download audio from WhatsApp
+						const audioDownload = await downloadWhatsAppMedia(audioUrl);
+						//console.log("Audio download:", audioDownload.data);
 
-					// Create a buffer
-					const buffer = Buffer.from(audioDownload.data);
+						// Create a buffer
+						const buffer = Buffer.from(audioDownload.data);
 
-					// Call whisper GPT to transcribe audio to text
-					const audioTranscription = await audioToText(buffer);
+						// Call whisper GPT to transcribe audio to text
+						const audioTranscription = await audioToText(
+							buffer,
+							newMessage.channel
+						);
 
-					console.log("Audio transcription:", audioTranscription);
+						console.log("Audio transcription:", audioTranscription);
 
-					// Replace message with transcription
-					newMessage.message = audioTranscription;
+						// Replace message with transcription
+						newMessage.message = audioTranscription;
+
+					// --- Messenger Audio --- //
+					} else if (newMessage.channel === "messenger") {
+						// Call whisper GPT to transcribe audio to text
+						const audioTranscription = await audioToText(
+							newMessage.url,
+							newMessage.channel
+						);
+
+						console.log("Audio transcription:", audioTranscription);
+
+						// Replace message with transcription
+						newMessage.message = audioTranscription;
+					}
+
+					// ---------- Image ----------//
 				} else if (newMessage.type === "image") {
-					// Get the Image URL from WhatsApp
-					const image = await getMediaWhatsappUrl(newMessage.imageId);
-					const imageUrl = image.data.url;
-					console.log("Image URL:", imageUrl);
+					// --- WhatsApp Image --- //
+					if (newMessage.channel === "whatsapp") {
+						// Get the Image URL from WhatsApp
+						const image = await getMediaWhatsappUrl(newMessage.imageId);
+						const imageUrl = image.data.url;
+						console.log("Image URL:", imageUrl);
 
-					// Download image from WhatsApp
-					const imageBuffer = await downloadWhatsAppMedia(imageUrl);
-					const imageBufferData = imageBuffer.data;
-					console.log("Image download:", imageBufferData);
+						// Download image from WhatsApp
+						const imageBuffer = await downloadWhatsAppMedia(imageUrl);
+						const imageBufferData = imageBuffer.data;
+						console.log("Image download:", imageBufferData);
 
-					// Convert buffer received from WhatsApp to a public URL
-					imageURL = await convertBufferImageToUrl(
-						imageBufferData,
-						"https://three-2-12-messenger-api.onrender.com"
-					);
-					console.log("image URL:", imageURL);
+						// Convert buffer received from WhatsApp to a public URL
+						imageURL = await convertBufferImageToUrl(
+							imageBufferData,
+							"https://three-2-12-messenger-api.onrender.com"
+						);
+						console.log("image URL:", imageURL);
+
+						// --- Messenger Image --- //
+					} else if (newMessage.channel === "messenger") {
+					}
 				}
 
 				// Process the message with the Assistant
@@ -81,8 +108,8 @@ export class MessageQueue {
 				if (newMessage.channel === "messenger") {
 					// Send the response back to the user by Messenger
 					handleMessengerMessage(
-						response.senderId,
-						response.messageGpt ? response.messageGpt : response.errorMessage,						
+						senderId,
+						response.messageGpt ? response.messageGpt : response.errorMessage
 					);
 
 					// Save the message in the database
@@ -115,11 +142,13 @@ export class MessageQueue {
 				// Change flag to allow next message processing
 				queue.processing = false;
 
-				// If there is an error for a web message, I use callback function to send the error to the user
+				// Error handlers
 				if (newMessage.channel === "web" && queue.responseCallback) {
 					queue.responseCallback(error, null);
-				} else if (newMessage.channel === "whatsapp"){
-					handleWhatsappMessage(senderId, errorMessage)
+				} else if (newMessage.channel === "whatsapp") {
+					handleWhatsappMessage(senderId, errorMessage);
+				} else if (newMessage.channel === "messenger") {
+					handleMessengerMessage(senderId, errorMessage);
 				}
 
 				// Return to webhookController that has res.
