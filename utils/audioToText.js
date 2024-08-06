@@ -27,8 +27,18 @@ async function audioToText(audioFile, channel) {
 			return transcription.text;
 		
 		} else if(channel === "messenger"){
+			// Transform URL to a file
+			let file;
+			if (typeof audioFile === 'string' && audioFile.startsWith('http')) {
+				// If audioFile is a URL, download it
+				const response = await axios.get(audioFile, { responseType: 'arraybuffer' });
+				file = new File([response.data], 'audio.mp3', { type: 'audio/mpeg' });
+			} else {
+				file = audioFile;
+			}
+
 			const transcription = await openai.audio.transcriptions.create({
-				file: audioFile,
+				file: file,
 				model: "whisper-1",
 			});	
 			return transcription.text;
