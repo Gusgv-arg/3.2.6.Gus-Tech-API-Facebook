@@ -15,6 +15,7 @@ export const userMessengerMiddleware = async (req, res, next) => {
 			"Messenger --> body.entry[0].messaging[0] -->",
 			body.entry[0].messaging[0]
 		);
+		console.log("Attachments -->", body.entry[0].messaging[0].message.attachments[0] )
 	} else {
 		console.log("Other object");
 	}
