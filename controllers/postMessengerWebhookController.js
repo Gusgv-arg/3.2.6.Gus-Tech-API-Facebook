@@ -34,7 +34,7 @@ export const postMessengerWebhookController = (req, res) => {
 					message: webhook_event.message.text ? webhook_event.message.text : "",
 					name: name,
 					type: req.type ? req.type : "text",
-					url: body?.entry[0]?.messaging[0]?.message?.attachments[0]?.payload.url ? body.entry[0].messaging[0].message.attachments[0].payload.url : "" 
+					url: body?.entry[0]?.messaging?.[0]?.message?.attachments?.[0]?.payload.url ? body.entry[0].messaging[0].message.attachments[0].payload.url : "" 
 				};
 
 				// Add message to the Queue
