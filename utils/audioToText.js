@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import dotenv from "dotenv";
+import axios from "axios"
 import fs from "fs";
 dotenv.config();
 
