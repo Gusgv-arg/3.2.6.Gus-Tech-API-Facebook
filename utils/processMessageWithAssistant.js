@@ -185,16 +185,16 @@ export const processMessageWithAssistant = async (
 
 	// Get the last assistant message from the messages array
 	const messages = await openai.beta.threads.messages.list(threadId);
-
+	
 	// Find the last message for the current run
 	const lastMessageForRun = messages.data
 		.filter(
 			(message) => message.run_id === run.id && message.role === "assistant"
 		)
 		.pop();
-
+	
 	// Save the received message from the user and send the assistants response
-	if (userMessage && lastMessageForRun) {
+	if (lastMessageForRun) {
 		let messageGpt = lastMessageForRun.content[0].text.value;
 		console.log("MessagGpt-->", messageGpt)
 		return { messageGpt, senderId, threadId };
