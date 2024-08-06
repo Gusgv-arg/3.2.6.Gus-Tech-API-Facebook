@@ -10,6 +10,7 @@ export const cleanThread = async (senderId) => {
 			const name = "estimado cliente"
             const message = "Hola"
             const newThread = await createGptThread(name, message)
+            console.log("New Thread en cleanThread:", newThread)
             lead.thread_id = newThread;
 			await lead.save();
             return
