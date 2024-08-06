@@ -7,6 +7,7 @@ dotenv.config();
 const FACEBOOK_PAGE_ID = process.env.FACEBOOK_PAGE_ID;
 const PAGE_ACCESS_TOKEN = process.env.FACEBOOK_PAGE_ACCESS_TOKEN;
 
+// Function that sends Messenger greeting
 export const handleMessengerGreeting = async(senderId)=>{
     try {
 		

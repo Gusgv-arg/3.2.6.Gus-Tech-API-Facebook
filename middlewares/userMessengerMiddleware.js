@@ -1,5 +1,5 @@
 import Leads from "../models/leads.js";
-import { greeting } from "../utils/greeting.js";
+import { greeting, messengerGreeting } from "../utils/greeting.js";
 import { createGptThread } from "../utils/createGptThread.js";
 import { handleMessengerGreeting } from "../utils/handleMessengerGreeting.js";
 
@@ -42,7 +42,7 @@ export const userMessengerMiddleware = async (req, res, next) => {
 			lead = await Leads.create({
 				name: name,
 				id_user: senderId,
-				content: `${currentDateTime} - ${name}: ${messengerMessage}`,
+				content: `${currentDateTime} - ${name}: ${messengerMessage}\n${currentDateTime} - MegaBot: ${messengerGreeting}`,
 				botSwitch: "ON",
 				channel: channel,
 			});
