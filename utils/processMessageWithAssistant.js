@@ -28,7 +28,7 @@ export const processMessageWithAssistant = async (
 	try {
 		existingThread = await Leads.findOne({
 			id_user: senderId,
-			thread_id: { $exists: true },
+			thread_id: { $exists: true, $ne: "", $ne: null },
 		});
 	} catch (error) {
 		console.error("Error fetching thread from the database:", error);
