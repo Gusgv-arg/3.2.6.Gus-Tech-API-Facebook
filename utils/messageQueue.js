@@ -110,28 +110,28 @@ export class MessageQueue {
 					// Send the response back to the user by Messenger
 					handleMessengerMessage(
 						senderId,
-						response.messageGpt ? response.messageGpt : response.errorMessage
+						response?.messageGpt ? response.messageGpt : response.errorMessage
 					);
 
 					// Save the message in the database
 					await saveMessageInDb(
 						senderId,
-						response.messageGpt ? response.messageGpt : response.errorMessage,
-						response.threadId ? response.threadId : "",
+						response?.messageGpt ? response.messageGpt : response.errorMessage,
+						response?.threadId ? response.threadId : "",
 						newMessage
 					);
 				} else if (newMessage.channel === "whatsapp") {
 					// Send response to user by Whatsapp (gpt or error message)
 					await handleWhatsappMessage(
 						senderId,
-						response.messageGpt ? response.messageGpt : response.errorMessage
+						response?.messageGpt ? response.messageGpt : response.errorMessage
 					);
 
 					// Save the message in the database
 					await saveMessageInDb(
 						senderId,
-						response.messageGpt ? response.messageGpt : response.errorMessage,
-						response.threadId ? response.threadId : "",
+						response?.messageGpt ? response.messageGpt : response.errorMessage,
+						response?.threadId ? response.threadId : "",
 						newMessage
 					);
 				}

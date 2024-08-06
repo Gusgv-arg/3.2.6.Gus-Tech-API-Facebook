@@ -196,6 +196,7 @@ export const processMessageWithAssistant = async (
 	// Save the received message from the user and send the assistants response
 	if (userMessage && lastMessageForRun) {
 		let messageGpt = lastMessageForRun.content[0].text.value;
+		console.log("MessagGpt-->", messageGpt)
 		return { messageGpt, senderId, threadId };
 	}
 };
