@@ -45,7 +45,7 @@ export const processMessageWithAssistant = async (
 				content: [
 					{
 						type: "text",
-						text: userMessage ? userMessage : "Dime que ves en esta imágen y como podría aplicar tu capacidad para ver imagenes en un negocio cualquiera.",
+						text: userMessage ? userMessage : "Dime que ves en esta imágen y 3 ejemplos de como podría aplicar tu capacidad para ver imagenes en un negocio cualquiera.",
 					},
 					{
 						type: "image_url",
@@ -73,7 +73,7 @@ export const processMessageWithAssistant = async (
 				content: [
 					{
 						type: "text",
-						text: userMessage ? userMessage : "Dime que ves en esta imágen y como podría aplicar tu capacidad para ver imagenes en un negocio cualquiera.",
+						text: userMessage ? userMessage : "Dime que ves en esta imágen y 3 ejemplos de como podría aplicar tu capacidad para ver imagenes en un negocio cualquiera.",
 					},
 					{
 						type: "image_url",
