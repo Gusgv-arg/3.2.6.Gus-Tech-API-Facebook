@@ -13,10 +13,10 @@ export const userMessengerMiddleware = async (req, res, next) => {
 	if (channel === "Messenger" && body?.entry[0]?.messaging[0]) {
 		console.log(
 			"Messenger --> body.entry[0].messaging[0] -->",
-			body.entry[0].messaging[0]
+			body.entry[0]?.messaging[0] ?? "No messaging data"
 		);
-		console.log("Attachments -->", body?.entry[0]?.messaging[0]?.message?.attachments[0] ? body.entry[0].messaging[0].message.attachments[0] : "no attachments" )
-		const type = body?.entry[0]?.messaging[0]?.message?.attachments[0]?.type ? body.entry[0].messaging[0].message.attachments[0].type : "text" 
+		console.log("Attachments -->", body?.entry[0]?.messaging[0]?.message?.attachments?.[0] ? body.entry[0].messaging[0].message.attachments[0] : "no attachments" )
+		const type = body?.entry[0]?.messaging[0]?.message?.attachments?.[0]?.type ? body.entry[0].messaging[0].message.attachments[0].type : "text" 
 		req.type = type
 	} else {
 		console.log("Other object");
