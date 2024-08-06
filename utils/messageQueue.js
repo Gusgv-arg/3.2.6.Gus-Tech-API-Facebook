@@ -95,6 +95,7 @@ export class MessageQueue {
 
 						// --- Messenger Image --- //
 					} else if (newMessage.channel === "messenger") {
+						imageURL = newMessage.url
 					}
 				}
 
