@@ -117,7 +117,7 @@ export class MessageQueue {
 					await saveMessageInDb(
 						senderId,
 						response?.messageGpt ? response.messageGpt : response.errorMessage,
-						response?.threadId ? response.threadId : "",
+						response?.threadId ? response.threadId : null,
 						newMessage
 					);
 				} else if (newMessage.channel === "whatsapp") {
@@ -131,7 +131,7 @@ export class MessageQueue {
 					await saveMessageInDb(
 						senderId,
 						response?.messageGpt ? response.messageGpt : response.errorMessage,
-						response?.threadId ? response.threadId : "",
+						response?.threadId ? response.threadId : null,
 						newMessage
 					);
 				}

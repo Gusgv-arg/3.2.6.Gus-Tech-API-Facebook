@@ -152,7 +152,7 @@ export const processMessageWithAssistant = async (
 						errorMessage = errorMessage2;
 
 						// Clean threadId for the user due to Openai bug
-						cleanThread(senderId);
+						await cleanThread(senderId);
 
 						// Return error message to the user
 						return { errorMessage, senderId };
