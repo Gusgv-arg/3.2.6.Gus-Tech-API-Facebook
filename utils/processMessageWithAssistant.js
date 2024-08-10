@@ -2,7 +2,7 @@ import OpenAI from "openai";
 import dotenv from "dotenv";
 import Leads from "../models/leads.js";
 import { getStockPrice } from "../functions/getStockPrice.js";
-import { errorMessage1, errorMessage2 } from "./errorMessages.js";
+import { errorMessage1, errorMessage2, errorMessage3 } from "./errorMessages.js";
 import { cleanThread } from "./cleanThread.js";
 
 dotenv.config();
@@ -149,7 +149,12 @@ export const processMessageWithAssistant = async (
 						runMessages.body.data[0].assistant_id === null ||
 						runStatus.last_error !== null
 					) {
-						errorMessage = errorMessage2;
+						// Error if rate limit is exceeded
+						if (runStatus.last_error === "rate_limit_exceeded"){
+							errorMessage = errorMessage3;
+						} else {
+							errorMessage = errorMessage2;
+						}
 
 						// Clean threadId for the user due to Openai bug
 						await cleanThread(senderId);
