@@ -61,6 +61,7 @@ export const userMessengerMiddleware = async (req, res, next) => {
 				content: `${currentDateTime} - ${name}: ${messengerMessage}\n${currentDateTime} - MegaBot: ${messengerGreeting}`,
 				botSwitch: "ON",
 				channel: channel,
+				responses: 1
 			});
 			console.log("Lead created in Leads DB");
 
