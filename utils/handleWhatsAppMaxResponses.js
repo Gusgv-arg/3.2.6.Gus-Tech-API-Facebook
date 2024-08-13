@@ -8,7 +8,7 @@ dotenv.config();
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
 
-// Function that sends greeting to WhatsApp user
+// Function that sends error message if user exceeds max allowed requests
 export const handleWhatsAppMaxResponses = async (name, userPhone) => {
 	try {
 		// Posts the message to Whatsapp

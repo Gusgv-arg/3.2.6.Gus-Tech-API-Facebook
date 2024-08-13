@@ -2,6 +2,12 @@ import Leads from "../models/leads.js";
 import { greeting, messengerGreeting } from "../utils/greeting.js";
 import { createGptThread } from "../utils/createGptThread.js";
 import { handleMessengerGreeting } from "../utils/handleMessengerGreeting.js";
+import dotenv from "dotenv";
+import { handleMessengerMaxResponses } from "../utils/handleMessengerMaxResponses.js";
+
+dotenv.config();
+
+const maxResponses = process.env.MAX_RESPONSES;
 
 // Middleware that creates the user in DB if it doesn't exist || next()
 export const userMessengerMiddleware = async (req, res, next) => {
@@ -15,9 +21,16 @@ export const userMessengerMiddleware = async (req, res, next) => {
 			"Messenger --> body.entry[0].messaging[0] -->",
 			body.entry[0]?.messaging[0] ?? "No messaging data"
 		);
-		console.log("Attachments -->", body?.entry[0]?.messaging[0]?.message?.attachments?.[0] ? body.entry[0].messaging[0].message.attachments[0] : "no attachments" )
-		const type = body?.entry[0]?.messaging[0]?.message?.attachments?.[0]?.type ? body.entry[0].messaging[0].message.attachments[0].type : "text" 
-		req.type = type
+		console.log(
+			"Attachments -->",
+			body?.entry[0]?.messaging[0]?.message?.attachments?.[0]
+				? body.entry[0].messaging[0].message.attachments[0]
+				: "no attachments"
+		);
+		const type = body?.entry[0]?.messaging[0]?.message?.attachments?.[0]?.type
+			? body.entry[0].messaging[0].message.attachments[0].type
+			: "text";
+		req.type = type;
 	} else {
 		console.log("Other object");
 	}
@@ -58,6 +71,14 @@ export const userMessengerMiddleware = async (req, res, next) => {
 			const thread = await createGptThread(name, messengerMessage, channel);
 
 			res.status(200).send("EVENT_RECEIVED");
+		
+		} else if (lead.responses + 1 > maxResponses) {
+			//Block user from doing more requests
+			console.log("User reached max allowed responses");
+			await handleMessengerMaxResponses(senderId);
+			res.status(200).send("EVENT_RECEIVED");
+			return;
+		
 		} else {
 			next();
 		}
