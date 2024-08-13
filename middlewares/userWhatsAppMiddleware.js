@@ -2,6 +2,12 @@ import Leads from "../models/leads.js";
 import { greeting } from "../utils/greeting.js";
 import { createGptThread } from "../utils/createGptThread.js";
 import { handleWhatsappGreeting } from "../utils/handleWhatsappGreeting.js";
+import dotenv from "dotenv";
+import { handleWhatsAppMaxResponses } from "../utils/handleWhatsAppMaxResponses.js";
+
+dotenv.config();
+
+const maxResponses = process.env.MAX_RESPONSES;
 
 // Middleware that creates the user in DB if it doesn't exist || next()
 export const userWhatsAppMiddleware = async (req, res, next) => {
@@ -14,10 +20,10 @@ export const userWhatsAppMiddleware = async (req, res, next) => {
 		: null;
 
 	// Return if I receive status update
-    if (status !== null) {
+	if (status !== null) {
 		res.status(200).send("EVENT_RECEIVED");
 		return;
-	}	
+	}
 
 	if (channel === "WhatsApp" && body?.entry[0]) {
 		let typeOfWhatsappMessage = body.entry[0].changes[0]?.value?.messages[0]
@@ -26,8 +32,8 @@ export const userWhatsAppMiddleware = async (req, res, next) => {
 			: "other type";
 		console.log("Type of WhatsApp message:", typeOfWhatsappMessage);
 
-        // Pass type to req object
-        req.type = typeOfWhatsappMessage
+		// Pass type to req object
+		req.type = typeOfWhatsappMessage;
 
 		const userPhone = body.entry[0].changes[0].value.messages[0].from;
 		const name = body.entry[0].changes[0].value.contacts[0].profile.name;
@@ -42,10 +48,10 @@ export const userWhatsAppMiddleware = async (req, res, next) => {
 		} else if (typeOfWhatsappMessage === "audio") {
 			message = "Audio message";
 			console.log("User message-->", message);
-		} else if(typeOfWhatsappMessage === "image"){
+		} else if (typeOfWhatsappMessage === "image") {
 			message = "Image Message";
-			console.log("User message-->", message);		
-		}else {
+			console.log("User message-->", message);
+		} else {
 			message = "Message with another format than audio, text or image";
 			console.log("User message-->", message);
 		}
@@ -65,13 +71,14 @@ export const userWhatsAppMiddleware = async (req, res, next) => {
 				minute: "2-digit",
 				second: "2-digit",
 			});
-			
+
 			lead = await Leads.create({
 				name: name ? name : "WhatsApp User",
 				id_user: userPhone,
 				content: `${currentDateTime} - ${name}: ${message}\n${currentDateTime} - MegaBot: ¡Hola ${name}${greeting}`,
 				botSwitch: "ON",
 				channel: channel,
+				responses: 1,
 			});
 			console.log("Lead created in Leads DB");
 
@@ -87,11 +94,22 @@ export const userWhatsAppMiddleware = async (req, res, next) => {
 			console.log("Lead updated with threadId");
 
 			res.status(200).send("EVENT_RECEIVED");
+		
+		} else if (lead.responses + 1 > maxResponses) {
+			//Block user from doing more requests
+			console.log("User reached max allowed responses");
+			await handleWhatsAppMaxResponses(name, userPhone);
+			res.status(200).send("EVENT_RECEIVED");
+			return;
+		
 		} else {
 			next();
-		}		
+		}
 	} else {
-		console.log("Object received from WhatsApp API not processed by this API:", body);
+		console.log(
+			"Object received from WhatsApp API not processed by this API:",
+			body
+		);
 		res.status(200).send("EVENT_RECEIVED");
 	}
 };
