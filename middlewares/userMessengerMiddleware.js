@@ -73,7 +73,7 @@ export const userMessengerMiddleware = async (req, res, next) => {
 
 			res.status(200).send("EVENT_RECEIVED");
 		
-		} else if (lead.responses + 1 > maxResponses) {
+		} else if (lead.responses + 1 > maxResponses && senderId !== 7696295710487485) {
 			//Block user from doing more requests
 			console.log("User reached max allowed responses");
 			await handleMessengerMaxResponses(senderId);
