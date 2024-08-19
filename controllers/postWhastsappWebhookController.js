@@ -25,42 +25,6 @@ export const postWhatsappWebhookController = async (req, res) => {
 	//console.log("Changes-->", body.entry[0].changes[0])
 	//console.log("Contacts-->", body.entry[0].changes[0].value.contacts)
 
-	//LO PRIMERO QUE TENGO QUE HACER ES GRABAR EL MENSAJE DEL USUARIO EN LA BD!!!!
-
-	/* Object from Webhook
-     {
-        "object": "whatsapp_business_account",
-        "entry": [{
-          "id": "WHATSAPP_BUSINESS_ACCOUNT_ID",
-          "changes": [{
-            "value": {
-              "messaging_product": "whatsapp",
-              "metadata": {
-                "display_phone_number": PHONE_NUMBER,
-                "phone_number_id": PHONE_NUMBER_ID
-              },
-              "contacts": [{
-                "profile": {
-                  "name": "NAME"
-                },
-                "wa_id": PHONE_NUMBER
-              }],
-              "messages": [{
-                "from": PHONE_NUMBER,
-                "id": "wamid.ID",
-                "timestamp": TIMESTAMP,
-                "text": {
-                  "body": "MESSAGE_BODY"
-                },
-                "type": "text"
-              }]
-            },
-            "field": "messages"
-          }]
-        }]
-      }
-     */
-
 	if (body.entry[0]) {
 		if (
 			body.entry &&

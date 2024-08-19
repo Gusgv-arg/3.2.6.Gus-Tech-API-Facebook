@@ -4,6 +4,7 @@ import { createGptThread } from "../utils/createGptThread.js";
 import { handleWhatsappGreeting } from "../utils/handleWhatsappGreeting.js";
 import dotenv from "dotenv";
 import { handleWhatsAppMaxResponses } from "../utils/handleWhatsAppMaxResponses.js";
+import { newLeadWhatsAppNotification } from "../utils/newLeadWhatsAppNotification.js";
 
 dotenv.config();
 
@@ -92,6 +93,9 @@ export const userWhatsAppMiddleware = async (req, res, next) => {
 			lead.thread_id = thread;
 			await lead.save();
 			console.log("Lead updated with threadId");
+
+			// Send Notification of new lead to Admin
+			newLeadWhatsAppNotification(channel, name)
 
 			res.status(200).send("EVENT_RECEIVED");
 		

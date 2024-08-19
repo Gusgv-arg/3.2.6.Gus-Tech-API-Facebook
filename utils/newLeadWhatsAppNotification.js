@@ -1,22 +1,23 @@
 import dotenv from "dotenv";
 import axios from "axios";
-import { saveMessageInDb } from "./saveMessageInDb.js";
+import { saveMessageInDb } from "../utils/saveMessageInDb.js";
 
 dotenv.config();
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
+const myPhone = process.env.MY_PHONE
 
-export const postWhatsappCampaignController = async (req, res) => {
+export const newLeadWhatsAppNotification = async (channel, name) => {
 	try {
 		// Posts the message to Whatsapp
 		const url = `https://graph.facebook.com/v20.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
 		const data = {
 			messaging_product: "whatsapp",
-			to: 5491161405589,
+			to: myPhone,
 			type: "template",
 			template: {
-				name: "lanzamiento_gustech",
+				name: "aviso_nuevo_lead",
 				language: {
 					code: "es_AR",
 				},
@@ -26,7 +27,11 @@ export const postWhatsappCampaignController = async (req, res) => {
 						parameters: [
 							{
 								type: "text",
-								text: "Gustavo", // Reemplaza con la variable requerida
+								text: channel, // Reemplaza con la variable requerida
+							},
+							{
+								type: "text",
+								text: name, // Reemplaza con la variable requerida
 							},
 						],
 					},
