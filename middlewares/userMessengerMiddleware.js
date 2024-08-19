@@ -4,6 +4,7 @@ import { createGptThread } from "../utils/createGptThread.js";
 import { handleMessengerGreeting } from "../utils/handleMessengerGreeting.js";
 import dotenv from "dotenv";
 import { handleMessengerMaxResponses } from "../utils/handleMessengerMaxResponses.js";
+import { newLeadWhatsAppNotification } from "../utils/newLeadWhatsAppNotification.js";
 
 dotenv.config();
 
@@ -70,6 +71,9 @@ export const userMessengerMiddleware = async (req, res, next) => {
 
 			// Create a Thread sending user message and greeting to GPT
 			const thread = await createGptThread(name, messengerMessage, channel);
+
+			// Send Notification of new lead to Admin
+			newLeadWhatsAppNotification(channel, name)
 
 			res.status(200).send("EVENT_RECEIVED");
 		
