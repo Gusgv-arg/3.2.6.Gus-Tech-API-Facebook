@@ -5,6 +5,7 @@ import { errorMessage1 } from "./errorMessages.js";
 import { getMediaWhatsappUrl } from "./getMediaWhatsappUrl.js";
 import { handleMessengerMessage } from "./handleMessengerMessage.js";
 import { handleWhatsappMessage } from "./handleWhatsappMessage.js";
+import { newErrorWhatsAppNotification } from "./newErrorWhatsAppNotification.js";
 import { processMessageWithAssistant } from "./processMessageWithAssistant.js";
 import { saveMessageInDb } from "./saveMessageInDb.js";
 
@@ -146,10 +147,20 @@ export class MessageQueue {
 				// Error handlers
 				if (newMessage.channel === "web" && queue.responseCallback) {
 					queue.responseCallback(error, null);
+					
 				} else if (newMessage.channel === "whatsapp") {
+					// Send error message to customer
 					handleWhatsappMessage(senderId, errorMessage);
+					
+					// Send WhatsApp error message to Admin
+					newErrorWhatsAppNotification("WhatsApp", error.message)
+					
 				} else if (newMessage.channel === "messenger") {
+					// Send error message to customer
 					handleMessengerMessage(senderId, errorMessage);
+					
+					// Send WhatsApp error message to Admin
+					newErrorWhatsAppNotification("Messenger", error.message)
 				}
 
 				// Return to webhookController that has res.
