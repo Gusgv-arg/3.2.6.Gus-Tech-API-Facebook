@@ -25,7 +25,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 		const userPhone = body.entry[0].changes[0].value.messages[0].from;
 
 		// Admin INSTRUCTIONS!!!
-        if (type === "text" && userPhone === myPhone) {
+        if (typeOfWhatsappMessage === "text" && userPhone === myPhone) {
 			const message = body.entry[0].changes[0].value.messages[0].text.body.toLowerCase();
 			
             if (message === "megabot responder") {
