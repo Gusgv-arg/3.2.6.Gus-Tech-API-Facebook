@@ -29,11 +29,16 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			const message = body.entry[0].changes[0].value.messages[0].text.body.toLowerCase();
 			
             if (message === "megabot responder") {
-                changeMegaBotSwitch("ON")
-			} else if (message === "megabot no responder") {
-                changeMegaBotSwitch("OFF")			
-            } else if (message === "megabot ayuda") {
+                await changeMegaBotSwitch("ON")
+				res.status(200).send("EVENT_RECEIVED")
 			
+			} else if (message === "megabot no responder") {
+				await changeMegaBotSwitch("OFF")			
+				res.status(200).send("EVENT_RECEIVED")
+				
+			} else if (message === "megabot ayuda") {
+				
+				res.status(200).send("EVENT_RECEIVED")
             } else {
 				// Does next if its an admin message but is not an instruction
                 next();
