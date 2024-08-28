@@ -14,11 +14,8 @@ export const changeMegaBotSwitch = async (instruction) => {
 		} else if (instruction === "OFF") {
 			// Change General Switch
 			botSwitch.generalSwitch = "OFF";
-			await botSwitch.save();
-		
-			// WhatsApp Admin notification
-			await adminWhatsAppNotification("NOTIFICACION: MegaBot fue puesto en OFF por lo que no responderá.")
-		
+			await botSwitch.save();		
+			
 		} else {
 			return;
 		}
