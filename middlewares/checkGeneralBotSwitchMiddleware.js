@@ -24,7 +24,7 @@ export const checkGeneralBotSwitchMiddleware = async (req, res, next) => {
 			);
 			
             // Notify user that MegaBot is off
-            const notification = "¡Hola! Te pedimos disculpas pero en estos momentos nuestro asistente virtual MegaBot se encuentra apagado. Por favor intentá más tarde. ¡Gracias!"
+            const notification = `¡Hola! Te pedimos disculpas, en estos momentos me encuentro apagado. Podes contactarte más tarde o contactarnos al ${myPhone}. ¡Gracias!`
 			userWhatsAppNotification(userPhone, notification)
 
 			res.status(200).send("EVENT_RECEIVED")
