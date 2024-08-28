@@ -9,6 +9,7 @@ import { newLeadWhatsAppNotification } from "../utils/newLeadWhatsAppNotificatio
 dotenv.config();
 
 const maxResponses = process.env.MAX_RESPONSES;
+const myPhone = process.env.MY_PHONE
 
 // Middleware that creates the user in DB if it doesn't exist || next()
 export const userWhatsAppMiddleware = async (req, res, next) => {
@@ -99,7 +100,7 @@ export const userWhatsAppMiddleware = async (req, res, next) => {
 
 			res.status(200).send("EVENT_RECEIVED");
 		
-		} else if (lead.responses + 1 > maxResponses && name !== "gustavo gomez villafane") {
+		} else if (lead.responses + 1 > maxResponses && userPhone !== myPhone) {
 			//Block user from doing more requests
 			console.log("User reached max allowed responses");
 			await handleWhatsAppMaxResponses(name, userPhone);
