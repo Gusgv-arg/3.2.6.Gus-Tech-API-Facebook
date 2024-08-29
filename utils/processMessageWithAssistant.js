@@ -2,7 +2,7 @@ import OpenAI from "openai";
 import dotenv from "dotenv";
 import Leads from "../models/leads.js";
 import { getStockPrice } from "../functions/getStockPrice.js";
-import { errorMessage1, errorMessage2, errorMessage3 } from "./errorMessages.js";
+import { errorMessage1, errorMessage2, errorMessage3, errorMessage5 } from "./errorMessages.js";
 import { cleanThread } from "./cleanThread.js";
 
 dotenv.config();
@@ -17,7 +17,7 @@ export const processMessageWithAssistant = async (
 	senderId,
 	userMessage,
 	imageURL,
-	documentURL
+	type
 ) => {
 	const assistantId = process.env.OPENAI_ASSISTANT_ID;
 	let threadId;
@@ -36,22 +36,29 @@ export const processMessageWithAssistant = async (
 		throw error;
 	}
 
+	
 	// Pass in the user question into the existing thread
 	if (existingThread) {
 		threadId = existingThread.thread_id;
+		
+		// If type is Document return an error message
+		if (type === "document"){
+			const errorMessage = errorMessage5
+			return {errorMessage, threadId}
+		}
 
-		if (imageURL || documentURL) {
+		if (imageURL) {
 			await openai.beta.threads.messages.create(threadId, {
 				role: "user",
 				content: [
 					{
 						type: "text",
-						text: userMessage //? userMessage : "Dime que ves en esta imágen y 3 ejemplos de como podría aplicar tu capacidad para ver imagenes en un negocio cualquiera.",
+						text: userMessage ? userMessage : "Dime que ves en esta imágen y 3 ejemplos de como podría aplicar tu capacidad para ver imagenes en un negocio cualquiera.",
 					},
 					{
 						type: "image_url",
 						image_url: {
-							url: imageURL ? imageURL : documentURL,
+							url: imageURL,
 							detail: "high",
 						},
 					}
@@ -68,18 +75,24 @@ export const processMessageWithAssistant = async (
 		const thread = await openai.beta.threads.create();
 		threadId = thread.id;
 
-		if (imageURL || documentURL) {
+		// If type is Document return an error message
+		if (type === "document"){
+			const errorMessage = errorMessage5
+			return {errorMessage, threadId}
+		}
+
+		if (imageURL) {
 			await openai.beta.threads.messages.create(threadId, {
 				role: "user",
 				content: [
 					{
 						type: "text",
-						text: userMessage //? userMessage : "Dime que ves en esta imágen y 3 ejemplos de como podría aplicar tu capacidad para ver imagenes en un negocio cualquiera.",
+						text: userMessage ? userMessage : "Dime que ves en esta imágen y 3 ejemplos de como podría aplicar tu capacidad para ver imagenes en un negocio cualquiera.",
 					},
 					{
 						type: "image_url",
 						image_url: {
-							url: imageURL ? imageURL : documentURL,
+							url: imageURL,
 							detail: "high",
 						},
 					},

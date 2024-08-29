@@ -129,7 +129,7 @@ export class MessageQueue {
 					senderId,
 					newMessage.message,
 					imageURL,
-					documentURL
+					newMessage.type
 				);
 
 				if (newMessage.channel === "messenger") {
