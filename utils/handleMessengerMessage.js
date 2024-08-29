@@ -6,7 +6,7 @@ dotenv.config();
 const FACEBOOK_PAGE_ID = process.env.FACEBOOK_PAGE_ID;
 const PAGE_ACCESS_TOKEN = process.env.FACEBOOK_PAGE_ACCESS_TOKEN;
 
-// Función que recibe la respuesta del GPT, guarda en BD y envía al usuario la respuesta
+// Function that sends message to Messenger user
 export const handleMessengerMessage = async (senderId, messageGpt) => {
 	try {
 		const name = "MegaBot";
