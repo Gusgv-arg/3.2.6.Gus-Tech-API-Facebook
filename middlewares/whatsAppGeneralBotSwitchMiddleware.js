@@ -7,7 +7,7 @@ dotenv.config();
 
 const myPhone = process.env.MY_PHONE;
 
-export const checkGeneralBotSwitchMiddleware = async (req, res, next) => {
+export const whatsAppGeneralBotSwitchMiddleware = async (req, res, next) => {
 	const data = req.body;
     const userPhone = data.entry[0].changes[0].value.messages[0].from
 

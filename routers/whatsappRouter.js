@@ -4,7 +4,7 @@ import { postWhatsappWebhookController } from "../controllers/postWhastsappWebho
 import { userWhatsAppMiddleware } from "../middlewares/userWhatsAppMiddleware.js";
 import { postWhatsAppCampaignController } from "../controllers/postWhatsAppCampaignController.js";
 import { adminFunctionsMiddleware } from "../middlewares/adminFunctionsMiddleware.js";
-import { checkGeneralBotSwitchMiddleware } from "../middlewares/checkGeneralBotSwitchMiddleware.js";
+import { whatsAppGeneralBotSwitchMiddleware } from "../middlewares/whatsAppGeneralBotSwitchMiddleware.js";
 
 const whatsappRouter = express.Router();
 
@@ -12,7 +12,7 @@ whatsappRouter.get("/", getWhatsappWebhookController);
 whatsappRouter.post(
 	"/",
 	adminFunctionsMiddleware,
-	checkGeneralBotSwitchMiddleware,
+	whatsAppGeneralBotSwitchMiddleware,
 	userWhatsAppMiddleware,
 	postWhatsappWebhookController
 );
