@@ -8,7 +8,7 @@ const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
 const myPhone = process.env.MY_PHONE
 
-export const postWhatsAppCampaignController = async (req, res) => {
+export const postWhatsAppCampaign = async (req, res) => {
 	try {
 		// Posts the message to Whatsapp
 		const url = `https://graph.facebook.com/v20.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;

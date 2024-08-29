@@ -6,9 +6,9 @@ dotenv.config();
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
 
-export const downloadWhatsAppMedia = async (audioUrl) => {
+export const downloadWhatsAppMedia = async (mediaUrl) => {
 	try {
-		const download = await axios.get(audioUrl, {
+		const download = await axios.get(mediaUrl, {
 			responseType: "arraybuffer",
 			headers: {
 				Authorization: `Bearer ${whatsappToken}`,

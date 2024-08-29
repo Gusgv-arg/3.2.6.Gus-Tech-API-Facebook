@@ -30,9 +30,10 @@ export class MessageQueue {
 			// Take the first record and delete it from the queue
 			let newMessage = queue.messages.shift();
 			let imageURL;
+			let documentURL;
 
 			try {
-				// ---------- Audio ---------- //
+				// ---------- AUDIO ---------- //
 				if (newMessage.type === "audio") {
 					// --- WhatsApp Audio --- //
 					if (newMessage.channel === "whatsapp") {
@@ -59,7 +60,7 @@ export class MessageQueue {
 						// Replace message with transcription
 						newMessage.message = audioTranscription;
 
-					// --- Messenger Audio --- //
+						// --- Messenger Audio --- //
 					} else if (newMessage.channel === "messenger") {
 						// Call whisper GPT to transcribe audio to text
 						const audioTranscription = await audioToText(
@@ -73,7 +74,7 @@ export class MessageQueue {
 						newMessage.message = audioTranscription;
 					}
 
-					// ---------- Image ----------//
+				// ---------- IMAGE -------------------------------------------------//
 				} else if (newMessage.type === "image") {
 					// --- WhatsApp Image --- //
 					if (newMessage.channel === "whatsapp") {
@@ -92,11 +93,34 @@ export class MessageQueue {
 							imageBufferData,
 							"https://three-2-12-messenger-api.onrender.com"
 						);
-						console.log("image URL:", imageURL);
+						console.log("Public image URL:", imageURL);
 
 						// --- Messenger Image --- //
 					} else if (newMessage.channel === "messenger") {
-						imageURL = newMessage.url
+						imageURL = newMessage.url;
+					}
+
+				// ----------- DOCUMENTS ----------------------------------------------------- //
+				} else if (newMessage.type === "document") {
+					// --- WhatsApp documents ---//
+					if (newMessage.channel === "whatsapp") {
+						// Get the Document URL from WhatsApp
+						const document = await getMediaWhatsappUrl(newMessage.documentId);
+						const documentUrl = document.data.url;
+						console.log("Document URL:", documentUrl);
+
+						// Download Document from WhatsApp
+						const documentBuffer = await downloadWhatsAppMedia(documentUrl);
+						const documentBufferData = documentBuffer.data;
+						console.log("Document download:", documentBufferData);
+
+						// Convert buffer received from WhatsApp to a public URL
+						documentURL = await convertBufferImageToUrl(
+							documentBufferData,
+							"https://three-2-12-messenger-api.onrender.com"
+						);
+						console.log("Public Document URL:", documentURL);
+
 					}
 				}
 
@@ -147,20 +171,18 @@ export class MessageQueue {
 				// Error handlers
 				if (newMessage.channel === "web" && queue.responseCallback) {
 					queue.responseCallback(error, null);
-					
 				} else if (newMessage.channel === "whatsapp") {
 					// Send error message to customer
 					handleWhatsappMessage(senderId, errorMessage);
-					
+
 					// Send WhatsApp error message to Admin
-					newErrorWhatsAppNotification("WhatsApp", error.message)
-					
+					newErrorWhatsAppNotification("WhatsApp", error.message);
 				} else if (newMessage.channel === "messenger") {
 					// Send error message to customer
 					handleMessengerMessage(senderId, errorMessage);
-					
+
 					// Send WhatsApp error message to Admin
-					newErrorWhatsAppNotification("Messenger", error.message)
+					newErrorWhatsAppNotification("Messenger", error.message);
 				}
 
 				// Return to webhookController that has res.
