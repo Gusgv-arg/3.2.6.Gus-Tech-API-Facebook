@@ -85,14 +85,14 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				console.log("Document download:", documentBufferData);
 				
 				// Convert buffer received from WhatsApp to a public URL
-				const documentURL = await convertBufferImageToUrl(
+				/* const documentURL = await convertBufferImageToUrl(
 					documentBufferData,
 					"https://three-2-12-messenger-api.onrender.com"
 				);
-				console.log("Public Document URL:", documentURL);
+				console.log("Public Document URL:", documentURL); */
 
 				// Call the new function to process the campaign
-				await processCampaignExcel(documentURL);
+				await processCampaignExcel(documentBufferData);
 			
 				res.status(200).send("EVENT_RECEIVED");
 			

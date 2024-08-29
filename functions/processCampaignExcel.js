@@ -8,11 +8,10 @@ dotenv.config();
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
 
-export const processCampaignExcel = async (documentURL) => {
+export const processCampaignExcel = async (excelBuffer) => {
     try {
-        // Download the Excel file
-        const response = await axios.get(documentURL, { responseType: 'arraybuffer' });
-        const workbook = xlsx.read(response.data);
+        // Read the Excel file from the buffer
+        const workbook = xlsx.read(excelBuffer, { type: 'buffer' });
         const sheet = workbook.Sheets[workbook.SheetNames[0]];
         const data = xlsx.utils.sheet_to_json(sheet);
 
@@ -24,12 +23,18 @@ export const processCampaignExcel = async (documentURL) => {
         for (const row of data) {
             const { telefono, nombre, montoCredito } = row;
 
+            if (!telefono || !nombre || montoCredito === undefined) {
+                console.error(`Fila inválida: ${JSON.stringify(row)}`);
+                errorCount++;
+                continue;
+            }
+
             const messageData = {
                 messaging_product: "whatsapp",
-                to: telefono,
+                to: telefono.toString(),
                 type: "template",
                 template: {
-                    name: "lanzamiento_gustech",
+                    name: "campania_whatsapp",
                     language: {
                         code: "es_AR",
                     },
@@ -37,7 +42,7 @@ export const processCampaignExcel = async (documentURL) => {
                         {
                             type: "body",
                             parameters: [
-                                { type: "text", text: nombre },
+                                { type: "text", text: nombre.toString() },
                                 { type: "text", text: montoCredito.toString() },
                             ],
                         },
