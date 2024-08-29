@@ -16,12 +16,13 @@ const openai = new OpenAI({
 export const processMessageWithAssistant = async (
 	senderId,
 	userMessage,
-	imageURL
+	imageURL,
+	documentURL
 ) => {
 	const assistantId = process.env.OPENAI_ASSISTANT_ID;
 	let threadId;
 	//console.log("sender_psid:", senderId, "userMessage:", userMessage);
-	console.log("Image URL recibida en processmessageWith..:", imageURL)
+	//console.log("Image URL recibida en processmessageWith..:", imageURL)
 
 	// Check if there is an existing thread for the user
 	let existingThread;
@@ -39,21 +40,21 @@ export const processMessageWithAssistant = async (
 	if (existingThread) {
 		threadId = existingThread.thread_id;
 
-		if (imageURL) {
+		if (imageURL || documentURL) {
 			await openai.beta.threads.messages.create(threadId, {
 				role: "user",
 				content: [
 					{
 						type: "text",
-						text: userMessage ? userMessage : "Dime que ves en esta imágen y 3 ejemplos de como podría aplicar tu capacidad para ver imagenes en un negocio cualquiera.",
+						text: userMessage //? userMessage : "Dime que ves en esta imágen y 3 ejemplos de como podría aplicar tu capacidad para ver imagenes en un negocio cualquiera.",
 					},
 					{
 						type: "image_url",
 						image_url: {
-							url: imageURL,
+							url: imageURL ? imageURL : documentURL,
 							detail: "high",
 						},
-					},
+					}
 				],
 			});
 		} else {
@@ -67,18 +68,18 @@ export const processMessageWithAssistant = async (
 		const thread = await openai.beta.threads.create();
 		threadId = thread.id;
 
-		if (imageURL) {
+		if (imageURL || documentURL) {
 			await openai.beta.threads.messages.create(threadId, {
 				role: "user",
 				content: [
 					{
 						type: "text",
-						text: userMessage ? userMessage : "Dime que ves en esta imágen y 3 ejemplos de como podría aplicar tu capacidad para ver imagenes en un negocio cualquiera.",
+						text: userMessage //? userMessage : "Dime que ves en esta imágen y 3 ejemplos de como podría aplicar tu capacidad para ver imagenes en un negocio cualquiera.",
 					},
 					{
 						type: "image_url",
 						image_url: {
-							url: imageURL,
+							url: imageURL ? imageURL : documentURL,
 							detail: "high",
 						},
 					},

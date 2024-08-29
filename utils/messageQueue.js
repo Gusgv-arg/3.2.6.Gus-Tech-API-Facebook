@@ -128,7 +128,8 @@ export class MessageQueue {
 				const response = await processMessageWithAssistant(
 					senderId,
 					newMessage.message,
-					imageURL
+					imageURL,
+					documentURL
 				);
 
 				if (newMessage.channel === "messenger") {
