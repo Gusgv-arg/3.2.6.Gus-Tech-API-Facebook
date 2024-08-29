@@ -6,8 +6,8 @@ import {
 	botSwitchOnNotification,
 	helpFunctionNotification,
 } from "../utils/notificationMessages.js";
-import {getMediaWhatsappUrl} from "../utils/getMediaWhatsappUrl.js"
-import {downloadWhatsAppMedia} from "../utils/downloadWhatsAppMedia.js"
+import { getMediaWhatsappUrl } from "../utils/getMediaWhatsappUrl.js";
+import { downloadWhatsAppMedia } from "../utils/downloadWhatsAppMedia.js";
 import { processCampaignExcel } from "../functions/processCampaignExcel.js";
 
 const myPhone = process.env.MY_PHONE;
@@ -45,8 +45,9 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				message =
 					body.entry[0].changes[0].value.messages[0].text.body.toLowerCase();
 			} else if (typeOfWhatsappMessage === "document") {
-				message = body.entry[0].changes[0].value.messages[0].document.caption.toLowerCase();
-				documentId = body.entry[0].changes[0].value.messages[0].document.id
+				message =
+					body.entry[0].changes[0].value.messages[0].document.caption.toLowerCase();
+				documentId = body.entry[0].changes[0].value.messages[0].document.id;
 			}
 
 			if (message === "megabot responder") {
@@ -71,21 +72,31 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				await adminWhatsAppNotification(helpFunctionNotification);
 
 				res.status(200).send("EVENT_RECEIVED");
-				
-			} else if (message === "campaña") {
+			
+			} else if (message.startsWith("campaña")) {
+				const parts = message.split(" ");
+				if (parts.length < 2) {
+					await adminWhatsAppNotification(
+						"NOTIFICACION de Error:\nDebe especificar el nombre de la plantilla después de 'campaña'."
+					);
+					res.status(200).send("EVENT_RECEIVED");
+					return;
+				}
+				const templateName = parts.slice(1).join("_");
+
 				// Get the Document URL from WhatsApp
 				const document = await getMediaWhatsappUrl(documentId);
 				const documentUrl = document.data.url;
-				console.log("Document URL:", documentUrl);
-				
+				//console.log("Document URL:", documentUrl);
+
 				// Download Document from WhatsApp
 				const documentBuffer = await downloadWhatsAppMedia(documentUrl);
 				const documentBufferData = documentBuffer.data;
-				console.log("Document download:", documentBufferData);
-				
+				//console.log("Document download:", documentBufferData);
+
 				// Call the new function to process the campaign
-				await processCampaignExcel(documentBufferData);
-			
+				await processCampaignExcel(documentBufferData, templateName);
+
 				res.status(200).send("EVENT_RECEIVED");
 			
 			} else {

@@ -10,7 +10,7 @@ const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-export const processCampaignExcel = async (excelBuffer) => {
+export const processCampaignExcel = async (excelBuffer, templateName) => {
     try {
         const workbook = xlsx.read(excelBuffer, { type: 'buffer' });
         const sheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -44,7 +44,7 @@ export const processCampaignExcel = async (excelBuffer) => {
                 to: telefono.toString(),
                 type: "template",
                 template: {
-                    name: "campania_whatsapp",
+                    name: templateName,
                     language: {
                         code: "es_AR",
                     },
