@@ -68,7 +68,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 
 				res.status(200).send("EVENT_RECEIVED");
 			
-			} else if (message === "megabot ayuda") {
+			} else if (message === "megabot") {
 				await adminWhatsAppNotification(helpFunctionNotification);
 
 				res.status(200).send("EVENT_RECEIVED");
