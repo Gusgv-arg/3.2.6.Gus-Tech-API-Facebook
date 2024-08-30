@@ -52,7 +52,7 @@ export const processMessageWithAssistant = async (
 			return { errorMessage, threadId };
 		} else if (
 			type === "button" &&
-			userMessagetoLowercase() === "detener promociones"
+			userMessage.toLowerCase() === "detener promociones"
 		) {
 			const notification = noPromotions;
 			return { notification, threadId };
@@ -94,7 +94,7 @@ export const processMessageWithAssistant = async (
 			return { errorMessage, threadId };
 		} else if (
 			type === "button" &&
-			userMessage.toLowercase() === "detener promociones"
+			userMessage.toLowerCase() === "detener promociones"
 		) {
 			const notification = noPromotions;
 			return { notification, threadId };
