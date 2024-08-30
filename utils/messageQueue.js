@@ -74,7 +74,7 @@ export class MessageQueue {
 						newMessage.message = audioTranscription;
 					}
 
-				// ---------- IMAGE -------------------------------------------------//
+					// ---------- IMAGE -------------------------------------------------//
 				} else if (newMessage.type === "image") {
 					// --- WhatsApp Image --- //
 					if (newMessage.channel === "whatsapp") {
@@ -100,7 +100,7 @@ export class MessageQueue {
 						imageURL = newMessage.url;
 					}
 
-				// ----------- DOCUMENTS ----------------------------------------------------- //
+					// ----------- DOCUMENTS ----------------------------------------------------- //
 				} else if (newMessage.type === "document") {
 					// --- WhatsApp documents ---//
 					if (newMessage.channel === "whatsapp") {
@@ -120,7 +120,6 @@ export class MessageQueue {
 							"https://three-2-12-messenger-api.onrender.com"
 						);
 						console.log("Public Document URL:", documentURL);
-
 					}
 				}
 
@@ -147,16 +146,24 @@ export class MessageQueue {
 						newMessage
 					);
 				} else if (newMessage.channel === "whatsapp") {
-					// Send response to user by Whatsapp (gpt or error message)
+					// Send response to user by Whatsapp (can be gpt, error message, notification)
 					await handleWhatsappMessage(
 						senderId,
-						response?.messageGpt ? response.messageGpt : response.errorMessage
+						response?.messageGpt
+							? response.messageGpt
+							: response.errorMessage
+							? response.errorMessage
+							: response.notification
 					);
 
 					// Save the message in the database
 					await saveMessageInDb(
 						senderId,
-						response?.messageGpt ? response.messageGpt : response.errorMessage,
+						response?.messageGpt
+							? response.messageGpt
+							: response.errorMessage
+							? response.errorMessage
+							: response.notification,
 						response?.threadId ? response.threadId : null,
 						newMessage
 					);

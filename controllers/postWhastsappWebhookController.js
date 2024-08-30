@@ -46,6 +46,8 @@ export const postWhatsappWebhookController = async (req, res) => {
 					? body.entry[0].changes[0].value.messages[0].text.body
 					: type === "document"
 					? body.entry[0].changes[0].value.messages[0].document.caption
+					: type === "button"
+					? body.entry[0].changes[0].value.messages[0].button.text
 					: "unknown message";
 			const userPhone = body.entry[0].changes[0].value.messages[0].from;
 			const channel = "whatsapp";

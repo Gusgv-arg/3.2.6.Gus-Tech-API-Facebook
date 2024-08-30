@@ -2,8 +2,14 @@ import OpenAI from "openai";
 import dotenv from "dotenv";
 import Leads from "../models/leads.js";
 import { getStockPrice } from "../functions/getStockPrice.js";
-import { errorMessage1, errorMessage2, errorMessage3, errorMessage5 } from "./errorMessages.js";
+import {
+	errorMessage1,
+	errorMessage2,
+	errorMessage3,
+	errorMessage5,
+} from "./errorMessages.js";
 import { cleanThread } from "./cleanThread.js";
+import { noPromotions } from "./notificationMessages.js";
 
 dotenv.config();
 
@@ -36,15 +42,20 @@ export const processMessageWithAssistant = async (
 		throw error;
 	}
 
-	
 	// Pass in the user question into the existing thread
 	if (existingThread) {
 		threadId = existingThread.thread_id;
-		
-		// If type is Document return an error message
-		if (type === "document"){
-			const errorMessage = errorMessage5
-			return {errorMessage, threadId}
+
+		// If type is Document or Button return a specific message
+		if (type === "document") {
+			const errorMessage = errorMessage5;
+			return { errorMessage, threadId };
+		} else if (
+			type === "button" &&
+			userMessagetoLowercase() === "detener promociones"
+		) {
+			const notification = noPromotions;
+			return { notification, threadId };
 		}
 
 		if (imageURL) {
@@ -53,7 +64,9 @@ export const processMessageWithAssistant = async (
 				content: [
 					{
 						type: "text",
-						text: userMessage ? userMessage : "Dime que ves en esta imágen y 3 ejemplos de como podría aplicar tu capacidad para ver imagenes en un negocio cualquiera.",
+						text: userMessage
+							? userMessage
+							: "Dime que ves en esta imágen y 3 ejemplos de como podría aplicar tu capacidad para ver imagenes en un negocio cualquiera.",
 					},
 					{
 						type: "image_url",
@@ -61,7 +74,7 @@ export const processMessageWithAssistant = async (
 							url: imageURL,
 							detail: "high",
 						},
-					}
+					},
 				],
 			});
 		} else {
@@ -75,10 +88,16 @@ export const processMessageWithAssistant = async (
 		const thread = await openai.beta.threads.create();
 		threadId = thread.id;
 
-		// If type is Document return an error message
-		if (type === "document"){
-			const errorMessage = errorMessage5
-			return {errorMessage, threadId}
+		// If type is Document or Button return a specific message
+		if (type === "document") {
+			const errorMessage = errorMessage5;
+			return { errorMessage, threadId };
+		} else if (
+			type === "button" &&
+			userMessage.toLowercase() === "detener promociones"
+		) {
+			const notification = noPromotions;
+			return { notification, threadId };
 		}
 
 		if (imageURL) {
@@ -87,7 +106,9 @@ export const processMessageWithAssistant = async (
 				content: [
 					{
 						type: "text",
-						text: userMessage ? userMessage : "Dime que ves en esta imágen y 3 ejemplos de como podría aplicar tu capacidad para ver imagenes en un negocio cualquiera.",
+						text: userMessage
+							? userMessage
+							: "Dime que ves en esta imágen y 3 ejemplos de como podría aplicar tu capacidad para ver imagenes en un negocio cualquiera.",
 					},
 					{
 						type: "image_url",
@@ -156,7 +177,6 @@ export const processMessageWithAssistant = async (
 						tool_outputs: toolsOutput,
 					});
 				} else if (runStatus.status === "failed") {
-					
 					currentAttempt++;
 					const runMessages = await openai.beta.threads.messages.list(threadId);
 					if (
@@ -164,7 +184,7 @@ export const processMessageWithAssistant = async (
 						runStatus.last_error !== null
 					) {
 						// Error if rate limit is exceeded
-						if (runStatus.last_error === "rate_limit_exceeded"){
+						if (runStatus.last_error === "rate_limit_exceeded") {
 							errorMessage = errorMessage3;
 						} else {
 							errorMessage = errorMessage2;
@@ -204,18 +224,18 @@ export const processMessageWithAssistant = async (
 
 	// Get the last assistant message from the messages array
 	const messages = await openai.beta.threads.messages.list(threadId);
-	
+
 	// Find the last message for the current run
 	const lastMessageForRun = messages.data
 		.filter(
 			(message) => message.run_id === run.id && message.role === "assistant"
 		)
 		.pop();
-	
+
 	// Save the received message from the user and send the assistants response
 	if (lastMessageForRun) {
 		let messageGpt = lastMessageForRun.content[0].text.value;
-		console.log("MessagGpt-->", messageGpt)
+		console.log("MessagGpt-->", messageGpt);
 		return { messageGpt, senderId, threadId };
 	}
 };
