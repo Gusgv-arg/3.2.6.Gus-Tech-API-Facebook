@@ -74,6 +74,10 @@ export const processCampaignExcel = async (
 					headers: { "Content-Type": "application/json" },
 				});
 				
+				// Increment counter
+				console.log(`Mensaje enviado a ${telefono}: ${response.data.messages[0].id}`);
+				successCount++;
+				
 				// Create a thread for the Campaign
 				const campaign = await createCampaignThread(campaignName, row[headers[1]])
 
@@ -114,11 +118,7 @@ export const processCampaignExcel = async (
 					// Update existing lead with Campaign
 					lead.campaigns.push(campaignDetail);
 					await lead.save();
-				}
-
-				// Increment counter
-				console.log(`Mensaje enviado a ${telefono}: ${response.data.messages[0].id}`);
-				successCount++;
+				}				
 
 			} catch (error) {
 				console.error(`Error enviando mensaje a ${telefono}:`, error.response?.data || error.message);
