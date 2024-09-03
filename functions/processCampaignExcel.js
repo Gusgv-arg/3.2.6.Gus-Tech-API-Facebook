@@ -81,7 +81,7 @@ export const processCampaignExcel = async (
 				const messageCampaign = {
 					messages: `Cliente contactado por la Campaña ${campaignName}.`,
 					status: "contactado",
-					sentAt: new Date().toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+					sentAt: new Date(),
 					error: "",
 					retryCount: 0,
 				};
@@ -89,7 +89,7 @@ export const processCampaignExcel = async (
 				// Prepare a Campaign detail object
 				const campaignDetail = {
 					campaignName: campaignName,
-					campaignDate: new Date().toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+					campaignDate: new Date(),
 					campaignThreadId: campaign.threadId,
 					messages: [messageCampaign],
 				};
@@ -128,14 +128,14 @@ export const processCampaignExcel = async (
 				const messageCampaign = {
 					messages: "",
 					status: "error",
-					sentAt: new Date().toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+					sentAt: new Date(),
 					error: error.response?.data || error.message,
 					retryCount: 0,
 				};
 
 				const campaignDetail = {
 					campaignName: campaignName,
-					campaignDate: new Date().toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+					campaignDate: new Date(),
 					campaignThreadId: "",
 					messages: [messageCampaign],
 				};
