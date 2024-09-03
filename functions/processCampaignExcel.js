@@ -77,9 +77,10 @@ export const processCampaignExcel = async (
 				// Increment counter
 				console.log(`Mensaje enviado a ${telefono}: ${response.data.messages[0].id}`);
 				successCount++;
-				
+
 				// Create a thread for the Campaign
 				const campaign = await createCampaignThread(campaignName, row[headers[1]])
+				console.log("campaignthreadID", campaign)
 
 				// Prepare a Message Campaign object
 				const messageCampaign = {
@@ -94,7 +95,7 @@ export const processCampaignExcel = async (
 				const campaignDetail = {
 					campaignName: campaignName,
 					campaignDate: new Date(),
-					campaignThreadId: campaign.threadId,
+					campaignThreadId: campaign,
 					messages: [messageCampaign],
 				};
 
@@ -108,6 +109,7 @@ export const processCampaignExcel = async (
 						id_user: telefono.toString(),
 						channel: "WhatsApp",
 						content: "",
+						thread_id: "",
 						botSwitch: "ON",
 						responses: 0,
 						campaigns: [campaignDetail],
