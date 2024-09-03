@@ -3,6 +3,7 @@ import axios from "axios";
 import xlsx from "xlsx";
 import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js";
 import Leads from "../models/leads.js";
+import { createCampaignThread } from "../utils/createCampaignThread.js";
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ export const processCampaignExcel = async (
 
 		const url = `https://graph.facebook.com/v20.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
 
+		// Variables to track Campaign
 		let successCount = 0;
 		let errorCount = 0;
 		let newLeadsCount = 0;
@@ -30,8 +32,9 @@ export const processCampaignExcel = async (
 		// Get headers dynamically
 		const headers = Object.keys(data[0]);
 
+		// Loop for each record
 		for (const row of data) {
-			// Ensure the row has a phone number (assuming it's the first column)
+			// Ensure the row has a phone number in the first column
 			const telefono = row[headers[0]];
 			if (!telefono) {
 				console.error(
@@ -41,7 +44,7 @@ export const processCampaignExcel = async (
 				continue;
 			}
 
-			// Prepare parameters for the message
+			// From the array of headers, take off  the telephone and map the records that correspond to the variables of the Campaign Template
 			const parameters = headers.slice(1).map((header) => ({
 				type: "text",
 				text: row[header] ? row[header].toString() : "",
@@ -70,12 +73,15 @@ export const processCampaignExcel = async (
 				const response = await axios.post(url, messageData, {
 					headers: { "Content-Type": "application/json" },
 				});
+				
+				// Create a thread for the Campaign
+				const campaign = await createCampaignThread(campaignName, row[headers[1]])
 
 				// Prepare a Message Campaign object
 				const messageCampaign = {
-					messages: JSON.stringify(messageData),
+					messages: `Cliente contactado por la Campaña ${campaignName}.`,
 					status: "contactado",
-					sentAt: new Date(),
+					sentAt: new Date().toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' }),
 					error: "",
 					retryCount: 0,
 				};
@@ -83,8 +89,8 @@ export const processCampaignExcel = async (
 				// Prepare a Campaign detail object
 				const campaignDetail = {
 					campaignName: campaignName,
-					campaignDate: new Date(),
-					campaignThreadId: "",
+					campaignDate: new Date().toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+					campaignThreadId: campaign.threadId,
 					messages: [messageCampaign],
 				};
 
@@ -111,29 +117,25 @@ export const processCampaignExcel = async (
 				}
 
 				// Increment counter
-				console.log(
-					`Mensaje enviado a ${telefono}: ${response.data.messages[0].id}`
-				);
+				console.log(`Mensaje enviado a ${telefono}: ${response.data.messages[0].id}`);
 				successCount++;
+
 			} catch (error) {
-				console.error(
-					`Error enviando mensaje a ${telefono}:`,
-					error.response?.data || error.message
-				);
+				console.error(`Error enviando mensaje a ${telefono}:`, error.response?.data || error.message);
 				errorCount++;
 
 				// Handle the Error
 				const messageCampaign = {
-					messages: JSON.stringify(messageData),
+					messages: "",
 					status: "error",
-					sentAt: new Date(),
+					sentAt: new Date().toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' }),
 					error: error.response?.data || error.message,
 					retryCount: 0,
 				};
 
 				const campaignDetail = {
 					campaignName: campaignName,
-					campaignDate: new Date(),
+					campaignDate: new Date().toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' }),
 					campaignThreadId: "",
 					messages: [messageCampaign],
 				};
@@ -144,7 +146,7 @@ export const processCampaignExcel = async (
 						$setOnInsert: {
 							name: row[headers[1]] || "",
 							channel: "WhatsApp",
-							content: "Creado por campaña (error)",
+							content: "",
 							botSwitch: "ON",
 							responses: 0,
 						},
@@ -160,12 +162,12 @@ export const processCampaignExcel = async (
 			await delay(3000);
 		}
 
-		const summaryMessage = `NOTIFICACION de Campaña procesada:\nMensajes enviados: ${successCount}\nErrores: ${errorCount}`;
+		const summaryMessage = `*NOTIFICACION de Campaña procesada*:\nMensajes enviados: ${successCount}\nErrores: ${errorCount}`;
 		await adminWhatsAppNotification(summaryMessage);
 	} catch (error) {
 		console.error("Error processing campaign Excel:", error.message);
 		await adminWhatsAppNotification(
-			"NOTIFICACION de Error al procesar la campaña:\n" + error.message
+			`*NOTIFICACION de Error de Campaña:*\n" + ${error.message}`
 		);
 	}
 };
