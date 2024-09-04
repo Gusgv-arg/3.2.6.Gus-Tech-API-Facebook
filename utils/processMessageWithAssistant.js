@@ -25,17 +25,20 @@ export const processMessageWithAssistant = async (
 	imageURL,
 	type
 ) => {
-	const assistantId = process.env.OPENAI_ASSISTANT_ID;
+	let assistantId;
 	let threadId;
 	//console.log("sender_psid:", senderId, "userMessage:", userMessage);
 	//console.log("Image URL recibida en processmessageWith..:", imageURL)
 
-	// Check if there is an existing thread for the user
 	let existingThread;
 	try {
+		// Check if there is an existing thread for the user (general or campaign)
 		existingThread = await Leads.findOne({
 			id_user: senderId,
-			thread_id: { $exists: true, $ne: "", $ne: null },
+			$or: [
+				{ thread_id: { $exists: true, $ne: "", $ne: null } },
+				{ campaigns: { $exists: true, $ne: [] } },
+			],
 		});
 	} catch (error) {
 		console.error("Error fetching thread from the database:", error);
@@ -44,7 +47,44 @@ export const processMessageWithAssistant = async (
 
 	// Pass in the user question into the existing thread
 	if (existingThread) {
-		threadId = existingThread.thread_id;
+		// Determine if it's General or Campaign thread
+		let generalThreadDate = existingThread.createdAt;
+		let generalThreadId = existingThread.thread_id;
+
+		// Get the last campaign info
+		let campaigns = existingThread.campaigns || [];
+		let lastCampaign = campaigns[campaigns.length - 1];
+		let campaignThreadDate = lastCampaign
+			? new Date(lastCampaign.campaignDate)
+			: null;
+		let campaignThreadId = lastCampaign ? lastCampaign.campaignThreadId : null;
+
+		// Determine the most recent threadId && assistant to be used
+		if (generalThreadId && campaignThreadId) {
+			// Both threads exist, compare dates
+			threadId =
+				generalThreadDate > campaignThreadDate
+					? generalThreadId
+					: campaignThreadId;
+			assistantId =
+				generalThreadDate > campaignThreadDate
+					? process.env.OPENAI_ASSISTANT_ID
+					: process.env.OPENAI_CAMPAIGN_ID;
+
+		} else if (generalThreadId) {
+			// Only general thread exists
+			threadId = generalThreadId;
+			assistantId = process.env.OPENAI_ASSISTANT_ID
+
+		} else if (campaignThreadId) {
+			// Only campaign thread exists
+			threadId = campaignThreadId;
+			assistantId = process.env.OPENAI_CAMPAIGN_ID
+			
+		} else {
+			// No valid threadId found
+			console.error("No valid threadId found for user:", senderId);
+		}
 
 		// If type is Document or Button return a specific message
 		if (type === "document") {
@@ -84,6 +124,7 @@ export const processMessageWithAssistant = async (
 			});
 		}
 	} else {
+		// ----- IN THEORY THIS SHOULD NEVER HAPPEN BECAUSE THE RECORD IS CREATED WITH A THREAD ---- //
 		// Create a new thread
 		const thread = await openai.beta.threads.create();
 		threadId = thread.id;
