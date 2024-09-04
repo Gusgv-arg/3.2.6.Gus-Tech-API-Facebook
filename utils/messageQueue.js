@@ -165,7 +165,8 @@ export class MessageQueue {
 							? response.errorMessage
 							: response.notification,
 						response?.threadId ? response.threadId : null,
-						newMessage
+						newMessage,
+						response?.campaignFlag
 					);
 				}
 			} catch (error) {

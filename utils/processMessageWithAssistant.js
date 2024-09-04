@@ -27,6 +27,7 @@ export const processMessageWithAssistant = async (
 ) => {
 	let assistantId;
 	let threadId;
+	let campaignFlag;
 	//console.log("sender_psid:", senderId, "userMessage:", userMessage);
 	//console.log("Image URL recibida en processmessageWith..:", imageURL)
 
@@ -59,7 +60,7 @@ export const processMessageWithAssistant = async (
 			: null;
 		let campaignThreadId = lastCampaign ? lastCampaign.campaignThreadId : null;
 
-		// Determine the most recent threadId && assistant to be used
+		// Determine the most recent threadId && assistant to be used && flag campaign
 		if (generalThreadId && campaignThreadId) {
 			// Both threads exist, compare dates
 			threadId =
@@ -70,17 +71,21 @@ export const processMessageWithAssistant = async (
 				generalThreadDate > campaignThreadDate
 					? process.env.OPENAI_ASSISTANT_ID
 					: process.env.OPENAI_CAMPAIGN_ID;
+			campaignFlag = generalThreadDate > campaignThreadDate
+			? false : true
 
 		} else if (generalThreadId) {
 			// Only general thread exists
 			threadId = generalThreadId;
 			assistantId = process.env.OPENAI_ASSISTANT_ID
+			campaignFlag = false
 
 		} else if (campaignThreadId) {
 			// Only campaign thread exists
 			threadId = campaignThreadId;
 			assistantId = process.env.OPENAI_CAMPAIGN_ID
-			
+			campaignFlag = true
+
 		} else {
 			// No valid threadId found
 			console.error("No valid threadId found for user:", senderId);
@@ -89,13 +94,13 @@ export const processMessageWithAssistant = async (
 		// If type is Document or Button return a specific message
 		if (type === "document") {
 			const errorMessage = errorMessage5;
-			return { errorMessage, threadId };
+			return { errorMessage, threadId, campaignFlag };
 		} else if (
 			type === "button" &&
 			userMessage.toLowerCase() === "detener promociones"
 		) {
 			const notification = noPromotions;
-			return { notification, threadId };
+			return { notification, threadId, campaignFlag };
 		}
 
 		if (imageURL) {
@@ -132,13 +137,13 @@ export const processMessageWithAssistant = async (
 		// If type is Document or Button return a specific message
 		if (type === "document") {
 			const errorMessage = errorMessage5;
-			return { errorMessage, threadId };
+			return { errorMessage, threadId, campaignFlag };
 		} else if (
 			type === "button" &&
 			userMessage.toLowerCase() === "detener promociones"
 		) {
 			const notification = noPromotions;
-			return { notification, threadId };
+			return { notification, threadId, campaignFlag };
 		}
 
 		if (imageURL) {
@@ -235,7 +240,7 @@ export const processMessageWithAssistant = async (
 						await cleanThread(senderId);
 
 						// Return error message to the user
-						return { errorMessage, senderId };
+						return { errorMessage, senderId, campaignFlag };
 					} else {
 						errorMessage = errorMessage1;
 					}
@@ -258,7 +263,7 @@ export const processMessageWithAssistant = async (
 				console.error("Exceeded maximum attempts. Exiting the loop.");
 				errorMessage = errorMessage1;
 
-				return { errorMessage, threadId };
+				return { errorMessage, threadId, campaignFlag };
 			}
 		}
 	} while (currentAttempt < maxAttempts);
@@ -277,6 +282,6 @@ export const processMessageWithAssistant = async (
 	if (lastMessageForRun) {
 		let messageGpt = lastMessageForRun.content[0].text.value;
 		console.log("MessagGpt-->", messageGpt);
-		return { messageGpt, senderId, threadId };
+		return { messageGpt, senderId, threadId, campaignFlag };
 	}
 };

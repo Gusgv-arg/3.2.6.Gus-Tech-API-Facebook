@@ -5,7 +5,8 @@ export const saveMessageInDb = async (
 	senderId,
 	messageGpt,
 	threadId,
-	newMessage
+	newMessage,
+	campaignFlag
 ) => {
 	// Save the sent message to the database
 	try {
@@ -28,21 +29,31 @@ export const saveMessageInDb = async (
 				second: "2-digit",
 			});
 
-			// Concatenate the new messages from user && GPT to the existing content
 			let newContent;
-			newContent = `${lead.content}\n${currentDateTime} - ${newMessage.name}: ${newMessage.message}\nMegaBot: ${messageGpt}`;
 
-			// Update the lead content
-			lead.content = newContent;
-			lead.channel = newMessage.channel;
-			lead.thread_id = threadId;
-			lead.responses = lead.responses + 1;
+			// Determine wether it's a general thread or campaign
+			if (campaignFlag === false) {
+				// Concatenate the new messages from user && GPT to the existing content
+				newContent = `${lead.content}\n${currentDateTime} - ${newMessage.name}: ${newMessage.message}\nMegaBot: ${messageGpt}`;
 
-			// Save the updated lead
-			await lead.save();
-			console.log("Lead updated with GPT message in Leads DB");
+				// Update the lead content
+				lead.content = newContent;
+				lead.channel = newMessage.channel;
+				lead.thread_id = threadId;
+				lead.responses = lead.responses + 1;
 
-			return;
+				// Save the updated lead
+				await lead.save();
+				console.log("Lead updated with GPT message in Leads DB");
+				return;
+
+			} else if (campaignFlag === true) {
+				console.log("llegue hasta aca y tengo que guardar en la base!!");
+				return;
+			} else {
+				console.log("there is no campaign flag so nothing was stored in DB!!")
+				return
+			}
 		}
 	} catch (error) {
 		logError(error, "An error occured while saving message in Messages DB");
