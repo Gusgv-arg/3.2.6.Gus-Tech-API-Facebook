@@ -28,6 +28,7 @@ export const processCampaignExcel = async (
 		let successCount = 0;
 		let errorCount = 0;
 		let newLeadsCount = 0;
+		let campaignThread = "";
 
 		// Get headers dynamically
 		const headers = Object.keys(data[0]);
@@ -79,8 +80,8 @@ export const processCampaignExcel = async (
 				successCount++;
 
 				// Create a thread for the Campaign
-				const campaign = await createCampaignThread(campaignName, row[headers[1]])
-				console.log("campaignthreadID", campaign)
+				campaignThread = await createCampaignThread(campaignName, row[headers[1]])
+				console.log("campaignthreadID-->", campaign)
 
 				// Prepare a Message Campaign object
 				const messageCampaign = {
@@ -95,7 +96,7 @@ export const processCampaignExcel = async (
 				const campaignDetail = {
 					campaignName: campaignName,
 					campaignDate: new Date(),
-					campaignThreadId: campaign,
+					campaignThreadId: campaignThread,
 					messages: [messageCampaign],
 				};
 
@@ -138,7 +139,7 @@ export const processCampaignExcel = async (
 				const campaignDetail = {
 					campaignName: campaignName,
 					campaignDate: new Date(),
-					campaignThreadId: "",
+					campaignThreadId: campaignThread,
 					messages: [messageCampaign],
 				};
 
@@ -164,7 +165,7 @@ export const processCampaignExcel = async (
 			await delay(3000);
 		}
 
-		const summaryMessage = `*NOTIFICACION de Campaña procesada*:\nMensajes enviados: ${successCount}\nErrores: ${errorCount}`;
+		const summaryMessage = `*NOTIFICACION de Campaña:*\nMensajes enviados: ${successCount}\nErrores: ${errorCount}`;
 		await adminWhatsAppNotification(summaryMessage);
 	} catch (error) {
 		console.error("Error processing campaign Excel:", error.message);

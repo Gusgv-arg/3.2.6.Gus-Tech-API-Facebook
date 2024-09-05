@@ -33,10 +33,10 @@ export const saveMessageInDb = async (
 
 			// Determine wether it's a general thread or campaign
 			if (campaignFlag === false) {
-				// Concatenate the new messages from user && GPT to the existing content
+				// Concatenate in the general thread the new messages from user && GPT to the existing content
 				newContent = `${lead.content}\n${currentDateTime} - ${newMessage.name}: ${newMessage.message}\nMegaBot: ${messageGpt}`;
 
-				// Update the lead content
+				// Update the lead content in the general thread
 				lead.content = newContent;
 				lead.channel = newMessage.channel;
 				lead.thread_id = threadId;
@@ -46,13 +46,35 @@ export const saveMessageInDb = async (
 				await lead.save();
 				console.log("Lead updated with GPT message in Leads DB");
 				return;
-
+				
 			} else if (campaignFlag === true) {
-				console.log("llegue hasta aca y tengo que guardar en la base!!");
+				// Look for Campaign in the array of Campaigns
+				const currentCampaign = lead.campaigns.find(
+					(campaign) => campaign.campaignThreadId === threadId
+				);
+
+				if (!currentCampaign) {
+					console.log("Campaign not found for this thread");
+					return;
+				}
+
+				// Create the message object for Campaign
+				const newCampaignMessage = {
+					messages: `${currentDateTime} - ${newMessage.name}: ${newMessage.message}\nMegaBot: ${messageGpt}`,
+					status: "respuesta",
+					sentAt: new Date(),
+				};
+
+				// Push new message to Campaign array
+				currentCampaign.messages.push(newCampaignMessage);
+
+				// Actualizar el lead con la nueva información de la campaña
+				await lead.save();
+				console.log("Lead updated with campaign message in Leads DB");
 				return;
 			} else {
-				console.log("there is no campaign flag so nothing was stored in DB!!")
-				return
+				console.log("there is no campaign flag so nothing was stored in DB!!");
+				return;
 			}
 		}
 	} catch (error) {
