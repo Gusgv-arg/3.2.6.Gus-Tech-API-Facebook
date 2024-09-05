@@ -46,7 +46,6 @@ export const saveMessageInDb = async (
 				await lead.save();
 				console.log("Lead updated with GPT message in Leads DB");
 				return;
-				
 			} else if (campaignFlag === true) {
 				// Look for Campaign in the array of Campaigns
 				const currentCampaign = lead.campaigns.find(
@@ -58,20 +57,27 @@ export const saveMessageInDb = async (
 					return;
 				}
 
-				// Create the message object for Campaign
-				const newCampaignMessage = {
-					messages: `${currentDateTime} - ${newMessage.name}: ${newMessage.message}\nMegaBot: ${messageGpt}`,
-					status: "respuesta",
-					sentAt: new Date(),
-				};
+				// Concatenate the campaign message with the previous ones
+				const newMessageContent = `${currentDateTime} - ${newMessage.name}: ${newMessage.message}\nMegaBot: ${messageGpt}\n\n`;
 
-				// Push new message to Campaign array
-				currentCampaign.messages.push(newCampaignMessage);
+				// Replace the messages history with the new one  
+				currentCampaign.messages = currentCampaign.messages
+					? currentCampaign.messages + newMessageContent
+					: newMessageContent;
 
-				// Actualizar el lead con la nueva información de la campaña
+				// Update Campaign status
+				currentCampaign.status = "respuesta";
+
+				// Clean error if it existed
+				if (currentCampaign.error) {
+					currentCampaign.error = null;
+				}
+
+				// Update lead
 				await lead.save();
 				console.log("Lead updated with campaign message in Leads DB");
 				return;
+				
 			} else {
 				console.log("there is no campaign flag so nothing was stored in DB!!");
 				return;

@@ -1,18 +1,12 @@
 import mongoose from "mongoose";
 
-const messageCampaignSchema = new mongoose.Schema({
-	messages: String,
-	status: { type: String, enum: ["contactado", "respuesta", "error"] },
-	sentAt: Date,
-	error: String,
-	retryCount: { type: Number, default: 0 },
-});
-
 const campaignDetailSchema = new mongoose.Schema({
 	campaignName: String,
 	campaignDate: Date,
 	campaignThreadId: String,
-	messages: [messageCampaignSchema],
+	messages: String,
+	status: { type: String, enum: ["contactado", "respuesta", "error"] },
+	error: String,
 });
 
 const leadsSchema = new mongoose.Schema(
