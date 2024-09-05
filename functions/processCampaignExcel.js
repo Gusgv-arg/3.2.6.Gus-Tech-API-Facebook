@@ -81,7 +81,7 @@ export const processCampaignExcel = async (
 
 				// Create a thread for the Campaign
 				campaignThread = await createCampaignThread(campaignName, row[headers[1]])
-				console.log("campaignthreadID-->", campaign)
+				console.log("campaignthreadID-->", campaignThread)
 
 				// Prepare a Message Campaign object
 				const messageCampaign = {
