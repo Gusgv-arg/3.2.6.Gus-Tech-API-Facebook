@@ -62,16 +62,16 @@ export const processCampaignExcel = async (
 					},
 					components: [
 						{
-							"type": "header",
-							"parameters": [
-							  {
-								"type": "image",
-								"image": {
-								  "link":"https://github.com/Gusgv-arg/3.2.6.Gus-Tech-API-Facebook/blob/34944992248264371781beaaf3e3c155713dc70a/assets/Gus%20Tech%20logo%20Whatsapp.jpg?raw=true"
-								}
-							  }
-							]
-						  },
+							type: "header",
+							parameters: [
+								{
+									type: "image",
+									image: {
+										link: "https://github.com/Gusgv-arg/3.2.6.Gus-Tech-API-Facebook/blob/34944992248264371781beaaf3e3c155713dc70a/assets/Gus%20Tech%20logo%20Whatsapp.jpg?raw=true",
+									},
+								},
+							],
+						},
 						{
 							type: "body",
 							parameters: parameters,
@@ -85,30 +85,28 @@ export const processCampaignExcel = async (
 				const response = await axios.post(url, messageData, {
 					headers: { "Content-Type": "application/json" },
 				});
-				
+
 				// Increment counter
-				console.log(`Mensaje enviado a ${telefono}: ${response.data.messages[0].id}`);
+				console.log(
+					`Mensaje enviado a ${telefono}: ${response.data.messages[0].id}`
+				);
 				successCount++;
 
 				// Create a thread for the Campaign
-				campaignThread = await createCampaignThread(campaignName, row[headers[1]])
-				console.log("campaignthreadID-->", campaignThread)
-
-				// Prepare a Message Campaign object
-				const messageCampaign = {
-					messages: `Cliente contactado por la Campaña ${campaignName}.`,
-					status: "contactado",
-					sentAt: new Date(),
-					error: "",
-					retryCount: 0,
-				};
+				campaignThread = await createCampaignThread(
+					campaignName,
+					row[headers[1]]
+				);
+				//console.log("campaignthreadID-->", campaignThread);
 
 				// Prepare a Campaign detail object
 				const campaignDetail = {
 					campaignName: campaignName,
 					campaignDate: new Date(),
 					campaignThreadId: campaignThread,
-					messages: [messageCampaign],
+					messages: `Cliente contactado por la Campaña ${campaignName}.`,
+					status: "contactado",
+					error: "",
 				};
 
 				// Looks existent lead or creates a new one
@@ -132,26 +130,22 @@ export const processCampaignExcel = async (
 					// Update existing lead with Campaign
 					lead.campaigns.push(campaignDetail);
 					await lead.save();
-				}				
-
+				}
 			} catch (error) {
-				console.error(`Error enviando mensaje a ${telefono}:`, error.response?.data || error.message);
+				console.error(
+					`Error enviando mensaje a ${telefono}:`,
+					error.response?.data || error.message
+				);
 				errorCount++;
 
 				// Handle the Error
-				const messageCampaign = {
-					messages: "",
-					status: "error",
-					sentAt: new Date(),
-					error: error.response?.data || error.message,
-					retryCount: 0,
-				};
-
 				const campaignDetail = {
 					campaignName: campaignName,
 					campaignDate: new Date(),
 					campaignThreadId: campaignThread,
-					messages: [messageCampaign],
+					messages: `Error al contactar cliente por la Campaña ${campaignName}.`,
+					status: "error",
+					error: error.response?.data || error.message,
 				};
 
 				await Leads.findOneAndUpdate(
