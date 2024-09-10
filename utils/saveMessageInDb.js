@@ -58,7 +58,7 @@ export const saveMessageInDb = async (
 				}
 
 				// Concatenate the campaign message with the previous ones
-				const newMessageContent = `${currentDateTime} - ${newMessage.name}: ${newMessage.message}\nMegaBot: ${messageGpt}\n\n`;
+				const newMessageContent = `\n${currentDateTime} - ${newMessage.name}: ${newMessage.message}\nMegaBot: ${messageGpt}`;
 
 				// Replace the messages history with the new one  
 				currentCampaign.messages = currentCampaign.messages

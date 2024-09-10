@@ -90,6 +90,7 @@ export const processCampaignExcel = async (
 				console.log(
 					`Mensaje enviado a ${telefono}: ${response.data.messages[0].id}`
 				);
+				console.log("Respuesta de facebook al enviar Campaña:", response.data)
 				successCount++;
 
 				// Create a thread for the Campaign
