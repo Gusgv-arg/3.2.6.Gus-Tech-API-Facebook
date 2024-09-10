@@ -62,6 +62,17 @@ export const processCampaignExcel = async (
 					},
 					components: [
 						{
+							"type": "header",
+							"parameters": [
+							  {
+								"type": "image",
+								"image": {
+								  "link":"https://github.com/Gusgv-arg/3.2.6.Gus-Tech-API-Facebook/blob/34944992248264371781beaaf3e3c155713dc70a/assets/Gus%20Tech%20logo%20Whatsapp.jpg?raw=true"
+								}
+							  }
+							]
+						  },
+						{
 							type: "body",
 							parameters: parameters,
 						},

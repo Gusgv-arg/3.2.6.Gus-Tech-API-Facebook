@@ -8,6 +8,7 @@ const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
 const myPhone = process.env.MY_PHONE
 
+// Function for testing purposes
 export const postWhatsAppCampaign = async (req, res) => {
 	try {
 		// Posts the message to Whatsapp
