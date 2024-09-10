@@ -87,11 +87,21 @@ export const processCampaignExcel = async (
 				});
 
 				// Increment counter
+				successCount++;
 				console.log(
 					`Mensaje enviado a ${telefono}: ${response.data.messages[0].id}`
 				);
-				console.log("Respuesta de facebook al enviar Campaña:", response.data)
-				successCount++;
+								
+				// With the message ID get the details of the template
+				const messageId =response.data.messages[0].id
+				const urlMessage = `https://graph.facebook.com/v20.0/${myPhoneNumberId}/messages/${messageId}?access_token=${whatsappToken}`;
+
+				const response2 = await axios.post(url, {
+					headers: { "Content-Type": "application/json" },
+				});
+
+				const template = response2.data
+				console.log("Mensaje de la Plantilla:", template)
 
 				// Create a thread for the Campaign
 				campaignThread = await createCampaignThread(
