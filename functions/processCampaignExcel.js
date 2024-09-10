@@ -96,7 +96,7 @@ export const processCampaignExcel = async (
 				const messageId =response.data.messages[0].id
 				const urlMessage = `https://graph.facebook.com/v20.0/${myPhoneNumberId}/messages/${messageId}?access_token=${whatsappToken}`;
 
-				const response2 = await axios.post(url, {
+				const response2 = await axios.post(urlMessage, {
 					headers: { "Content-Type": "application/json" },
 				});
 
