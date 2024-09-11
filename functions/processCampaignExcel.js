@@ -72,12 +72,16 @@ export const processCampaignExcel = async (
 			let personalizedMessage = templateText;
 			headers.slice(1).forEach((header, index) => {
 				const variableNumber = index + 1; // {{1}} corresponde a la segunda columna (index 0 + 1)
-				const variableRegex = new RegExp(`{{${variableNumber}}}`, 'g');
+				const variableRegex = new RegExp(escapeRegExp(`{{${variableNumber}}}`), 'g');
 				const value = row[header] !== undefined ? row[header].toString().trim() : '';
 				
+				const beforeReplace = personalizedMessage;
 				personalizedMessage = personalizedMessage.replace(variableRegex, value);
 				
 				console.log(`Reemplazando {{${variableNumber}}} con "${value}"`);
+				console.log("Antes del reemplazo:", beforeReplace);
+				console.log("Después del reemplazo:", personalizedMessage);
+				console.log("¿Cambió?", beforeReplace !== personalizedMessage);
 			});
 			console.log("Mensaje individual:", personalizedMessage);
 
