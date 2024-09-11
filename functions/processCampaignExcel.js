@@ -70,11 +70,21 @@ export const processCampaignExcel = async (
 
 			// Create personalized message by replacing variables in templateText
 			let personalizedMessage = templateText;
+			/* headers.slice(1).forEach((header, index) => {
+				const variableRegex = new RegExp(`{{${index + 1}}}`, "g");
+				personalizedMessage = personalizedMessage.replace(
+					variableRegex,
+					row[header] || ""
+				);
+			}); */
+			
 			headers.slice(1).forEach((header, index) => {
-				const variableRegex = new RegExp(`{{${index + 1}}}`, 'g');
-				personalizedMessage = personalizedMessage.replace(variableRegex, row[header] || '');
+				const variableRegex = new RegExp(`{{${index + 1}}}`, "g");
+				const value =
+					row[header] !== undefined ? row[header].toString().trim() : "";
+				personalizedMessage = personalizedMessage.replace(variableRegex, value);
 			});
-			console.log("Mensaje individual:", personalizedMessage)
+			console.log("Mensaje individual:", personalizedMessage);
 
 			// From the array of headers, take off  the telephone and map the records that correspond to the variables of the Campaign Template
 			const parameters = headers.slice(1).map((header) => ({
@@ -131,14 +141,14 @@ export const processCampaignExcel = async (
 				//console.log("campaignthreadID-->", campaignThread);
 
 				// Add the template message to the messages of the thread
-				await addTemplateMessageToThread(campaignThread, personalizedMessage)
+				await addTemplateMessageToThread(campaignThread, personalizedMessage);
 
 				// Prepare a Campaign detail object
 				const campaignDetail = {
 					campaignName: campaignName,
 					campaignDate: new Date(),
 					campaignThreadId: campaignThread,
-					messages: `Cliente contactado por la Campaña ${campaignName}.`,
+					messages: `MegaBot: ${personalizedMessage}`,
 					status: "contactado",
 					error: "",
 				};
@@ -213,6 +223,8 @@ export const processCampaignExcel = async (
 		await adminWhatsAppNotification(summaryMessage);
 	} catch (error) {
 		console.error("Error processing campaign Excel:", error.message);
-		await adminWhatsAppNotification(`*NOTIFICACION de Error de Campaña:*\n${error.message} en processCampaignExcel.js`);
+		await adminWhatsAppNotification(
+			`*NOTIFICACION de Error de Campaña:*\n${error.message} en processCampaignExcel.js`
+		);
 	}
 };

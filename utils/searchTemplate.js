@@ -44,8 +44,7 @@ export const searchTemplate = async (templateName) => {
 
 		const templateData = response2.data;
 		console.log("Templatedata:", templateData)
-		console.log("Response2:", response2)
-
+		
 		const bodyComponent = templateData.components.find(
 			(component) => component.type === "BODY"
 		);
