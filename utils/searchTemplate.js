@@ -8,7 +8,7 @@ const whatsapBusinessId = process.env.WHATSAPP_BUSINESS_ID;
 export const searchTemplate = async (templateName) => {
 	try {
 		// Get WhatsApp Templates from Facebook
-		const urlTemplates = `https://graph.facebook.com/v20.0/${whatsapBusinessId}/message_templates?fields=name,statust`;
+		const urlTemplates = `https://graph.facebook.com/v20.0/${whatsapBusinessId}/message_templates?fields=name,status`;
 
 		const response = await axios.get(urlTemplates, {
 			headers: { "Content-Type": "application/json" },

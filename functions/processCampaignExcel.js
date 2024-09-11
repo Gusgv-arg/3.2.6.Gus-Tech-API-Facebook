@@ -213,5 +213,6 @@ export const processCampaignExcel = async (
 		await adminWhatsAppNotification(summaryMessage);
 	} catch (error) {
 		console.error("Error processing campaign Excel:", error.message);
+		await adminWhatsAppNotification(`*NOTIFICACION de Error de Campaña en processCampaignExcel.js:*\n${error.message}`);
 	}
 };
