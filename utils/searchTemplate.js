@@ -3,10 +3,10 @@ import axios from "axios";
 import { adminWhatsAppNotification } from "./adminWhatsAppNotification.js";
 
 const whatsappBusinessId = process.env.WHATSAPP_BUSINESS_ID;
-const whatsappToken = process.env.WHATSAPP_TOKEN 
+const whatsappToken = process.env.WHATSAPP_TOKEN;
 //const whatsappToken="EAANyjgoo5J4BO0dTv8kduiyVohevetzbkX64aRraJBLXi5WXNwAZBuJKfEZAkgwr1W4D2jifACtimx4Cpl4NZCgufglHbwHBwV9m2jfcZCdwxJr4RVC6oufflop3JqaWFz4BtGtcpdZCmHxxtquYiWjZBbSRXSqm3tdlY7UkCUvg3wAFDPefs0rC8E6a3GzZBbtIQZDZD"
-console.log("token", whatsappToken)
-console.log("whatsapp business ID", whatsappBusinessId)
+console.log("token", whatsappToken);
+console.log("whatsapp business ID", whatsappBusinessId);
 
 //Function that searches WhatsApp body Template
 export const searchTemplate = async (templateName) => {
@@ -19,7 +19,7 @@ export const searchTemplate = async (templateName) => {
 		const response = await axios.get(urlTemplates, {
 			headers: {
 				"Content-Type": "application/json",
-				"Authorization": `Bearer ${whatsappToken}`,
+				Authorization: `Bearer ${whatsappToken}`,
 			},
 		});
 		console.log("response de templates:", response.data);
@@ -35,15 +35,21 @@ export const searchTemplate = async (templateName) => {
 		}
 
 		const templateId = desiredTemplate.id;
+		console.log("Template ID", templateId)
 
 		// With Template ID get the body
 		const urlTemplateBody = `https://graph.facebook.com/v20.0/${templateId}`;
 
 		const response2 = axios.get(urlTemplateBody, {
-			headers: { "Content-Type": "application/json" },
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${whatsappToken}`,
+			},
 		});
 
 		const templateData = response2.data;
+		console.log("Templatedata:", templateData)
+		
 		const bodyComponent = templateData.components.find(
 			(component) => component.type === "BODY"
 		);
