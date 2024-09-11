@@ -4,6 +4,8 @@ import xlsx from "xlsx";
 import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js";
 import Leads from "../models/leads.js";
 import { createCampaignThread } from "../utils/createCampaignThread.js";
+import { searchTemplate } from "../utils/searchTemplate.js";
+import { addTemplateMessageToThread } from "../utils/addTemplateMessageToThread.js";
 
 dotenv.config();
 
@@ -18,10 +20,34 @@ export const processCampaignExcel = async (
 	campaignName
 ) => {
 	try {
+		// Look for the template text body
+		const templateText = await searchTemplate(templateName);
+		console.log("Texto de la Plantilla:", templateText);
+
+		// Extract variables from template text
+		const templateVariables = templateText.match(/{{\d+}}/g) || [];
+		const templateVariableCount = templateVariables.length;
+
+		// Process Excel file
 		const workbook = xlsx.read(excelBuffer, { type: "buffer" });
 		const sheet = workbook.Sheets[workbook.SheetNames[0]];
 		const data = xlsx.utils.sheet_to_json(sheet);
 
+		// Get headers dynamically
+		const headers = Object.keys(data[0]);
+		const excelVariableCount = headers.length - 1; // Exclude the phone number column
+
+		// Check if the number of variables match
+		if (templateVariableCount !== excelVariableCount) {
+			await adminWhatsAppNotification(
+				`*NOTIFICACION de Error de Campaña:*\nLa plantilla tiene ${templateVariableCount} variables y el Excel tiene ${excelVariableCount} columnas.`
+			);
+			throw new Error(
+				`La cantidad de variables en el texto de la plantilla (${templateVariableCount}) no coincide con la cantidad de columnas en el Excel (${excelVariableCount}).`
+			);
+		}
+
+		// URL where to post Campaign
 		const url = `https://graph.facebook.com/v20.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
 
 		// Variables to track Campaign
@@ -29,9 +55,6 @@ export const processCampaignExcel = async (
 		let errorCount = 0;
 		let newLeadsCount = 0;
 		let campaignThread = "";
-
-		// Get headers dynamically
-		const headers = Object.keys(data[0]);
 
 		// Loop for each record
 		for (const row of data) {
@@ -44,6 +67,14 @@ export const processCampaignExcel = async (
 				errorCount++;
 				continue;
 			}
+
+			// Create personalized message by replacing variables in templateText
+			let personalizedMessage = templateText;
+			headers.slice(1).forEach((header, index) => {
+				const variableRegex = new RegExp(`{{${index + 1}}}`, 'g');
+				personalizedMessage = personalizedMessage.replace(variableRegex, row[header] || '');
+			});
+			console.log("Mensaje individual:", personalizedMessage)
 
 			// From the array of headers, take off  the telephone and map the records that correspond to the variables of the Campaign Template
 			const parameters = headers.slice(1).map((header) => ({
@@ -85,23 +116,12 @@ export const processCampaignExcel = async (
 				const response = await axios.post(url, messageData, {
 					headers: { "Content-Type": "application/json" },
 				});
-
-				// Increment counter
-				successCount++;
 				console.log(
 					`Mensaje enviado a ${telefono}: ${response.data.messages[0].id}`
 				);
-								
-				// With the message ID get the details of the template
-				const messageId =response.data.messages[0].id
-				const urlMessage = `https://graph.facebook.com/v20.0/${myPhoneNumberId}/messages/${messageId}?access_token=${whatsappToken}`;
 
-				const response2 = await axios.post(urlMessage, {
-					headers: { "Content-Type": "application/json" },
-				});
-
-				const template = response2.data
-				console.log("Mensaje de la Plantilla:", template)
+				// Increment counter
+				successCount++;
 
 				// Create a thread for the Campaign
 				campaignThread = await createCampaignThread(
@@ -109,6 +129,9 @@ export const processCampaignExcel = async (
 					row[headers[1]]
 				);
 				//console.log("campaignthreadID-->", campaignThread);
+
+				// Add the template message to the messages of the thread
+				await addTemplateMessageToThread(campaignThread, personalizedMessage)
 
 				// Prepare a Campaign detail object
 				const campaignDetail = {
@@ -175,6 +198,11 @@ export const processCampaignExcel = async (
 				);
 
 				errorCount++;
+				await adminWhatsAppNotification(
+					`*NOTIFICACION de Error de Campaña para ${telefono}-${
+						row[headers[1]] || ""
+					}:*\n" + ${error.message}`
+				);
 			}
 
 			// Delay for 3 seconds before sending the next message
@@ -185,8 +213,5 @@ export const processCampaignExcel = async (
 		await adminWhatsAppNotification(summaryMessage);
 	} catch (error) {
 		console.error("Error processing campaign Excel:", error.message);
-		await adminWhatsAppNotification(
-			`*NOTIFICACION de Error de Campaña:*\n" + ${error.message}`
-		);
 	}
 };
