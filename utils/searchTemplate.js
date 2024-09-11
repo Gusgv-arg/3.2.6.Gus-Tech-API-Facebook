@@ -1,5 +1,6 @@
-import dotennv from "dotenv";
+import dotenv from "dotenv";
 import axios from "axios";
+import { adminWhatsAppNotification } from "./adminWhatsAppNotification.js";
 
 const whatsapBusinessId = process.env.WHATSAPP_BUSINESS_ID;
 
@@ -42,7 +43,7 @@ export const searchTemplate = async (templateName) => {
         return templateContent;
 
 	} catch (error) {
-		console.log("Error en searchTemplae.js", error.message);
-		throw error;
+		console.log("Error en searchTemplate.js", error.message);
+		await adminWhatsAppNotification(`*NOTIFICACION de Error de Campaña:*\n${error.message} en searchTemplate.js`);
 	}
 };
