@@ -86,11 +86,6 @@ export const processCampaignExcel = async (
 
 				const beforeReplace = personalizedMessage;
 				personalizedMessage = personalizedMessage.replace(variableRegex, value);
-
-				console.log(`Reemplazando {{${variableNumber}}} con "${value}"`);
-				console.log("Antes del reemplazo:", beforeReplace);
-				console.log("Después del reemplazo:", personalizedMessage);
-				console.log("¿Cambió?", beforeReplace !== personalizedMessage);
 			});
 			console.log("Mensaje individual:", personalizedMessage);
 

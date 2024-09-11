@@ -51,6 +51,8 @@ export const processMessageWithAssistant = async (
 		// Determine if it's General or Campaign thread
 		let generalThreadDate = existingThread.createdAt;
 		let generalThreadId = existingThread.thread_id;
+		console.log("General thread date:", generalThreadDate)
+		console.log("General thread Id:", generalThreadId)
 
 		// Get the last campaign info
 		let campaigns = existingThread.campaigns || [];
@@ -59,6 +61,8 @@ export const processMessageWithAssistant = async (
 			? new Date(lastCampaign.campaignDate)
 			: null;
 		let campaignThreadId = lastCampaign ? lastCampaign.campaignThreadId : null;
+		console.log("Last campaign date:", campaignThreadDate)
+		console.log("Last campaign thread Id:", campaignThreadId)
 
 		// Determine the most recent threadId && assistant to be used && flag campaign
 		if (generalThreadId && campaignThreadId) {
