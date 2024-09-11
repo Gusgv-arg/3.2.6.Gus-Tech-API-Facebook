@@ -62,4 +62,4 @@ export const searchTemplate = async (templateName) => {
 		);
 	}
 };
-searchTemplate("campania_whatsapp");
+//searchTemplate("campania_whatsapp");
