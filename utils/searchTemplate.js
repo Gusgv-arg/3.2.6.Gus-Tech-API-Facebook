@@ -13,6 +13,7 @@ export const searchTemplate = async (templateName) => {
 		const response = await axios.get(urlTemplates, {
 			headers: { "Content-Type": "application/json" },
 		});
+		console.log("response de templates:", response.data)
 
         // Filter needed Template to get the Template ID
         const allTemplates = response.data.data
