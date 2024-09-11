@@ -35,7 +35,7 @@ export const searchTemplate = async (templateName) => {
 		// With Template ID get the body
 		const urlTemplateBody = `https://graph.facebook.com/v20.0/${templateId}`;
 
-		const response2 = axios.get(urlTemplateBody, {
+		const response2 = await axios.get(urlTemplateBody, {
 			headers: {
 				"Content-Type": "application/json",
 				Authorization: `Bearer ${whatsappToken}`,
