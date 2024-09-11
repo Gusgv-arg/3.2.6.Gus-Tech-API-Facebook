@@ -68,16 +68,25 @@ export const processCampaignExcel = async (
 				continue;
 			}
 
+			// Función para escapar caracteres especiales en expresiones regulares
+			function escapeRegExp(string) {
+				return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+			}
+
 			// Create personalized message by replacing variables in templateText
 			let personalizedMessage = templateText;
 			headers.slice(1).forEach((header, index) => {
 				const variableNumber = index + 1; // {{1}} corresponde a la segunda columna (index 0 + 1)
-				const variableRegex = new RegExp(escapeRegExp(`{{${variableNumber}}}`), 'g');
-				const value = row[header] !== undefined ? row[header].toString().trim() : '';
-				
+				const variableRegex = new RegExp(
+					escapeRegExp(`{{${variableNumber}}}`),
+					"g"
+				);
+				const value =
+					row[header] !== undefined ? row[header].toString().trim() : "";
+
 				const beforeReplace = personalizedMessage;
 				personalizedMessage = personalizedMessage.replace(variableRegex, value);
-				
+
 				console.log(`Reemplazando {{${variableNumber}}} con "${value}"`);
 				console.log("Antes del reemplazo:", beforeReplace);
 				console.log("Después del reemplazo:", personalizedMessage);
