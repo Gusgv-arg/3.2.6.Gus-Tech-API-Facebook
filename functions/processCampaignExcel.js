@@ -70,19 +70,14 @@ export const processCampaignExcel = async (
 
 			// Create personalized message by replacing variables in templateText
 			let personalizedMessage = templateText;
-			/* headers.slice(1).forEach((header, index) => {
-				const variableRegex = new RegExp(`{{${index + 1}}}`, "g");
-				personalizedMessage = personalizedMessage.replace(
-					variableRegex,
-					row[header] || ""
-				);
-			}); */
-			
 			headers.slice(1).forEach((header, index) => {
-				const variableRegex = new RegExp(`{{${index + 1}}}`, "g");
-				const value =
-					row[header] !== undefined ? row[header].toString().trim() : "";
+				const variableNumber = index + 1; // {{1}} corresponde a la segunda columna (index 0 + 1)
+				const variableRegex = new RegExp(`{{${variableNumber}}}`, 'g');
+				const value = row[header] !== undefined ? row[header].toString().trim() : '';
+				
 				personalizedMessage = personalizedMessage.replace(variableRegex, value);
+				
+				console.log(`Reemplazando {{${variableNumber}}} con "${value}"`);
 			});
 			console.log("Mensaje individual:", personalizedMessage);
 

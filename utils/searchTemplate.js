@@ -17,7 +17,7 @@ export const searchTemplate = async (templateName) => {
 				Authorization: `Bearer ${whatsappToken}`,
 			},
 		});
-		console.log("response de templates:", response.data);
+		//console.log("response de templates:", response.data);
 
 		// Filter needed Template to get the Template ID
 		const allTemplates = response.data.data;
@@ -30,7 +30,7 @@ export const searchTemplate = async (templateName) => {
 		}
 
 		const templateId = desiredTemplate.id;
-		console.log("Template ID", templateId)
+		//console.log("Template ID", templateId)
 
 		// With Template ID get the body
 		const urlTemplateBody = `https://graph.facebook.com/v20.0/${templateId}`;
@@ -43,7 +43,7 @@ export const searchTemplate = async (templateName) => {
 		});
 
 		const templateData = response2.data;
-		console.log("Templatedata:", templateData)
+		//console.log("Templatedata:", templateData)
 		
 		const bodyComponent = templateData.components.find(
 			(component) => component.type === "BODY"
