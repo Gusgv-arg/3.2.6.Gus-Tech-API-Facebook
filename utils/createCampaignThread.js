@@ -9,25 +9,23 @@ const openai = new OpenAI({
 	apiKey: API_KEY,
 });
 
-export const createCampaignThread = async (campaignName, name) => {
+export const createCampaignThread = async (campaignName, personalizedMessage) => {
 	try {
-
-		// Create a new thread
-		const thread = await openai.beta.threads.create();
+		// Create a new thread with the initial messages
+		const thread = await openai.beta.threads.create({
+			messages: [
+				{
+					role: "user",
+					content: "Hola",
+				},
+				{
+					role: "assistant",
+					content: personalizedMessage,
+				},
+			],
+		});
 		const threadId = thread.id;
-
-		// Pass in the user question && the greeting into the new thread
-		await openai.beta.threads.messages.create(
-			threadId,
-			{
-				role: "user",
-				content: "Hola",
-			},
-			{
-				role: "assistant",
-				content: `¡Hola ${name}! Te contactamos de Megamoto por la Campaña ${campaignName}.`,
-			}
-		);
+		
 		return threadId;
 	} catch (error) {
 		console.log("Error en createCampaignThread:", error.message);

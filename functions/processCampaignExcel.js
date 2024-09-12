@@ -136,15 +136,15 @@ export const processCampaignExcel = async (
 				// Increment counter
 				successCount++;
 
-				// Create a thread for the Campaign
+				// Create a thread for the Campaign with the initial messages
 				campaignThread = await createCampaignThread(
 					campaignName,
-					row[headers[1]]
+					personalizedMessage
 				);
 				//console.log("campaignthreadID-->", campaignThread);
 
 				// Add the template message to the messages of the thread
-				await addTemplateMessageToThread(campaignThread, personalizedMessage);
+				//await addTemplateMessageToThread(campaignThread, personalizedMessage);
 
 				// Prepare a Campaign detail object
 				const campaignDetail = {
