@@ -95,7 +95,7 @@ export const processMessageWithAssistant = async (
 			console.error("No valid threadId found for user:", senderId);
 		}
 		console.log("ThreadID utilizado:", threadId)
-		const thread_messages = openai.beta.threads.messages.list(threadId)
+		const thread_messages = await openai.beta.threads.messages.list(threadId)
 		console.log("Messages dentro del thread:", thread_messages)
 
 		// If type is Document or Button return a specific message
