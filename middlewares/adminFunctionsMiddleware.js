@@ -10,6 +10,7 @@ import {
 import { getMediaWhatsappUrl } from "../utils/getMediaWhatsappUrl.js";
 import { downloadWhatsAppMedia } from "../utils/downloadWhatsAppMedia.js";
 import { processCampaignExcel } from "../functions/processCampaignExcel.js";
+import { changeCampaignStatus } from "../utils/changeCampaignStatus.js";
 
 const myPhone = process.env.MY_PHONE;
 
@@ -75,12 +76,8 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				res.status(200).send("EVENT_RECEIVED");
 			
 			} else if (message.startsWith("campaña")) {
+				// Campaigns format: "campaña" "template name" "campaign name" 
 				const parts = message.split(" ");
-				if (parts.length < 3) {
-					await adminWhatsAppNotification(templateError);
-					res.status(200).send("EVENT_RECEIVED");
-					return;
-				}
 				const templateName = parts[1];
 				const campaignName = parts.slice(2).join("_");
 
@@ -98,8 +95,25 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				await processCampaignExcel(documentBufferData, templateName, campaignName);
 
 				res.status(200).send("EVENT_RECEIVED");
-			
-			} else {
+				
+			} else if(message.startsWith("inactivar")){
+				const parts = message.split(" ");
+				const campaignName = parts.slice(1).join("_");
+				
+				//Call the functions that inactivates Campaign
+				await changeCampaignStatus("inactiva", campaignName)
+				
+				res.status(200).send("EVENT_RECEIVED");
+				
+			} else if(message.startsWith("activar")){
+				const parts = message.split(" ");
+				const campaignName = parts.slice(1).join("_");
+
+				//Call the functions that activates Campaign
+				await changeCampaignStatus("activa", campaignName)
+				
+				res.status(200).send("EVENT_RECEIVED");
+			}	else {
 				// Does next if its an admin message but is not an instruction
 				next();
 			}
