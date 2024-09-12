@@ -1,15 +1,13 @@
 import OpenAI from "openai";
 import dotenv from "dotenv";
 
-dotenv.config();
-
 const API_KEY = process.env.OPENAI_API_KEY;
 
 const openai = new OpenAI({
 	apiKey: API_KEY,
 });
 
-export const createCampaignThread = async (campaignName, personalizedMessage) => {
+export const createCampaignThread = async (personalizedMessage) => {
 	try {
 		// Create a new thread with the initial messages
 		const thread = await openai.beta.threads.create({

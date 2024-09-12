@@ -5,7 +5,7 @@ import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js
 import Leads from "../models/leads.js";
 import { createCampaignThread } from "../utils/createCampaignThread.js";
 import { searchTemplate } from "../utils/searchTemplate.js";
-import { addTemplateMessageToThread } from "../utils/addTemplateMessageToThread.js";
+import { createGeneralThread } from "../utils/createGeneralThread.js";
 
 dotenv.config();
 
@@ -137,22 +137,17 @@ export const processCampaignExcel = async (
 				successCount++;
 
 				// Create a thread for the Campaign with the initial messages
-				campaignThread = await createCampaignThread(
-					campaignName,
-					personalizedMessage
-				);
+				campaignThread = await createCampaignThread(personalizedMessage);
 				//console.log("campaignthreadID-->", campaignThread);
-
-				// Add the template message to the messages of the thread
-				//await addTemplateMessageToThread(campaignThread, personalizedMessage);
-
+				
 				// Prepare a Campaign detail object
 				const campaignDetail = {
 					campaignName: campaignName,
 					campaignDate: new Date(),
 					campaignThreadId: campaignThread,
 					messages: `MegaBot: ${personalizedMessage}`,
-					status: "contactado",
+					client_status: "contactado",
+					campaign_status: "activa",
 					error: "",
 				};
 
@@ -160,13 +155,16 @@ export const processCampaignExcel = async (
 				let lead = await Leads.findOne({ id_user: telefono.toString() });
 
 				if (!lead) {
+					// Create a General Thread (just in case the campaign is stopped)
+					const generalThread = await createGeneralThread()
+
 					// Creates a new lead if it does not exist
 					lead = new Leads({
 						name: row[headers[1]] || "", // Asumiendo que el nombre está en la segunda columna
 						id_user: telefono.toString(),
 						channel: "WhatsApp",
 						content: "",
-						thread_id: "",
+						thread_id: generalThread,
 						botSwitch: "ON",
 						responses: 0,
 						campaigns: [campaignDetail],
@@ -191,7 +189,8 @@ export const processCampaignExcel = async (
 					campaignDate: new Date(),
 					campaignThreadId: campaignThread,
 					messages: `Error al contactar cliente por la Campaña ${campaignName}.`,
-					status: "error",
+					client_status: "error",
+					campaign_status: "activa",
 					error: error.response?.data || error.message,
 				};
 

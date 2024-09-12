@@ -61,11 +61,12 @@ export const processMessageWithAssistant = async (
 			? new Date(lastCampaign.campaignDate)
 			: null;
 		let campaignThreadId = lastCampaign ? lastCampaign.campaignThreadId : null;
+		let campaignStatus = lastCampaign.campaign_status
 		//console.log("Last campaign date:", campaignThreadDate)
 		//console.log("Last campaign thread Id:", campaignThreadId)
 
 		// Determine the most recent threadId && assistant to be used && flag campaign
-		if (generalThreadId && campaignThreadId) {
+		if (generalThreadId && campaignThreadId && campaignStatus === "activa") {
 			// Both threads exist, compare dates
 			threadId =
 				generalThreadDate > campaignThreadDate
@@ -84,7 +85,7 @@ export const processMessageWithAssistant = async (
 			assistantId = process.env.OPENAI_ASSISTANT_ID
 			campaignFlag = false
 
-		} else if (campaignThreadId) {
+		} else if (campaignThreadId && campaignStatus === "activa") {
 			// Only campaign thread exists
 			threadId = campaignThreadId;
 			assistantId = process.env.OPENAI_CAMPAIGN_ID
@@ -95,9 +96,9 @@ export const processMessageWithAssistant = async (
 			console.error("No valid threadId found for user:", senderId);
 		}
 		console.log("ThreadID utilizado:", threadId)
+		
+		//View messages in thread
 		const thread_messages = await openai.beta.threads.messages.list(threadId)
-		//console.log("Messages dentro del thread:", thread_messages)
-		// Log de cada array dentro de la propiedad content
 		thread_messages.data.forEach(message => {
 			console.log("Content del mensaje:", message.content);
 		});
