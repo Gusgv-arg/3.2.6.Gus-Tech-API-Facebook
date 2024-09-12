@@ -49,35 +49,21 @@ export const processMessageWithAssistant = async (
 	// Pass in the user question into the existing thread
 	if (existingThread) {
 		// Determine if it's General or Campaign thread
-		let generalThreadDate = existingThread.createdAt;
 		let generalThreadId = existingThread.thread_id;
-		//console.log("General thread date:", generalThreadDate)
 		//console.log("General thread Id:", generalThreadId)
 
 		// Get the last campaign info
 		let campaigns = existingThread.campaigns || [];
 		let lastCampaign = campaigns[campaigns.length - 1];
-		let campaignThreadDate = lastCampaign
-			? new Date(lastCampaign.campaignDate)
-			: null;
 		let campaignThreadId = lastCampaign ? lastCampaign.campaignThreadId : null;
-		let campaignStatus = lastCampaign.campaign_status
-		//console.log("Last campaign date:", campaignThreadDate)
+		let campaignStatus = lastCampaign ? lastCampaign.campaign_status : null;
 		//console.log("Last campaign thread Id:", campaignThreadId)
-
-		// Determine the most recent threadId && assistant to be used && flag campaign
+		
+		// Both threads exist, use Campaign thread
 		if (generalThreadId && campaignThreadId && campaignStatus === "activa") {
-			// Both threads exist, compare dates
-			threadId =
-				generalThreadDate > campaignThreadDate
-					? generalThreadId
-					: campaignThreadId;
-			assistantId =
-				generalThreadDate > campaignThreadDate
-					? process.env.OPENAI_ASSISTANT_ID
-					: process.env.OPENAI_CAMPAIGN_ID;
-			campaignFlag = generalThreadDate > campaignThreadDate
-			? false : true
+			threadId = campaignThreadId;
+			assistantId = process.env.OPENAI_CAMPAIGN_ID;
+			campaignFlag = true;
 
 		} else if (generalThreadId) {
 			// Only general thread exists
