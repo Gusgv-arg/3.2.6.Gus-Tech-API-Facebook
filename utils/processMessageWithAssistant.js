@@ -96,7 +96,11 @@ export const processMessageWithAssistant = async (
 		}
 		console.log("ThreadID utilizado:", threadId)
 		const thread_messages = await openai.beta.threads.messages.list(threadId)
-		console.log("Messages dentro del thread:", thread_messages)
+		//console.log("Messages dentro del thread:", thread_messages)
+		// Log de cada array dentro de la propiedad content
+		thread_messages.data.forEach(message => {
+			console.log("Content del mensaje:", message.content);
+		});
 
 		// If type is Document or Button return a specific message
 		if (type === "document") {
