@@ -113,7 +113,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				await changeCampaignStatus("activa", campaignName);
 
 				res.status(200).send("EVENT_RECEIVED");
-			} else if (message === "Megabot campañas") {
+			} else if (message === "megabot campañas") {
 				await listCampaigns();
 
 				res.status(200).send("EVENT_RECEIVED");

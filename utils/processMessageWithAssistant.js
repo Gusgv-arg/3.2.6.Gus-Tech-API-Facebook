@@ -84,10 +84,10 @@ export const processMessageWithAssistant = async (
 		console.log("ThreadID utilizado:", threadId)
 		
 		//View messages in thread
-		const thread_messages = await openai.beta.threads.messages.list(threadId)
+		/* const thread_messages = await openai.beta.threads.messages.list(threadId)
 		thread_messages.data.forEach(message => {
 			console.log("Content del mensaje:", message.content);
-		});
+		}); */
 
 		// If type is Document or Button return a specific message
 		if (type === "document") {
