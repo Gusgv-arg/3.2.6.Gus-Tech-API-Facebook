@@ -22,14 +22,23 @@ export const exportLeadsToExcel = async () => {
 				error: campaign.error,
 			}));
 
-			return {
+			// Crea un objeto con los datos del lead y agrega las campañas como columnas
+			const leadData = {
 				name: lead.name,
 				channel: lead.channel,
 				content: lead.content,
 				id_user: lead.id_user,
 				createdAt: lead.createdAt,
-				...Object.assign({}, ...campaignData), 
 			};
+
+			// Agrega los datos de las campañas al objeto leadData
+			campaignData.forEach((campaign, index) => {
+				Object.keys(campaign).forEach(key => {
+					leadData[`${key}_${index + 1}`] = campaign[key]; // Agrega un sufijo para cada campaña
+				});
+			});
+
+			return leadData;
 		});
 		
 		const wb = xlsx.utils.book_new();
