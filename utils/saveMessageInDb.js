@@ -66,7 +66,7 @@ export const saveMessageInDb = async (
 					: newMessageContent;
 
 				// Update Campaign status
-				currentCampaign.status = "respuesta";
+				currentCampaign.client_status = "respuesta";
 
 				// Clean error if it existed
 				if (currentCampaign.error) {
