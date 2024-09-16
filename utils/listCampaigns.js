@@ -23,6 +23,7 @@ async function listCampaigns() {
                 summary[campaignName].contacted++;
             } else if (client_status === "respuesta") {
                 summary[campaignName].responded++;
+                summary[campaignName].contacted++;
             }
         });
     });
