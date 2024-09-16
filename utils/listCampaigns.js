@@ -8,9 +8,12 @@ async function listCampaigns() {
 
     leads.forEach(lead => {
         lead.campaigns.forEach(campaign => {
-            const { campaignName, campaignDate, campaign_status, client_status } = campaign;
+            const { campaignName, campaignDate, campaign_status, client_status } = campaign;            
+            const formattedDate = new Date(campaignDate).toLocaleDateString('es-ES');
+            
             if (!summary[campaignName]) {
                 summary[campaignName] = {
+                    campaignDate: formattedDate,
                     campaign_status,
                     contacted: 0,
                     responded: 0,
@@ -28,7 +31,7 @@ async function listCampaigns() {
     let result = "";
 
     for (const [campaignName, data] of Object.entries(summary)) {
-        result += `${data.campaignDate} - ${campaignName}: Status-${data.campaign_status}. Contactados: ${data.contacted}. Respondieron: ${data.responded}.\n`;
+        result += `${data.campaignDate} - ${campaignName}: ${data.campaign_status}. Cant.: ${data.contacted}. Resp.: ${data.responded}.\n`;
     }
     console.log("Result-->",result)
     await adminWhatsAppNotification(`*LISTADO DE CAMPAÑAS*\n${result}`)
