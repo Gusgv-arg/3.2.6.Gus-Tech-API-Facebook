@@ -12,6 +12,7 @@ import { downloadWhatsAppMedia } from "../utils/downloadWhatsAppMedia.js";
 import { processCampaignExcel } from "../functions/processCampaignExcel.js";
 import { changeCampaignStatus } from "../utils/changeCampaignStatus.js";
 import listCampaigns from "../utils/listCampaigns.js";
+import { exportLeadsToExcel } from "../utils/exportLeadsToExcel.js";
 
 const myPhone = process.env.MY_PHONE;
 
@@ -28,7 +29,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 		return;
 	}
 
-	// Check if its WhatsApp text message from Admin instructions
+	// Check if its WhatsApp text message from Admin phone
 	if (channel === "WhatsApp" && body?.entry[0]) {
 		let typeOfWhatsappMessage = body.entry[0].changes[0]?.value?.messages[0]
 			?.type
@@ -116,6 +117,10 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			} else if (message === "megabot campañas") {
 				await listCampaigns();
 
+				res.status(200).send("EVENT_RECEIVED");
+			} else if (message==="megabot leads"){
+				const leads = await exportLeadsToExcel();
+				
 				res.status(200).send("EVENT_RECEIVED");
 			} else {
 				// Does next if its an admin message but is not an instruction
