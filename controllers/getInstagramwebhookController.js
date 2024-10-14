@@ -17,7 +17,7 @@ export const getInstagramWebhookController = (req, res) => {
 		// Check the mode and token sent is correct
 		if (mode === "subscribe" && token === INSTAGRAM_VERIFY_TOKEN) {
 			// Respond with the challenge token from the request
-			console.log("MESSENGER WEBHOOK VERIFIED");
+			console.log("INSTAGRAM WEBHOOK VERIFIED");
 			res.status(200).send(challenge);
 		} else {
 			// Respond with '403 Forbidden' if verify tokens do not match
