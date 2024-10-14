@@ -38,7 +38,7 @@ export const postMessengerWebhookController = (req, res) => {
 				};
 
 				// Add message to the Messenger Queue
-				MessageQueueMessenger.enqueueMessage(userMessage, senderId);
+				MessageQueueMessenger.enqueueMessengerMessage(userMessage, senderId);
 			}
 		});
 
