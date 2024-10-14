@@ -73,6 +73,11 @@ export const userMessengerMiddleware = async (req, res, next) => {
 			// Create a Thread sending user message and greeting to GPT
 			const thread = await createGptThread(name, messengerMessage, channel);
 
+			// Save thread in DB
+			lead.thread_id = thread;
+			await lead.save();
+			console.log("Lead updated with threadId");
+
 			// Send Notification of new lead to Admin
 			newLeadWhatsAppNotification(channel, name)
 

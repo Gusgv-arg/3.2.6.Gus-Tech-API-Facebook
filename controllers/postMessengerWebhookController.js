@@ -1,8 +1,8 @@
-import { MessageQueue } from "../utils/messageQueue.js";
+import { MessageQueueMessenger } from "../utils/messageQueueMessenger.js";
 import { processMessageWithAssistant } from "../utils/processMessageWithAssistant.js";
 
 // Define a new instance of MessageQueue
-const messageQueue = new MessageQueue();
+const messageQueue = new MessageQueueMessenger();
 
 // Webhook that receives message from Facebook Messenger
 export const postMessengerWebhookController = (req, res) => {
@@ -37,17 +37,8 @@ export const postMessengerWebhookController = (req, res) => {
 					url: body?.entry[0]?.messaging?.[0]?.message?.attachments?.[0]?.payload.url ? body.entry[0].messaging[0].message.attachments[0].payload.url : "" 
 				};
 
-				// Add message to the Queue
-				/* Steps:
-				   1- Enqueues the message to the Queue
-				   2- Calls processQueue to process the message
-				   3- processQueue takes the first message
-				   4- Calls processMessageWithAssistant to get the response for the user
-				   5- processMessagewithAssistant calls saveMessageInDb and saves the user question in DB  
-				   6- Calls handleMessenger/WhatsappMessage that calls saveMessageInDb to save GPT response in DB
-				   7- Then posts the message to the user in Facebook
-				*/
-				messageQueue.enqueueMessage(userMessage, senderId);
+				// Add message to the Messenger Queue
+				MessageQueueMessenger.enqueueMessage(userMessage, senderId);
 			}
 		});
 
