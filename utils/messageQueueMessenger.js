@@ -64,7 +64,7 @@ export class MessageQueueMessenger {
 
 				if (newMessage.channel === "messenger") {
 					// Send the response back to the user by Messenger
-					handleMessengerMessage(
+					await handleMessengerMessage(
 						senderId,
 						response?.messageGpt ? response.messageGpt : response.errorMessage
 					);
