@@ -70,11 +70,13 @@ export class MessageQueueMessenger {
 					);
 
 					// Save the message in the database
+					
 					await saveMessageInDb(
 						senderId,
 						response?.messageGpt ? response.messageGpt : response.errorMessage,
 						response?.threadId ? response.threadId : null,
-						newMessage
+						newMessage,
+						response?.campaignFlag
 					);
 				}
 			} catch (error) {
