@@ -1,5 +1,5 @@
 import { handleTestMessage } from "../utils/handleTestMessage.js";
-import { processMessageWithAssistant } from "../utils/processMessageWithAssistant.js";
+import { processMessengerWithAssistant } from "../utils/processMessengerWithAssistant.js";
 
 export const testingController = (req, res) => {
 	const body = req.body;
@@ -26,7 +26,7 @@ export const testingController = (req, res) => {
 
 				console.log("sender_psid", sender_psid);
 				// Process the message with the assistant
-				const response = await processMessageWithAssistant(
+				const response = await processMessengerWithAssistant(
 					sender_psid,
 					userMessage,
 					channel

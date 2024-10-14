@@ -3,14 +3,13 @@ import { convertBufferImageToUrl } from "./convertBufferImageToUrl.js";
 import { downloadWhatsAppMedia } from "./downloadWhatsAppMedia.js";
 import { errorMessage1 } from "./errorMessages.js";
 import { getMediaWhatsappUrl } from "./getMediaWhatsappUrl.js";
-import { handleMessengerMessage } from "./handleMessengerMessage.js";
 import { handleWhatsappMessage } from "./handleWhatsappMessage.js";
 import { newErrorWhatsAppNotification } from "./newErrorWhatsAppNotification.js";
-import { processMessageWithAssistant } from "./processMessageWithAssistant.js";
+import { processWhatsAppWithAssistant } from "./processWhatsAppWithAssistant.js";
 import { saveMessageInDb } from "./saveMessageInDb.js";
 
 // Class definition for the Queue
-export class MessageQueue {
+export class MessageQueueWhatsApp {
 	constructor() {
 		this.queues = new Map();
 	}
@@ -59,19 +58,6 @@ export class MessageQueue {
 
 						// Replace message with transcription
 						newMessage.message = audioTranscription;
-
-						// --- Messenger Audio --- //
-					} else if (newMessage.channel === "messenger") {
-						// Call whisper GPT to transcribe audio to text
-						const audioTranscription = await audioToText(
-							newMessage.url,
-							newMessage.channel
-						);
-
-						console.log("Audio transcription:", audioTranscription);
-
-						// Replace message with transcription
-						newMessage.message = audioTranscription;
 					}
 
 					// ---------- IMAGE -------------------------------------------------//
@@ -94,10 +80,6 @@ export class MessageQueue {
 							"https://three-2-12-messenger-api.onrender.com"
 						);
 						console.log("Public image URL:", imageURL);
-
-						// --- Messenger Image --- //
-					} else if (newMessage.channel === "messenger") {
-						imageURL = newMessage.url;
 					}
 
 					// ----------- DOCUMENTS ----------------------------------------------------- //
@@ -124,28 +106,14 @@ export class MessageQueue {
 				}
 
 				// Process the message with the Assistant
-				const response = await processMessageWithAssistant(
+				const response = await processWhatsAppWithAssistant(
 					senderId,
 					newMessage.message,
 					imageURL,
 					newMessage.type
 				);
 
-				if (newMessage.channel === "messenger") {
-					// Send the response back to the user by Messenger
-					handleMessengerMessage(
-						senderId,
-						response?.messageGpt ? response.messageGpt : response.errorMessage
-					);
-
-					// Save the message in the database
-					await saveMessageInDb(
-						senderId,
-						response?.messageGpt ? response.messageGpt : response.errorMessage,
-						response?.threadId ? response.threadId : null,
-						newMessage
-					);
-				} else if (newMessage.channel === "whatsapp") {
+				if (newMessage.channel === "whatsapp") {
 					// Send response to user by Whatsapp (can be gpt, error message, notification)
 					await handleWhatsappMessage(
 						senderId,
@@ -178,24 +146,13 @@ export class MessageQueue {
 				queue.processing = false;
 
 				// Error handlers
-				if (newMessage.channel === "web" && queue.responseCallback) {
-					queue.responseCallback(error, null);
-				} else if (newMessage.channel === "whatsapp") {
+				if (newMessage.channel === "whatsapp") {
 					// Send error message to customer
 					handleWhatsappMessage(senderId, errorMessage);
 
 					// Send WhatsApp error message to Admin
 					newErrorWhatsAppNotification("WhatsApp", error.message);
-				} else if (newMessage.channel === "messenger") {
-					// Send error message to customer
-					handleMessengerMessage(senderId, errorMessage);
-
-					// Send WhatsApp error message to Admin
-					newErrorWhatsAppNotification("Messenger", error.message);
 				}
-
-				// Return to webhookController that has res.
-				return errorMessage;
 			}
 		}
 		// Change flag to allow next message processing

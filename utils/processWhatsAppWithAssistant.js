@@ -19,7 +19,7 @@ const openai = new OpenAI({
 	apiKey: API_KEY,
 });
 
-export const processMessageWithAssistant = async (
+export const processWhatsAppWithAssistant = async (
 	senderId,
 	userMessage,
 	imageURL,

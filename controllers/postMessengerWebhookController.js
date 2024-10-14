@@ -1,5 +1,4 @@
 import { MessageQueueMessenger } from "../utils/messageQueueMessenger.js";
-import { processMessageWithAssistant } from "../utils/processMessageWithAssistant.js";
 
 // Define a new instance of MessageQueue
 const messageQueue = new MessageQueueMessenger();

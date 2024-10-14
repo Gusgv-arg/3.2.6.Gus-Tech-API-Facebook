@@ -1,8 +1,7 @@
-import axios from "axios";
-import { MessageQueue } from "../utils/messageQueue.js";
+import { MessageQueueWhatsApp } from "../utils/messageQueueWhatsApp.js";
 
 // Define a new instance of MessageQueue
-const messageQueue = new MessageQueue();
+const messageQueue = new MessageQueueWhatsApp();
 
 export const postWhatsappWebhookController = async (req, res) => {
 	const body = req.body;
