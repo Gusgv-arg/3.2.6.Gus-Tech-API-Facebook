@@ -1,7 +1,7 @@
-import { MessageQueueMessenger } from "../utils/messageQueueMessenger.js";
+import { MessageQueueInstagram } from "../utils/messageQueueInstagram.js";
 
 // Define a new instance of MessageQueue
-const messageQueue = new MessageQueueMessenger();
+const messageQueue = new MessageQueueInstagram();
 
 // Webhook that receives message from Instagram Messenger
 export const postInstagramWebhookController = (req, res) => {
@@ -13,24 +13,26 @@ export const postInstagramWebhookController = (req, res) => {
 			? body.entry[0].messaging[0].message.text
 			: "no se"
 	);
-    
-    res.status(200).send("EVENT_RECEIVED");
-
-	// Check if its Messenger App
-	/* if (body.object === "page") {
+	console.log(
+		"Messaging ---->",
+		body?.entry[0]?.messaging[0]
+			? body.entry[0].messaging[0]
+			: "no se"
+	);
+        
+	// Check if its Instagram App
+	if (body.object === "instagram") {
 		// Facebook sends an array that can have more than 1
 		body.entry.forEach(async (entry) => {
 			// Gets body of the webhook event
 			let webhook_event = entry.messaging[0];
-			console.log("entry.messaging[0].sender:", entry.messaging[0].sender);
-
+	
 			// Get the sender ID
 			let senderId = webhook_event.sender.id;
-			console.log("sender_psid", senderId);
-
+			
 			if (webhook_event.message) {
-				const channel = "messenger";
-				const name = "Messenger user";
+				const channel = "instagram";
+				const name = "Instagram user";
 				// Get the message sent by the user & create an object to send it to the queue
 				const userMessage = {
 					channel: channel,
@@ -42,9 +44,9 @@ export const postInstagramWebhookController = (req, res) => {
 						? body.entry[0].messaging[0].message.attachments[0].payload.url
 						: "",
 				};
-
-				// Add message to the Messenger Queue
-				messageQueue.enqueueMessengerMessage(userMessage, senderId);
+				
+				// Add message to the Instagram Queue
+				messageQueue.enqueueInstagramMessage(userMessage, senderId);
 			}
 		});
 
@@ -53,5 +55,5 @@ export const postInstagramWebhookController = (req, res) => {
 	} else {
 		// Return a '404 Not Found' if event is not from a page subscription
 		res.sendStatus(404);
-	} */
+	}
 };

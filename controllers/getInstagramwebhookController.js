@@ -6,8 +6,7 @@ dotenv.config();
 export const getInstagramWebhookController = (req, res) => {
 	let INSTAGRAM_VERIFY_TOKEN = process.env.INSTAGRAM_MY_VERIFY_TOKEN;
 	console.log("req.query", req.query);
-	console.log("req.body", req.body);
-
+	
 	// Parse the query params
 	let mode = req.query["hub.mode"];
 	let token = req.query["hub.verify_token"];

@@ -1,17 +1,18 @@
 import dotenv from "dotenv";
 import axios from "axios";
-import { messengerGreeting } from "./greeting.js"; 
 
 dotenv.config();
 
 const FACEBOOK_PAGE_ID = process.env.FACEBOOK_PAGE_ID;
 const PAGE_ACCESS_TOKEN = process.env.FACEBOOK_PAGE_ACCESS_TOKEN;
 
-// Function that sends Messenger && Instagram greeting
-export const handleMessengerGreeting = async(senderId)=>{
-    try {
-		
-		// Posts the message to Facebook
+// Function that sends message to Messenger user
+export const handleInstagramMessage = async (senderId, messageGpt) => {
+	try {
+		const name = "MegaBot";
+		const channel = "facebook";
+
+		// Posts the message to Instagram
 		const url = `https://graph.facebook.com/v20.0/${FACEBOOK_PAGE_ID}/messages?access_token=${PAGE_ACCESS_TOKEN}`;
 		const data = {
 			recipient: {
@@ -19,7 +20,7 @@ export const handleMessengerGreeting = async(senderId)=>{
 			},
 			messaging_type: "RESPONSE",
 			message: {
-				text: messengerGreeting,
+				text: messageGpt,
 			},
 		};
 
@@ -30,18 +31,16 @@ export const handleMessengerGreeting = async(senderId)=>{
 				},
 			})
 			.then((response) => {
-				console.log("Response from Facebook:", response.data);
+				console.log("Response from Instagram:", response.data);
 			})
 			.catch((error) => {
 				console.error(
-					"Error enviando a Facebook------------>",
+					"Error enviando a Instagram:",
 					error.response ? error.response.data : error.message
 				);
 			});
 	} catch (error) {
-		console.log("Error en handleMessengerGreeting", error.message);
+		console.log("Error en handleInstagramMessage.js", error.message);
 		throw error;
 	}
-
-
-}
+};

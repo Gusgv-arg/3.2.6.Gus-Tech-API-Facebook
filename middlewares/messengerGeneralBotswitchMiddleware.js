@@ -1,7 +1,6 @@
 import axios from "axios";
 import BotSwitch from "../models/botSwitch.js";
 import dotenv from "dotenv";
-import { userWhatsAppNotification } from "../utils/userWhatsAppNotification.js";
 import { handleMessengerMessage } from "../utils/handleMessengerMessage.js";
 import { errorMessage1 } from "../utils/errorMessages.js";
 
