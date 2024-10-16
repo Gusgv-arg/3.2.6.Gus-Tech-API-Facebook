@@ -17,6 +17,7 @@ export const userInstagramMiddleware = async (req, res, next) => {
 	//console.log("Lo que recibo de la API de Instagram -->", body);
 	let channel = body.object === "instagram" ? "instagram" : "other";
 	console.log("Channel:", channel);
+	const senderId = body?.entry?.[0]?.messaging?.[0]?.sender?.id || "";
 
 	if (channel === "instagram" && body?.entry[0]?.messaging) {
 		console.log(
@@ -35,12 +36,10 @@ export const userInstagramMiddleware = async (req, res, next) => {
 			: "text";
 		req.type = type;
 	} else {
-		console.log("Other object");
+		console.log("Other object--->", body);
 	}
 
-	if (channel === "instagram") {
-		const senderId = body?.entry[0]?.messaging[0].sender.id;
-
+	if (channel === "instagram" & senderId !== "") {
         // Check if iths the owner of the account and return
 		if (senderId === ownerInstagramAccount) {
 			console.log("Return because is the owner of the account");
