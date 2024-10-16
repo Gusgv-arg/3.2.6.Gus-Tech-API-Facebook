@@ -9,7 +9,7 @@ import { newLeadWhatsAppNotification } from "../utils/newLeadWhatsAppNotificatio
 dotenv.config();
 
 const maxResponses = process.env.MAX_RESPONSES;
-const ownerInstagramAccount = process.env.INSTAGRAM_OWNER_ACCOUNT_ID
+const ownerInstagramAccount = process.env.INSTAGRAM_OWNER_ACCOUNT_ID;
 
 // Middleware that creates the user in DB if it doesn't exist || next()
 export const userInstagramMiddleware = async (req, res, next) => {
@@ -17,7 +17,7 @@ export const userInstagramMiddleware = async (req, res, next) => {
 	//console.log("Lo que recibo de la API de Instagram -->", body);
 	let channel = body.object === "instagram" ? "instagram" : "other";
 	console.log("Channel:", channel);
-	const senderId = body?.entry?.[0]?.messaging?.[0]?.sender?.id || "";
+	let senderId = body?.entry?.[0]?.messaging?.[0]?.sender?.id || "";
 
 	if (channel === "instagram" && body?.entry[0]?.messaging) {
 		console.log(
@@ -36,17 +36,24 @@ export const userInstagramMiddleware = async (req, res, next) => {
 			: "text";
 		req.type = type;
 	} else {
-		console.log("Other object--->", body);
+		console.log("Other object--->", body?.entry[0]?.standby || body);
+		senderId = body?.entry[0]?.standby[0]?.sender.id
+			? body.entry[0].standby[0].sender.id
+			: senderId;
 	}
 
-	if (channel === "instagram" & senderId !== "") {
-        // Check if iths the owner of the account and return
+	if ((channel === "instagram") & (senderId !== "")) {
+		// Check if iths the owner of the account and return
 		if (senderId === ownerInstagramAccount) {
 			console.log("Return because is the owner of the account");
 			res.status(200).send("EVENT_RECEIVED");
-            return
+			return;
 		}
-		const instagramMessage = body?.entry[0]?.messaging[0].message.text;
+
+		const instagramMessage =
+			body?.entry?.[0]?.messaging?.[0]?.message?.text ??
+			body?.entry?.[0]?.standby?.[0]?.message?.text ??
+			"";
 		const name = "Instagram user";
 
 		// Find the lead by id
@@ -91,7 +98,7 @@ export const userInstagramMiddleware = async (req, res, next) => {
 			res.status(200).send("EVENT_RECEIVED");
 		} else if (
 			lead.responses + 1 > maxResponses &&
-			senderId !== "7696295710487485"
+			senderId !== "1349568352682541"
 		) {
 			//Block user from doing more requests
 			console.log("User reached max allowed responses");

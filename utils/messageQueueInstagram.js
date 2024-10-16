@@ -61,6 +61,7 @@ export class MessageQueueInstagram {
 					imageURL,
 					newMessage.type
 				);
+				console.log("Response desde processInstagramWithAssistant:", response)
 
 				if (newMessage.channel === "instagram") {
 					// Send the response back to the user by Instagram
@@ -89,7 +90,7 @@ export class MessageQueueInstagram {
 				// Error handlers
 				if (newMessage.channel === "instagram") {
 					// Send error message to customer
-					handleMessengerMessage(senderId, errorMessage);
+					handleInstagramMessage(senderId, errorMessage);
 
 					// Send WhatsApp error message to Admin
 					//newErrorWhatsAppNotification("Messenger", error.message);

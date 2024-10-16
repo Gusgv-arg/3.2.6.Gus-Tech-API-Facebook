@@ -255,7 +255,7 @@ export const processInstagramWithAssistant = async (
 
 			break; // Exit the loop if the run is completed
 		} catch (error) {
-			console.error("Error running the assistant:", error.message);
+			console.error("Error running assistant in processInstagramWithAssitant.js:", error.message);
 			currentAttempt++;
 			if (currentAttempt >= maxAttempts) {
 				console.error("Exceeded maximum attempts. Exiting the loop.");
@@ -279,7 +279,7 @@ export const processInstagramWithAssistant = async (
 	// Save the received message from the user and send the assistants response
 	if (lastMessageForRun) {
 		let messageGpt = lastMessageForRun.content[0].text.value;
-		console.log("MessagGpt-->", messageGpt);
+		//console.log("MessagGpt-->", messageGpt);
 		return { messageGpt, senderId, threadId, campaignFlag };
 	}
 };
