@@ -10,9 +10,7 @@ const myPhone = process.env.MY_PHONE;
 
 export const instagramGeneralBotSwitchMiddleware = async (req, res, next) => {
 	const body = req.body;
-	const senderId = body?.entry[0]?.messaging[0].sender.id
-		? body.entry[0].messaging[0].sender.id
-		: "";
+	const senderId = body?.entry?.[0]?.messaging?.[0]?.sender?.id || "";
 
 	try {
 		let botSwitchInstance = await BotSwitch.findOne();
@@ -27,9 +25,15 @@ export const instagramGeneralBotSwitchMiddleware = async (req, res, next) => {
 			);
 
 			// Notify user that MegaBot is off
-			await handleInstagramMessage(senderId, errorMessage1);
-			res.status(200).send("EVENT_RECEIVED");
-			return
+			if (senderId !== ""){
+				await handleInstagramMessage(senderId, errorMessage1);
+				res.status(200).send("EVENT_RECEIVED");
+				return
+			} else {
+				res.status(200).send("EVENT_RECEIVED");
+				return
+			}
+
 		}
 	} catch (error) {
 		console.log(
