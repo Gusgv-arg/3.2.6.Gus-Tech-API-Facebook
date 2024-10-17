@@ -105,6 +105,10 @@ export const userInstagramMiddleware = async (req, res, next) => {
 			await handleMessengerMaxResponses(senderId);
 			res.status(200).send("EVENT_RECEIVED");
 			return;
+		} else if (lead.botSwitch === "OFF") {
+			// Block user if individual swith is in OFF
+			res.status(200).send("EVENT_RECEIVED");
+			return;
 		} else {
 			next();
 		}

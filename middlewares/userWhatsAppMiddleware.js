@@ -9,7 +9,7 @@ import { newLeadWhatsAppNotification } from "../utils/newLeadWhatsAppNotificatio
 dotenv.config();
 
 const maxResponses = process.env.MAX_RESPONSES;
-const myPhone = process.env.MY_PHONE
+const myPhone = process.env.MY_PHONE;
 
 // Middleware that creates the user in DB if it doesn't exist || next()
 export const userWhatsAppMiddleware = async (req, res, next) => {
@@ -96,17 +96,19 @@ export const userWhatsAppMiddleware = async (req, res, next) => {
 			console.log("Lead updated with threadId");
 
 			// Send Notification of new lead to Admin
-			newLeadWhatsAppNotification(channel, name)
+			newLeadWhatsAppNotification(channel, name);
 
 			res.status(200).send("EVENT_RECEIVED");
-		
 		} else if (lead.responses + 1 > maxResponses && userPhone !== myPhone) {
-			//Block user from doing more requests
+			//Block user from doing more requests than permited
 			console.log("User reached max allowed responses");
 			await handleWhatsAppMaxResponses(name, userPhone);
 			res.status(200).send("EVENT_RECEIVED");
 			return;
-		
+		} else if (lead.botSwitch === "OFF") {
+			// Block user if individual swith is in OFF
+			res.status(200).send("EVENT_RECEIVED");
+			return;
 		} else {
 			next();
 		}

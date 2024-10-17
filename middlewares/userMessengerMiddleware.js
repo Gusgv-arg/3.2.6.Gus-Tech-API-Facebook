@@ -27,7 +27,7 @@ export const userMessengerMiddleware = async (req, res, next) => {
 			body?.entry[0]?.messaging[0]?.message?.attachments?.[0]
 				? body.entry[0].messaging[0].message.attachments[0]
 				: "no attachments"
-		);	
+		);
 
 		const type = body?.entry[0]?.messaging[0]?.message?.attachments?.[0]?.type
 			? body.entry[0].messaging[0].message.attachments[0].type
@@ -63,7 +63,7 @@ export const userMessengerMiddleware = async (req, res, next) => {
 				content: `${currentDateTime} - ${name}: ${messengerMessage}\n${currentDateTime} - MegaBot: ${messengerGreeting}`,
 				botSwitch: "ON",
 				channel: channel,
-				responses: 1
+				responses: 1,
 			});
 			console.log("Lead created in Leads DB");
 
@@ -79,17 +79,22 @@ export const userMessengerMiddleware = async (req, res, next) => {
 			console.log("Lead updated with threadId");
 
 			// Send Notification of new lead to Admin
-			newLeadWhatsAppNotification(channel, name)
+			newLeadWhatsAppNotification(channel, name);
 
 			res.status(200).send("EVENT_RECEIVED");
-		
-		} else if (lead.responses + 1 > maxResponses && senderId !== "7696295710487485") {
+		} else if (
+			lead.responses + 1 > maxResponses &&
+			senderId !== "7696295710487485"
+		) {
 			//Block user from doing more requests
 			console.log("User reached max allowed responses");
 			await handleMessengerMaxResponses(senderId);
 			res.status(200).send("EVENT_RECEIVED");
 			return;
-		
+		} else if (lead.botSwitch === "OFF") {
+			// Block user if individual swith is in OFF
+			res.status(200).send("EVENT_RECEIVED");
+			return;
 		} else {
 			next();
 		}
