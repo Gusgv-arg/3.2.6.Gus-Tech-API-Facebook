@@ -6,20 +6,20 @@ const messageQueue = new MessageQueueInstagram();
 // Webhook that receives message from Instagram Messenger
 export const postInstagramWebhookController = (req, res) => {
 	const body = req.body;
-	console.log("Lo que recibo de la API de Instagram", body);
-	        
+	console.log("Recibo en postInstagramWebhookController.js: body-->", body);
+
 	// Check if its Instagram App
 	if (body.object === "instagram") {
 		// Facebook sends an array that can have more than 1
 		body.entry.forEach(async (entry) => {
 			// Gets body of the webhook event
-			//let webhook_event = entry?.messaging[0] ? entry.messaging[0] : entry?.standby[0];
 			let webhook_event = entry?.messaging?.[0] ?? entry?.standby?.[0] ?? null;
+			console.log("webhook_event-->", webhook_event);
 
 			// Get the sender ID
 			let senderId = webhook_event.sender?.id ?? "";
-			console.log("senderId en postInstagramWebhookController.js:", senderId)
-			
+			//console.log("senderId en postInstagramWebhookController.js:", senderId);
+
 			if (webhook_event.message) {
 				const channel = "instagram";
 				const name = "Instagram user";
@@ -34,7 +34,7 @@ export const postInstagramWebhookController = (req, res) => {
 						? body.entry[0].messaging[0].message.attachments[0].payload.url
 						: "",
 				};
-				console.log("Object added to Instagram queue:", userMessage)
+				console.log("Object added to Instagram queue:", userMessage, "with senderId:", senderId);
 
 				// Add message to the Instagram Queue
 				messageQueue.enqueueInstagramMessage(userMessage, senderId);

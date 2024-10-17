@@ -16,20 +16,12 @@ export const userInstagramMiddleware = async (req, res, next) => {
 	const body = req.body;
 	//console.log("Lo que recibo de la API de Instagram -->", body);
 	let channel = body.object === "instagram" ? "instagram" : "other";
-	console.log("Channel:", channel);
+	//console.log("Channel:", channel);
 	let senderId = body?.entry?.[0]?.messaging?.[0]?.sender?.id || "";
 
 	if (channel === "instagram" && body?.entry[0]?.messaging) {
-		console.log(
-			"Messenger --> body.entry[0].messaging[0] -->",
-			body.entry[0]?.messaging[0] ?? "No messaging data"
-		);
-		console.log(
-			"Attachments -->",
-			body?.entry[0]?.messaging[0]?.message?.attachments?.[0]
-				? body.entry[0].messaging[0].message.attachments[0]
-				: "no attachments"
-		);
+		// console.log("body.entry[0].messaging[0] -->", body.entry[0]?.messaging[0] ?? "No messaging data");
+		// console.log("Attachments -->", body?.entry[0]?.messaging[0]?.message?.attachments?.[0] ? body.entry[0].messaging[0].message.attachments[0] : "no attachments");
 
 		const type = body?.entry[0]?.messaging[0]?.message?.attachments?.[0]?.type
 			? body.entry[0].messaging[0].message.attachments[0].type
@@ -45,7 +37,7 @@ export const userInstagramMiddleware = async (req, res, next) => {
 	if ((channel === "instagram") & (senderId !== "")) {
 		// Check if iths the owner of the account and return
 		if (senderId === ownerInstagramAccount) {
-			console.log("Return because is the owner of the account");
+			console.log("Return because is the owner of the account!!");
 			res.status(200).send("EVENT_RECEIVED");
 			return;
 		}
@@ -79,7 +71,7 @@ export const userInstagramMiddleware = async (req, res, next) => {
 				channel: channel,
 				responses: 1,
 			});
-			console.log("Lead created in Leads DB:", name);
+			console.log("Lead created in Leads DB!!:", name);
 
 			// Post greeting to the new customer
 			await handleMessengerGreeting(senderId);
@@ -90,10 +82,11 @@ export const userInstagramMiddleware = async (req, res, next) => {
 			// Save thread in DB
 			lead.thread_id = thread;
 			await lead.save();
-			console.log("Lead updated with threadId");
-
+			console.log("Lead updated with threadId!!");
+			
 			// Send Notification of new lead to Admin
 			newLeadWhatsAppNotification(channel, name);
+			console.log("Lead creation notification sent to Admin!!");
 
 			res.status(200).send("EVENT_RECEIVED");
 		} else if (
@@ -113,7 +106,7 @@ export const userInstagramMiddleware = async (req, res, next) => {
 			next();
 		}
 	} else {
-		console.log("Not processed by API:", body);
+		console.log("Object not processed by API:", body);
 		res.status(200).send("EVENT_RECEIVED");
 	}
 };
