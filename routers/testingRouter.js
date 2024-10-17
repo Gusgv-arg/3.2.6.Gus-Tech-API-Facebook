@@ -3,6 +3,6 @@ import { testingController } from "../controllers/testingController.js";
 
 const testingRouter = express.Router();
 
-testingRouter.post("/", testingController)
+testingRouter.get("/", testingController)
 
 export default testingRouter
