@@ -15,12 +15,7 @@ export const postInstagramWebhookController = (req, res) => {
 			// Gets body of the webhook event
 			let webhook_event = entry?.messaging?.[0] ?? entry?.standby?.[0] ?? null;
 			console.log("webhook_event-->", webhook_event);
-			console.log("entry-->", entry)
-			console.log("entry.messaging[0]-->", entry.messaging[0])
-			console.log("entry.messaging[0].sender-->", entry.messaging[0].sender)
-			console.log("entry.messaging[0].recipient-->", entry.messaging[0].recipient)
-			console.log("entry.messaging[0].message-->", entry.messaging[0].message)
-
+			
 			// Get the sender ID
 			let senderId = webhook_event.sender?.id ?? "";
 			//console.log("senderId en postInstagramWebhookController.js:", senderId);

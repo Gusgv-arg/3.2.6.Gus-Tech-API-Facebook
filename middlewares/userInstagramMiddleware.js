@@ -16,8 +16,8 @@ export const userInstagramMiddleware = async (req, res, next) => {
 	const body = req.body;
 	//console.log("Lo que recibo de la API de Instagram -->", body);
 	let channel = body.object === "instagram" ? "instagram" : "other";
-	//console.log("Channel:", channel);
 	let senderId = body?.entry?.[0]?.messaging?.[0]?.sender?.id || "";
+	let recipientId = body?.entry?.[0]?.messaging?.[0]?.recipient?.id || "";
 
 	if (channel === "instagram" && body?.entry[0]?.messaging) {
 		// console.log("body.entry[0].messaging[0] -->", body.entry[0]?.messaging[0] ?? "No messaging data");
@@ -38,6 +38,11 @@ export const userInstagramMiddleware = async (req, res, next) => {
 		// Check if iths the owner of the account and return
 		if (senderId === ownerInstagramAccount) {
 			console.log("Return because is the owner of the account!!");
+			res.status(200).send("EVENT_RECEIVED");
+			return;
+		} else if (recipientId !== ownerInstagramAccount) {
+		// Check if its another recipient ID different from our Instagram ID and return	
+			console.log("Return because the recipient ID is not owrs!!");
 			res.status(200).send("EVENT_RECEIVED");
 			return;
 		}
@@ -83,7 +88,7 @@ export const userInstagramMiddleware = async (req, res, next) => {
 			lead.thread_id = thread;
 			await lead.save();
 			console.log("Lead updated with threadId!!");
-			
+
 			// Send Notification of new lead to Admin
 			newLeadWhatsAppNotification(channel, name);
 			console.log("Lead creation notification sent to Admin!!");
