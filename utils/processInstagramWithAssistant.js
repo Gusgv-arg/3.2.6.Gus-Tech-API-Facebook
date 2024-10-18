@@ -81,7 +81,7 @@ export const processInstagramWithAssistant = async (
 			// No valid threadId found
 			console.error("No valid threadId found for user:", senderId);
 		}
-		console.log("ThreadID utilizado:", threadId)
+		//console.log("ThreadID utilizado:", threadId)
 		
 		//View messages in thread
 		/* const thread_messages = await openai.beta.threads.messages.list(threadId)
@@ -189,8 +189,8 @@ export const processInstagramWithAssistant = async (
 			runStatus = await openai.beta.threads.runs.retrieve(threadId, run.id);
 
 			while (runStatus.status !== "completed") {
-				console.log("run status---->", runStatus.status);
-				console.log("run last_error---->", runStatus.last_error);
+				//console.log("run status---->", runStatus.status);
+				//console.log("run last_error---->", runStatus.last_error);
 
 				if (runStatus.status === "requires_action") {
 					console.log("Requires action");

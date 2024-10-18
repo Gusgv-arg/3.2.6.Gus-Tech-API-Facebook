@@ -34,10 +34,15 @@ export const postInstagramWebhookController = (req, res) => {
 						? body.entry[0].messaging[0].message.attachments[0].payload.url
 						: "",
 				};
-				console.log("Object added to Instagram queue:", userMessage, "with senderId:", senderId);
 
 				// Add message to the Instagram Queue
-				messageQueue.enqueueInstagramMessage(userMessage, senderId);
+				console.log(
+					"Acá haría el enqueue del ID:",
+					senderId,
+					"\nCon este Objeto:",
+					userMessage
+				);
+				//messageQueue.enqueueInstagramMessage(userMessage, senderId);
 			}
 		});
 
