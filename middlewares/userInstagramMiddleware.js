@@ -116,6 +116,13 @@ export const userInstagramMiddleware = async (req, res, next) => {
 
 			res.status(200).send("EVENT_RECEIVED");
 		} else {
+			
+			// Verify existing Mid
+			if (lead.instagramMid.includes(instagramMessageId)) {
+				console.log("Exiting because existing mid:", instagramMessageId);
+				return res.status(200).send("EVENT_RECEIVED");
+			}
+			
 			// Check max allowed responses
 			if (
 				lead.responses + 1 > maxResponses &&
