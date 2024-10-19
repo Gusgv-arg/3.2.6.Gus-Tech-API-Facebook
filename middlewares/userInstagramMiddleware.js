@@ -41,8 +41,11 @@ export const userInstagramMiddleware = async (req, res, next) => {
 			res.status(200).send("EVENT_RECEIVED");
 			return;
 		} else if (recipientId !== ownerInstagramAccount) {
-		// Check if its another recipient ID different from our Instagram ID and return	
-			console.log("Return because the recipient ID is not owrs!!");
+			// Check if its another recipient ID different from our Instagram ID and return
+			console.log(
+				"Return because the recipient ID is not owrs!! RecipientId:",
+				recipientId
+			);
 			res.status(200).send("EVENT_RECEIVED");
 			return;
 		}
@@ -52,6 +55,9 @@ export const userInstagramMiddleware = async (req, res, next) => {
 			body?.entry?.[0]?.standby?.[0]?.message?.text ??
 			"";
 		const name = "Instagram user";
+		const instagramMessageId = body?.entry?.[0]?.messaging?.[0]?.message?.mid
+			? body.entry[0].messaging[0].message.mid
+			: "";
 
 		// Find the lead by id
 		let lead = await Leads.findOne({ id_user: senderId });
@@ -72,6 +78,7 @@ export const userInstagramMiddleware = async (req, res, next) => {
 				name: name,
 				id_user: senderId,
 				content: `${currentDateTime} - ${name}: ${instagramMessage}\n${currentDateTime} - MegaBot: ${messengerGreeting}`,
+				instagramMid: [instagramMessageId],
 				botSwitch: "ON",
 				channel: channel,
 				responses: 1,
