@@ -18,7 +18,7 @@ export const checkInstagramMidMiddleware = async (req, res, next) => {
 
 				if (isDuplicate) {
 					console.log("Mensaje duplicado detectado. Ignorando.");
-					res.status(200).send("EVENT_RECEIVED");
+					return res.status(200).send("EVENT_RECEIVED");
 				}
 			}
 		} catch (error) {

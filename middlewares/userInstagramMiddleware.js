@@ -22,7 +22,10 @@ export const userInstagramMiddleware = async (req, res, next) => {
 		return res.status(200).send("EVENT_RECEIVED");
 	}
 
-	if (senderId === ownerInstagramAccount || recipientId !== ownerInstagramAccount) {
+	if (
+		senderId === ownerInstagramAccount ||
+		recipientId !== ownerInstagramAccount
+	) {
 		console.log("Return because of owner account or different recipient ID");
 		return res.status(200).send("EVENT_RECEIVED");
 	}
@@ -62,7 +65,7 @@ export const userInstagramMiddleware = async (req, res, next) => {
 		// Primero, intentamos encontrar el lead existente
 		let lead = await Leads.findOne({ id_user: senderId });
 
-		if (!lead) {
+		if (lead === null) {
 			// Si no existe, creamos un nuevo lead
 			lead = await Leads.create({
 				id_user: senderId,
@@ -86,7 +89,7 @@ export const userInstagramMiddleware = async (req, res, next) => {
 			// Si el lead ya existe, actualizamos
 			if (!lead.instagramMid.includes(instagramMessageId)) {
 				lead.instagramMid.push(instagramMessageId);
-				
+
 				if (lead.responses > maxResponses && senderId !== "1349568352682541") {
 					console.log("User reached max allowed responses");
 					await handleMessengerMaxResponses(senderId);
