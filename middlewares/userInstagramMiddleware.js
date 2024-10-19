@@ -22,7 +22,6 @@ export const userInstagramMiddleware = async (req, res, next) => {
 		return res.status(200).send("EVENT_RECEIVED");
 	}
 
-	// Check if its a message for my account or is a meesage sent by me to my propoer account
 	if (senderId === ownerInstagramAccount || recipientId !== ownerInstagramAccount) {
 		console.log("Return because of owner account or different recipient ID");
 		return res.status(200).send("EVENT_RECEIVED");
@@ -60,25 +59,21 @@ export const userInstagramMiddleware = async (req, res, next) => {
 	});
 
 	try {
-		// Function that creates a lead or if it exists it updates it
-		const lead = await Leads.findOneAndUpdate(
-			{ id_user: senderId },
-			{
-				$setOnInsert: {
-					name: name,
-					content: `${currentDateTime} - ${name}: ${instagramMessage}\n${currentDateTime} - MegaBot: ${messengerGreeting}`,
-					botSwitch: "ON",
-					channel: channel,
-					responses: 1,
-				},
-				$addToSet: { instagramMid: instagramMessageId },
-				$inc: { responses: 1 },
-			},
-			{ new: true, upsert: true }
-		);
+		// Primero, intentamos encontrar el lead existente
+		let lead = await Leads.findOne({ id_user: senderId });
 
-		if (lead.instagramMid.length === 1) {
-			// Es un nuevo lead
+		if (!lead) {
+			// Si no existe, creamos un nuevo lead
+			lead = await Leads.create({
+				id_user: senderId,
+				name: name,
+				content: `${currentDateTime} - ${name}: ${instagramMessage}\n${currentDateTime} - MegaBot: ${messengerGreeting}`,
+				instagramMid: [instagramMessageId],
+				botSwitch: "ON",
+				channel: channel,
+				responses: 1,
+			});
+
 			console.log("Lead created in Leads DB!!:", name);
 			await handleMessengerGreeting(senderId);
 			const thread = await createGptThread(name, instagramMessage, channel);
@@ -88,14 +83,23 @@ export const userInstagramMiddleware = async (req, res, next) => {
 			newLeadWhatsAppNotification(channel, name);
 			console.log("Lead creation notification sent to Admin!!");
 		} else {
-			// Es un lead existente
-			if (lead.responses > maxResponses && senderId !== "1349568352682541") {
-				console.log("User reached max allowed responses");
-				await handleMessengerMaxResponses(senderId);
-				return res.status(200).send("EVENT_RECEIVED");
-			}
+			// Si el lead ya existe, actualizamos
+			if (!lead.instagramMid.includes(instagramMessageId)) {
+				lead.instagramMid.push(instagramMessageId);
+				
+				if (lead.responses > maxResponses && senderId !== "1349568352682541") {
+					console.log("User reached max allowed responses");
+					await handleMessengerMaxResponses(senderId);
+					return res.status(200).send("EVENT_RECEIVED");
+				}
 
-			if (lead.botSwitch === "OFF") {
+				if (lead.botSwitch === "OFF") {
+					return res.status(200).send("EVENT_RECEIVED");
+				}
+
+				await lead.save();
+			} else {
+				console.log("Mensaje duplicado detectado. Ignorando.");
 				return res.status(200).send("EVENT_RECEIVED");
 			}
 		}
