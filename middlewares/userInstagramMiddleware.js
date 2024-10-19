@@ -60,7 +60,7 @@ export const userInstagramMiddleware = async (req, res, next) => {
 			: "";
 
 		// Find the lead by id
-		const lead = await Leads.findOne({ id_user: senderId });
+		let lead = await Leads.findOne({ id_user: senderId });
 
 		if (lead === null) {
 			// Obtain current date and hour
