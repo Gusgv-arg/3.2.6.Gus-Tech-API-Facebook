@@ -59,22 +59,8 @@ export const userInstagramMiddleware = async (req, res, next) => {
 			? body.entry[0].messaging[0].message.mid
 			: "";
 
-		// Find lead by id_user && instagramMid
-		let lead = await Leads.findOne({
-			id_user: senderId,
-			instagramMid: instagramMessageId,
-		});
-
-		if (lead) {
-			console.log(
-				"Exiting because of existing Instagram Mid:",
-				instagramMessageId
-			);
-			return res.status(200).send("EVENT_RECEIVED");
-		}
-
 		// Find the lead by id
-		lead = await Leads.findOne({ id_user: senderId });
+		const lead = await Leads.findOne({ id_user: senderId });
 
 		if (lead === null) {
 			// Obtain current date and hour
@@ -117,12 +103,6 @@ export const userInstagramMiddleware = async (req, res, next) => {
 			res.status(200).send("EVENT_RECEIVED");
 		} else {
 			
-			// Verify existing Mid
-			if (lead.instagramMid.includes(instagramMessageId)) {
-				console.log("Exiting because existing mid:", instagramMessageId);
-				return res.status(200).send("EVENT_RECEIVED");
-			}
-			
 			// Check max allowed responses
 			if (
 				lead.responses + 1 > maxResponses &&
@@ -136,10 +116,7 @@ export const userInstagramMiddleware = async (req, res, next) => {
 			// Check individual botSwitch
 			if (lead.botSwitch === "OFF") {
 				return res.status(200).send("EVENT_RECEIVED");
-			}
-
-			lead.instagramMid.push(instagramMessageId);
-			await lead.save();
+			}			
 		}
 
 		next();
