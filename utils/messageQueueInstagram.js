@@ -58,35 +58,37 @@ export class MessageQueueInstagram {
 
 				// Check if it's a new lead
 				const process = await instagramNewLead(newMessage, senderId);
+				console.log("Process the message?:", process)
 
 				if (process === true){
-					console.log("Acá entraría la lógica de procesar. Process:", process)
+					// Process the message with the Assistant
+					const response = await processInstagramWithAssistant(
+						senderId,
+						newMessage.message,
+						imageURL,
+						newMessage.type
+					);
+					console.log("Response desde processInstagramWithAssistant:", response)
+	
+					if (newMessage.channel === "instagram") {
+						// Send the response back to the user by Instagram
+						await handleInstagramMessage(
+							senderId,
+							response?.messageGpt ? response.messageGpt : response.errorMessage
+						);
+	
+						// Save the message in the database
+						await saveMessageInDb(
+							senderId,
+							response?.messageGpt ? response.messageGpt : response.errorMessage,
+							response?.threadId ? response.threadId : null,
+							newMessage,
+							response?.campaignFlag
+						);
+					}
+				} else {
+					return
 				}
-				// Process the message with the Assistant
-				/* const response = await processInstagramWithAssistant(
-					senderId,
-					newMessage.message,
-					imageURL,
-					newMessage.type
-				);
-				console.log("Response desde processInstagramWithAssistant:", response) */
-
-				/* if (newMessage.channel === "instagram") {
-					// Send the response back to the user by Instagram
-					await handleInstagramMessage(
-						senderId,
-						response?.messageGpt ? response.messageGpt : response.errorMessage
-					);
-
-					// Save the message in the database
-					await saveMessageInDb(
-						senderId,
-						response?.messageGpt ? response.messageGpt : response.errorMessage,
-						response?.threadId ? response.threadId : null,
-						newMessage,
-						response?.campaignFlag
-					);
-				} */
 			} catch (error) {
 				console.error(
 					`14. Error processing Instagram message: ${error.message}`

@@ -9,7 +9,7 @@ const messageQueue = new MessageQueueInstagram();
 // Webhook that receives message from Instagram Messenger
 export const postInstagramWebhookController = (req, res) => {
 	const body = req.body;
-	console.log("Recibo en postInstagramWebhookController.js: body-->", body);
+	//console.log("Recibo en postInstagramWebhookController.js: body-->", body);
 
 	if (body.object !== "instagram") {
 		return res.sendStatus(404);

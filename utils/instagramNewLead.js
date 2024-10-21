@@ -9,7 +9,7 @@ import { newLeadWhatsAppNotification } from "./newLeadWhatsAppNotification.js";
 const maxResponses = process.env.MAX_RESPONSES;
 
 export const instagramNewLead = async (newMessage, senderId) => {
-	console.log("newMessage en instagramNewLead.js:", newMessage);
+	//console.log("newMessage en instagramNewLead.js:", newMessage);
 
 	const currentDateTime = new Date().toLocaleString("es-AR", {
 		timeZone: "America/Argentina/Buenos_Aires",
