@@ -16,7 +16,8 @@ export class MessageQueueInstagram {
 	async processQueue(senderId) {
 		const queue = this.queues.get(senderId);
 		//console.log("Queue:", queue);
-
+		console.log("this.queues:", this.queues)
+		
 		//If there is no queue or there is no processing return
 		if (!queue || queue.processing) return;
 
@@ -123,7 +124,7 @@ export class MessageQueueInstagram {
 
 		// Add the message to the Queue
 		queue.messages.push(userMessage);
-		console.log("Queue:", queue);
+		//console.log("Queue:", queue);
 
 		// Process the queue
 		this.processQueue(senderId);
