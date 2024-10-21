@@ -57,8 +57,11 @@ export class MessageQueueInstagram {
 				}
 
 				// Check if it's a new lead
-				await instagramNewLead(newMessage, senderId);
+				const process = await instagramNewLead(newMessage, senderId);
 
+				if (process === true){
+					console.log("Acá entraría la lógica de procesar. Process:", process)
+				}
 				// Process the message with the Assistant
 				/* const response = await processInstagramWithAssistant(
 					senderId,

@@ -34,7 +34,7 @@ export const postInstagramWebhookController = (req, res) => {
 			senderId === ownerInstagramAccount ||
 			recipientId !== ownerInstagramAccount
 		) {
-			console.log("Skipping message due to sender or recipient mismatch");
+			console.log("Skipping message due to sender or recipient mismatch. SenderID:", senderId, "recipientID:", recipientId);
 			continue;
 		}
 
@@ -44,8 +44,9 @@ export const postInstagramWebhookController = (req, res) => {
 			// Get the message sent by the user & create an object to send it to the queue
 			const userMessage = {
 				channel: channel,
-				message: webhook_event.message.text ? webhook_event.message.text : "",
 				name: name,
+				message: webhook_event.message.text ? webhook_event.message.text : "",
+				instagramMid: webhook_event.message.mid ? webhook_event.message.mid : "",
 				type: req.type ? req.type : "text",
 				url: body?.entry[0]?.messaging?.[0]?.message?.attachments?.[0]?.payload
 					.url
