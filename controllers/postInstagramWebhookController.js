@@ -36,13 +36,7 @@ export const postInstagramWebhookController = (req, res) => {
 				};
 
 				// Add message to the Instagram Queue
-				console.log(
-					"Acá haría el enqueue del ID:",
-					senderId,
-					"\nCon este Objeto:",
-					userMessage
-				);
-				//messageQueue.enqueueInstagramMessage(userMessage, senderId);
+				messageQueue.enqueueInstagramMessage(userMessage, senderId);
 			}
 		});
 

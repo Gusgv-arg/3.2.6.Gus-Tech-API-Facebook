@@ -1,6 +1,7 @@
 import audioToText from "./audioToText.js";
 import { errorMessage1 } from "./errorMessages.js";
 import { handleInstagramMessage } from "./handleInstagramMessage.js";
+import { instagramNewLead } from "./instagramNewLead.js";
 import { newErrorWhatsAppNotification } from "./newErrorWhatsAppNotification.js";
 import { processInstagramWithAssistant } from "./processInstagramWithAssistant.js";
 import { saveMessageInDb } from "./saveMessageInDb.js";
@@ -54,16 +55,19 @@ export class MessageQueueInstagram {
 					console.log("Entró un document y no lo proceso");
 				}
 
+				// Check if it's a new lead
+				await instagramNewLead(newMessage);
+
 				// Process the message with the Assistant
-				const response = await processInstagramWithAssistant(
+				/* const response = await processInstagramWithAssistant(
 					senderId,
 					newMessage.message,
 					imageURL,
 					newMessage.type
 				);
-				console.log("Response desde processInstagramWithAssistant:", response)
+				console.log("Response desde processInstagramWithAssistant:", response) */
 
-				if (newMessage.channel === "instagram") {
+				/* if (newMessage.channel === "instagram") {
 					// Send the response back to the user by Instagram
 					await handleInstagramMessage(
 						senderId,
@@ -78,9 +82,11 @@ export class MessageQueueInstagram {
 						newMessage,
 						response?.campaignFlag
 					);
-				}
+				} */
 			} catch (error) {
-				console.error(`14. Error processing Instagram message: ${error.message}`);
+				console.error(
+					`14. Error processing Instagram message: ${error.message}`
+				);
 				// Send error message to the user
 				const errorMessage = errorMessage1;
 
@@ -114,10 +120,10 @@ export class MessageQueueInstagram {
 
 		// Look for the queue with the sender ID
 		const queue = this.queues.get(senderId);
-		//console.log("Queue:", queue);
 
 		// Add the message to the Queue
 		queue.messages.push(userMessage);
+		console.log("Queue:", queue);
 
 		// Process the queue
 		this.processQueue(senderId);

@@ -11,7 +11,7 @@ instagramRouter.get("/", getInstagramWebhookController);
 instagramRouter.post(
 	"/",
 	instagramGeneralBotSwitchMiddleware,
-	userInstagramMiddleware,
+	//userInstagramMiddleware,
 	checkInstagramMidMiddleware,
 	postInstagramWebhookController
 );
