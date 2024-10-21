@@ -17,7 +17,7 @@ export class MessageQueueInstagram {
 		const queue = this.queues.get(senderId);
 		//console.log("Queue:", queue);
 		console.log("this.queues:", this.queues)
-		
+
 		//If there is no queue or there is no processing return
 		if (!queue || queue.processing) return;
 
@@ -57,7 +57,7 @@ export class MessageQueueInstagram {
 				}
 
 				// Check if it's a new lead
-				await instagramNewLead(newMessage);
+				await instagramNewLead(newMessage, senderId);
 
 				// Process the message with the Assistant
 				/* const response = await processInstagramWithAssistant(

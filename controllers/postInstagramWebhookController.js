@@ -1,4 +1,7 @@
 import { MessageQueueInstagram } from "../utils/messageQueueInstagram.js";
+import dotenv from "dotenv";
+
+const ownerInstagramAccount = process.env.INSTAGRAM_OWNER_ACCOUNT_ID;
 
 // Define a new instance of MessageQueue
 const messageQueue = new MessageQueueInstagram();
@@ -19,6 +22,16 @@ export const postInstagramWebhookController = (req, res) => {
 			// Get the sender ID
 			let senderId = webhook_event.sender?.id ?? "";
 			//console.log("senderId en postInstagramWebhookController.js:", senderId);
+
+			// Get the recipient ID
+			const recipientId = webhook_event.recipient?.id ?? "";
+			if (
+				senderId === ownerInstagramAccount ||
+				recipientId !== ownerInstagramAccount
+			) {
+				console.log("Return because of owner account or different recipient ID");
+				return res.status(200).send("EVENT_RECEIVED");
+			}
 
 			if (webhook_event.message) {
 				const channel = "instagram";

@@ -7,18 +7,11 @@ import { handleMessengerMaxResponses } from "./handleMessengerMaxResponses.js";
 import { newLeadWhatsAppNotification } from "./newLeadWhatsAppNotification.js";
 
 const maxResponses = process.env.MAX_RESPONSES;
-const ownerInstagramAccount = process.env.INSTAGRAM_OWNER_ACCOUNT_ID;
 
-export const instagramNewLead = async (newMessage) => {
+export const instagramNewLead = async (newMessage, senderId) => {
 	
 	console.log("newMessage en instagramNewLead.js:", newMessage)
-	/* if (
-		senderId === ownerInstagramAccount ||
-		recipientId !== ownerInstagramAccount
-	) {
-		console.log("Return because of owner account or different recipient ID");
-		return;
-	} */
+	
 	
 	const currentDateTime = new Date().toLocaleString("es-AR", {
 		timeZone: "America/Argentina/Buenos_Aires",
