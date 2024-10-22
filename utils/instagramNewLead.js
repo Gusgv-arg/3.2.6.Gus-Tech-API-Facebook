@@ -1,10 +1,10 @@
 import Leads from "../models/leads.js";
 import { greeting, messengerGreeting } from "./greeting.js";
 import { createGptThread } from "./createGptThread.js";
-import { handleMessengerGreeting } from "./handleMessengerGreeting.js";
 import dotenv from "dotenv";
 import { handleMessengerMaxResponses } from "./handleMessengerMaxResponses.js";
 import { newLeadWhatsAppNotification } from "./newLeadWhatsAppNotification.js";
+import {handleInstagramGreeting} from "./handleInstagramGreeting.js"
 
 dotenv.config()
 
@@ -41,7 +41,7 @@ export const instagramNewLead = async (newMessage, senderId) => {
 
 			console.log("Lead created in Leads DB!!:", newMessage.name);
 
-			await handleMessengerGreeting(senderId);
+			await handleInstagramGreeting(senderId);
 
 			const thread = await createGptThread(
 				newMessage.name,
