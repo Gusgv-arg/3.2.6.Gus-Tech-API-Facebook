@@ -6,6 +6,8 @@ import dotenv from "dotenv";
 import { handleMessengerMaxResponses } from "./handleMessengerMaxResponses.js";
 import { newLeadWhatsAppNotification } from "./newLeadWhatsAppNotification.js";
 
+dotenv.config()
+
 const maxResponses = process.env.MAX_RESPONSES;
 
 export const instagramNewLead = async (newMessage, senderId) => {

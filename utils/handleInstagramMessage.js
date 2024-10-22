@@ -17,11 +17,11 @@ export const handleInstagramMessage = async (senderId, messageGpt) => {
 	} else {
 		accessToken = INSTAGRAM_ACCESS_TOKEN;
 	}
-	console.log("access token:", accessToken);
+	//console.log("access token:", accessToken);
 	try {
 		const name = "MegaBot";
 		const channel = "facebook";
-		console.log("senderId recibido en handleInstagramMessage:", senderId);
+		//console.log("senderId recibido en handleInstagramMessage:", senderId);
 
 		// Posts the message to Instagram
 		const url = `https://graph.facebook.com/v20.0/${FACEBOOK_PAGE_ID}/messages?access_token=${accessToken}`;
@@ -34,7 +34,7 @@ export const handleInstagramMessage = async (senderId, messageGpt) => {
 				text: messageGpt,
 			},
 		};
-		//console.log("acá haría el post de la respuesta-->", messageGpt);
+		
 		const response = await axios
 			.post(url, data, {
 				headers: {
