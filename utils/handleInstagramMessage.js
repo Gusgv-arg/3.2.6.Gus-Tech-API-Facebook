@@ -34,8 +34,8 @@ export const handleInstagramMessage = async (senderId, messageGpt) => {
 				text: messageGpt,
 			},
 		};
-		console.log("acá haría el post de la respuesta-->", messageGpt);
-		/* const response = await axios
+		//console.log("acá haría el post de la respuesta-->", messageGpt);
+		const response = await axios
 			.post(url, data, {
 				headers: {
 					"Content-Type": "application/json",
@@ -49,7 +49,7 @@ export const handleInstagramMessage = async (senderId, messageGpt) => {
 					"Error enviando a Instagram desde handleInstagramMessage.js:",
 					error.response ? error.response.data : error.message
 				);
-			}); */
+			});
 	} catch (error) {
 		console.log("Error en handleInstagramMessage.js", error.message);
 		throw error;

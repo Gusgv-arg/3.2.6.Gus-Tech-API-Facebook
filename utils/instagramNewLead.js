@@ -71,7 +71,7 @@ export const instagramNewLead = async (newMessage, senderId) => {
 
 				return true;
 			} else {
-				console.log("Mensaje duplicado detectado. Ignorando.");
+				console.log("Skipping duplicated MID: ", newMessage.instagramMid);
 				return false;
 			}
 		}
