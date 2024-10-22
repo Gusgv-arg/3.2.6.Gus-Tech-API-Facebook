@@ -8,7 +8,7 @@ const FACEBOOK_PAGE_ID = process.env.FACEBOOK_PAGE_ID;
 const INSTAGRAM_ACCESS_TOKEN = process.env.INSTAGRAM_TOKEN;
 
 // Function that sends Instagram greeting
-export const handleMessengerGreeting = async (senderId) => {
+export const handleInstagramGreeting = async (senderId) => {
 	try {
 		// Posts the message to Facebook
 		const url = `https://graph.facebook.com/v20.0/${FACEBOOK_PAGE_ID}/messages?access_token=${INSTAGRAM_ACCESS_TOKEN}`;
