@@ -57,11 +57,14 @@ export class MessageQueueInstagram {
 				}
 
 				// Check if it's a new lead
-				const process = await instagramNewLead(newMessage, senderId);
-				
-				console.log("Process the message?:", process)
+				const processWithGpt = await instagramNewLead(newMessage, senderId);
+				//EL PROBLEMA ESTA CON QUE CREA EL LEAD PERO NO PONE EL PROCESSING EN FALSE!!!!!
+				//EL PROBLEMA ESTA CON QUE CREA EL LEAD PERO NO PONE EL PROCESSING EN FALSE!!!!!
+				//EL PROBLEMA ESTA CON QUE CREA EL LEAD PERO NO PONE EL PROCESSING EN FALSE!!!!!
+				//EL PROBLEMA ESTA CON QUE CREA EL LEAD PERO NO PONE EL PROCESSING EN FALSE!!!!!
+				console.log("Process the message?:", processWithGpt)
 
-				if (process === true){
+				if (processWithGpt === true){
 					// Process the message with the Assistant
 					const response = await processInstagramWithAssistant(
 						senderId,
@@ -88,7 +91,7 @@ export class MessageQueueInstagram {
 						);
 					}
 				} else {
-					return
+					queue.processing = false;
 				}
 			} catch (error) {
 				console.error(

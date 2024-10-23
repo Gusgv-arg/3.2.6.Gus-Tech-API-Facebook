@@ -4,9 +4,10 @@ import { createGptThread } from "./createGptThread.js";
 import dotenv from "dotenv";
 import { handleMessengerMaxResponses } from "./handleMessengerMaxResponses.js";
 import { newLeadWhatsAppNotification } from "./newLeadWhatsAppNotification.js";
-import {handleInstagramGreeting} from "./handleInstagramGreeting.js"
+import { handleInstagramGreeting } from "./handleInstagramGreeting.js";
+import { handleInstagramMaxResponses } from "./handleInstagramMaxresponses.js";
 
-dotenv.config()
+dotenv.config();
 
 const maxResponses = process.env.MAX_RESPONSES;
 
@@ -54,7 +55,9 @@ export const instagramNewLead = async (newMessage, senderId) => {
 
 			newLeadWhatsAppNotification(newMessage.channel, newMessage.name);
 			console.log("Lead creation notification sent to Admin!!");
-			return false
+
+			return false;
+			
 		} else {
 			// Si el lead ya existe, actualizamos
 			if (!lead.instagramMid.includes(newMessage.instagramMid)) {
@@ -63,7 +66,7 @@ export const instagramNewLead = async (newMessage, senderId) => {
 
 				if (lead.responses > maxResponses && senderId !== "1349568352682541") {
 					console.log("User reached max allowed responses");
-					await handleMessengerMaxResponses(senderId);
+					await handleInstagramMaxResponses(senderId);
 					return false;
 				}
 
