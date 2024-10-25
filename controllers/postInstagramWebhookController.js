@@ -53,7 +53,7 @@ export const postInstagramWebhookController = (req, res) => {
 				name: name,
 				message: webhook_event.message.text ? webhook_event.message.text : "",
 				instagramMid: webhook_event.message.mid ? webhook_event.message.mid : "",
-				type: webhook_event.message.attachments.type ? webhook_event.message.attachments.type : "text",
+				type: webhook_event?.message?.attachments?.[0].type ? webhook_event.message.attachments[0].type : "text",
 				url: webhook_event?.message?.attachments?.[0]?.payload.url
 					? webhook_event.message.attachments[0].payload.url
 					: "",
