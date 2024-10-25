@@ -22,6 +22,12 @@ export const postInstagramWebhookController = (req, res) => {
 		// Gets body of the webhook event
 		let webhook_event = entry?.messaging?.[0] ?? entry?.standby?.[0] ?? null;
 		console.log("webhook_event-->", webhook_event);
+		console.log(
+			"Attachments -->",
+			webhook_event?.message?.attachments?.[0]
+				? webhook_event.message.attachments[0]
+				: "no attachments"
+		);
 
 		// Get the sender ID
 		let senderId = webhook_event.sender?.id ?? "";
@@ -47,10 +53,9 @@ export const postInstagramWebhookController = (req, res) => {
 				name: name,
 				message: webhook_event.message.text ? webhook_event.message.text : "",
 				instagramMid: webhook_event.message.mid ? webhook_event.message.mid : "",
-				type: req.type ? req.type : "text",
-				url: body?.entry[0]?.messaging?.[0]?.message?.attachments?.[0]?.payload
-					.url
-					? body.entry[0].messaging[0].message.attachments[0].payload.url
+				type: webhook_event.message.attachments.type ? webhook_event.message.attachments.type : "text",
+				url: webhook_event?.message?.attachments?.[0]?.payload.url
+					? webhook_event.message.attachments[0].payload.url
 					: "",
 			};
 
