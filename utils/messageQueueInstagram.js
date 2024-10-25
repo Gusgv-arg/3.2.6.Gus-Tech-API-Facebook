@@ -52,7 +52,7 @@ export class MessageQueueInstagram {
 						imageURL = newMessage.url;
 
 						// Download and save the image locally
-						const localImagePath = await this.downloadInstagramImage(imageURL, senderId);
+						const localImagePath = await downloadInstagramImage(imageURL, senderId);
 						
 						// Update imageURL to the local path
 						imageURL = localImagePath;
