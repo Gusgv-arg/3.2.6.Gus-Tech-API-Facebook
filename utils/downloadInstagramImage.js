@@ -10,6 +10,7 @@ export const downloadInstagramImage = async (url, senderId) => {
 		const filePath = path.join("/public/temp", fileName);
 
 		await fs.promises.writeFile(filePath, buffer);
+        console.log("Image desde dowloadInstagramImage.js:", filePath)
 		return filePath;
 	} catch (error) {
 		console.error("Error downloading image:", error);

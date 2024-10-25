@@ -4,6 +4,9 @@ export const checkInstagramMidMiddleware = async (req, res, next) => {
 	const senderId = req.body?.entry?.[0]?.messaging?.[0]?.sender?.id || "";
 	const instagramMessageId =
 		req.body?.entry?.[0]?.messaging?.[0]?.message?.mid || "";
+	const read = req.body?.entry?.[0]?.messaging?.[0]?.read
+		? req.body.entry[0].messaging[0].read
+		: "no read";
 
 	if (senderId && instagramMessageId) {
 		try {
@@ -25,8 +28,9 @@ export const checkInstagramMidMiddleware = async (req, res, next) => {
 			console.error("Error en userInstagramMiddleware:", error);
 			res.status(500).send("Internal Server Error");
 		}
-	} else {
-        console.log("Algo está mal xq no hay senderId o Mid")
-    }
+	} else if (read !== "no read") {
+		console.log("Exiting because a read property entered", read);
+		return res.status(200).send("EVENT_RECEIVED");
+	}
 	next(); // Continuar al siguiente middleware si no hay duplicados
 };

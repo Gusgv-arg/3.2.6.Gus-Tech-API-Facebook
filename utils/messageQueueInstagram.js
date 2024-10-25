@@ -55,8 +55,7 @@ export class MessageQueueInstagram {
 						const localImagePath = await downloadInstagramImage(imageURL, senderId);
 						
 						// Update imageURL to the local path
-						imageURL = localImagePath;
-						console.log("Image despues de dowload:", imageURL)
+						imageURL = localImagePath;						
 					}
 
 					// ----------- DOCUMENTS ----------------------------------------------------- //
