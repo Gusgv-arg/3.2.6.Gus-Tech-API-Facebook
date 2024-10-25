@@ -56,6 +56,7 @@ export class MessageQueueInstagram {
 						
 						// Update imageURL to the local path
 						imageURL = localImagePath;
+						console.log("Image despues de dowload:", imageURL)
 					}
 
 					// ----------- DOCUMENTS ----------------------------------------------------- //
