@@ -27,7 +27,7 @@ async function audioToText(audioFile, channel) {
 			await fs.promises.unlink(tempFilePath);
 			return transcription.text;
 		
-		} else if(channel === "messenger"){
+		} else if(channel === "messenger" || channel === "instagram"){
 			// Transform URL to a file
 			let file;
 			if (typeof audioFile === 'string' && audioFile.startsWith('http')) {

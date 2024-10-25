@@ -58,6 +58,7 @@ export const postInstagramWebhookController = (req, res) => {
 					? webhook_event.message.attachments[0].payload.url
 					: "",
 			};
+			console.log("Object added to queue:", userMessage)
 
 			// Add message to the Instagram Queue
 			messageQueue.enqueueInstagramMessage(userMessage, senderId);
