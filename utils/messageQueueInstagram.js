@@ -5,6 +5,7 @@ import { instagramNewLead } from "./instagramNewLead.js";
 import { newErrorWhatsAppNotification } from "./newErrorWhatsAppNotification.js";
 import { processInstagramWithAssistant } from "./processInstagramWithAssistant.js";
 import { saveMessageInDb } from "./saveMessageInDb.js";
+import { downloadInstagramImage } from "./downloadInstagramImage.js";
 
 // Class definition for the Queue
 export class MessageQueueInstagram {
@@ -49,6 +50,12 @@ export class MessageQueueInstagram {
 				} else if (newMessage.type === "image") {
 					if (newMessage.channel === "instagram") {
 						imageURL = newMessage.url;
+
+						// Download and save the image locally
+						const localImagePath = await this.downloadInstagramImage(imageURL, senderId);
+						
+						// Update imageURL to the local path
+						imageURL = localImagePath;
 					}
 
 					// ----------- DOCUMENTS ----------------------------------------------------- //
@@ -58,10 +65,7 @@ export class MessageQueueInstagram {
 
 				// Check if it's a new lead
 				const processWithGpt = await instagramNewLead(newMessage, senderId);
-				//EL PROBLEMA ESTA CON QUE CREA EL LEAD PERO NO PONE EL PROCESSING EN FALSE!!!!!
-				//EL PROBLEMA ESTA CON QUE CREA EL LEAD PERO NO PONE EL PROCESSING EN FALSE!!!!!
-				//EL PROBLEMA ESTA CON QUE CREA EL LEAD PERO NO PONE EL PROCESSING EN FALSE!!!!!
-				//EL PROBLEMA ESTA CON QUE CREA EL LEAD PERO NO PONE EL PROCESSING EN FALSE!!!!!
+
 				console.log("Process the message?:", processWithGpt)
 
 				if (processWithGpt === true){
