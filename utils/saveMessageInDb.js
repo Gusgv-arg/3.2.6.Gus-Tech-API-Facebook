@@ -32,7 +32,7 @@ export const saveMessageInDb = async (
 			let newContent;
 
 			// Determine wether it's a general thread or campaign
-			if (campaignFlag === false) {
+			if (campaignFlag === false || campaignFlag === undefined) {
 				// Concatenate in the general thread the new messages from user && GPT to the existing content
 				newContent = `${lead.content}\n${currentDateTime} - ${newMessage.name}: ${newMessage.message}\nMegaBot: ${messageGpt}`;
 
