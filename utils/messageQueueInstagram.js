@@ -6,6 +6,7 @@ import { newErrorWhatsAppNotification } from "./newErrorWhatsAppNotification.js"
 import { processInstagramWithAssistant } from "./processInstagramWithAssistant.js";
 import { saveMessageInDb } from "./saveMessageInDb.js";
 import { downloadInstagramImage } from "./downloadInstagramImage.js";
+import { responseCharactersQuantity } from "./responseCharactersQuantity.js";
 
 // Class definition for the Queue
 export class MessageQueueInstagram {
@@ -17,7 +18,7 @@ export class MessageQueueInstagram {
 	async processQueue(senderId) {
 		const queue = this.queues.get(senderId);
 		//console.log("Queue:", queue);
-		console.log("this.queues:", this.queues)
+		console.log("this.queues:", this.queues);
 
 		//If there is no queue or there is no processing return
 		if (!queue || queue.processing) return;
@@ -52,10 +53,13 @@ export class MessageQueueInstagram {
 						imageURL = newMessage.url;
 
 						// Download and save the image locally
-						const localImagePath = await downloadInstagramImage(imageURL, senderId);
-						
+						const localImagePath = await downloadInstagramImage(
+							imageURL,
+							senderId
+						);
+
 						// Update imageURL to the local path
-						imageURL = localImagePath;						
+						imageURL = localImagePath;
 					}
 
 					// ----------- DOCUMENTS ----------------------------------------------------- //
@@ -66,29 +70,41 @@ export class MessageQueueInstagram {
 				// Check if it's a new lead
 				const processWithGpt = await instagramNewLead(newMessage, senderId);
 
-				console.log("Process the message?:", processWithGpt)
+				console.log("Process the message?:", processWithGpt);
 
-				if (processWithGpt === true){
+				if (processWithGpt === true) {
 					// Process the message with the Assistant
-					const response = await processInstagramWithAssistant(
+					let response = await processInstagramWithAssistant(
 						senderId,
 						newMessage.message,
 						imageURL,
 						newMessage.type
 					);
-					console.log("Response desde processInstagramWithAssistant:", response)
-	
+					console.log(
+						"Response desde processInstagramWithAssistant:",
+						response
+					);
+
+					// Check response characters that must be below 1000
+					if (response.messageGpt){
+						const abreviated = responseCharactersQuantity(response.messageGpt);
+						console.log("Abreviated:", abreviated);
+						response.messageGpt = abreviated;
+					}
+
 					if (newMessage.channel === "instagram") {
 						// Send the response back to the user by Instagram
 						await handleInstagramMessage(
 							senderId,
 							response?.messageGpt ? response.messageGpt : response.errorMessage
 						);
-	
+
 						// Save the message in the database
 						await saveMessageInDb(
 							senderId,
-							response?.messageGpt ? response.messageGpt : response.errorMessage,
+							response?.messageGpt
+								? response.messageGpt
+								: response.errorMessage,
 							response?.threadId ? response.threadId : null,
 							newMessage,
 							response?.campaignFlag
