@@ -11,6 +11,6 @@ export const responseCharactersQuantity = (response, limit = 1000) => {
       return response;
     } else {
       const truncatedResponse = response.slice(0, 900);
-      return truncatedResponse + " ...\n*¡Mensaje cortado por restricciones de longitud de Instagram!*";
+      return truncatedResponse + " ...\n¡Mensaje cortado por restricciones de longitud de Instagram!";
     }
   };
