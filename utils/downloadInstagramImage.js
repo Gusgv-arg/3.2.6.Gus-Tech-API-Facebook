@@ -1,6 +1,7 @@
 import axios from "axios";
 import fs from "fs";
 import path from "path";
+import config from "../config.js"; 
 
 export const downloadInstagramImage = async (url, senderId) => {
 	try {
@@ -13,7 +14,7 @@ export const downloadInstagramImage = async (url, senderId) => {
 		await fs.promises.mkdir(tempDir, { recursive: true });
 		
 		const filePath = path.join(tempDir, fileName);
-		const webAccessiblePath = `/temp/${fileName}`;
+		const webAccessiblePath = `${config.BASE_URL}/public/temp/${fileName}`;
 
 		await fs.promises.writeFile(filePath, buffer);
         console.log("Image desde downloadInstagramImage.js:", webAccessiblePath);
