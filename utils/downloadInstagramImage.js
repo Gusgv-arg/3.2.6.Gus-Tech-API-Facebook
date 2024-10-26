@@ -7,16 +7,17 @@ export const downloadInstagramImage = async (url, senderId) => {
 		const response = await axios.get(url, { responseType: "arraybuffer" });
 		const buffer = Buffer.from(response.data, "binary");
 		const fileName = `${senderId}_${Date.now()}.jpg`;
-		const tempDir = path.join(process.cwd(), "public", "temp");
+		const tempDir = path.join("public", "temp");
 		
 		// Ensure the directory exists
 		await fs.promises.mkdir(tempDir, { recursive: true });
 		
 		const filePath = path.join(tempDir, fileName);
+		const webAccessiblePath = `/temp/${fileName}`;
 
 		await fs.promises.writeFile(filePath, buffer);
-        console.log("Image desde downloadInstagramImage.js:", filePath)
-		return filePath;
+        console.log("Image desde downloadInstagramImage.js:", webAccessiblePath);
+		return webAccessiblePath;
 	} catch (error) {
 		console.error("Error downloading image:", error);
 		throw error;
