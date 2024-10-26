@@ -70,15 +70,16 @@ export const processInstagramWithAssistant = async (
 			threadId = generalThreadId;
 			assistantId = process.env.OPENAI_ASSISTANT_ID
 			campaignFlag = false
-
+			
 		} else if (campaignThreadId && campaignStatus === "activa") {
 			// Only campaign thread exists
 			threadId = campaignThreadId;
 			assistantId = process.env.OPENAI_CAMPAIGN_ID
 			campaignFlag = true
-
+			
 		} else {
 			// No valid threadId found
+			assistantId = process.env.OPENAI_ASSISTANT_ID
 			console.error("No valid threadId found for user:", senderId);
 		}
 		//console.log("ThreadID utilizado:", threadId)
@@ -173,7 +174,6 @@ export const processInstagramWithAssistant = async (
 	}
 	//console.log("threadId:", threadId);
 
-	//******************************METODO ORIGINAL MAS ACCIONES**************************************/
 	// Run the assistant and wait for completion
 	let maxAttempts = 5;
 	let currentAttempt = 0;
@@ -183,7 +183,7 @@ export const processInstagramWithAssistant = async (
 	do {
 		try {
 			run = await openai.beta.threads.runs.create(threadId, {
-				assistant_id: assistantId,
+				assistant_id: assistantId ? assistantId : process.env.OPENAI_ASSISTANT_ID,
 			});
 
 			runStatus = await openai.beta.threads.runs.retrieve(threadId, run.id);
