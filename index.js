@@ -5,13 +5,18 @@ import cors from "cors";
 import morgan from "morgan";
 import { errorHandler } from "./utils/errorHandler.js";
 import testingRouter from "./routers/testingRouter.js";
-import messengerRouter from "./routers/messengerRouter.js"
+import messengerRouter from "./routers/messengerRouter.js";
 import whatsappRouter from "./routers/whatsappRouter.js";
-import BotSwitch from "./models/botSwitch.js"
+import BotSwitch from "./models/botSwitch.js";
 import createBotSwitchInstance from "./utils/createBotSwitchInstance.js";
 import instagramRouter from "./routers/instagramRouter.js";
+import path from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 mongoose
 	.connect(process.env.MONGODB_URI)
@@ -32,7 +37,7 @@ app.use(
 );
 app.use(express.json());
 app.use(morgan("dev"));
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 
 // Looking for General Bot Switch
@@ -51,7 +56,7 @@ try {
 } catch (error) {
 	console.error("Error initializing bot switch:", error.message);
 	console.log("Retrying to create botSwitchInstance...");
-    await createBotSwitchInstance();
+	await createBotSwitchInstance();
 }
 
 app.use("/webhook_instagram", instagramRouter);
@@ -62,7 +67,7 @@ app.use("/testing", testingRouter);
 // Middleware de manejo de errores
 app.use(errorHandler);
 
-const port = process.env.PORT || 8000
+const port = process.env.PORT || 8000;
 
 app.listen(port, () => {
 	console.log(`Server running at http://localhost:${port}`);

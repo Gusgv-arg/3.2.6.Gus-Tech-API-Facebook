@@ -14,7 +14,7 @@ export const downloadInstagramImage = async (url, senderId) => {
 		await fs.promises.mkdir(tempDir, { recursive: true });
 		
 		const filePath = path.join(tempDir, fileName);
-		const webAccessiblePath = `${config.BASE_URL}/public/temp/${fileName}`;
+		const webAccessiblePath = `${config.BASE_URL}/temp/${fileName}`;
 
 		await fs.promises.writeFile(filePath, buffer);
         console.log("Image desde downloadInstagramImage.js:", webAccessiblePath);
