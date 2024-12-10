@@ -30,7 +30,7 @@ export const adminWhatsAppNotification = async (notification) => {
 				},
 			})
 			.then((response) => {
-				console.log("Response from Facebook:", response.data);
+				console.log("Response for WhatsApp Notification:", response.data);
 			})
 			.catch((error) => {
 				console.error(

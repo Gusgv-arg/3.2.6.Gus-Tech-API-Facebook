@@ -63,7 +63,7 @@ export const searchTemplate = async (templateName) => {
 	} catch (error) {
 		console.log("Error en searchTemplate.js", error.message);
 		await adminWhatsAppNotification(
-			`*NOTIFICACION de Error de Campaña:*\n${error.message}`
+			`*NOTIFICACION de Error de Plantilla de WhatsApp:*\n${error.message}`
 		);
 	}
 };

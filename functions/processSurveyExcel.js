@@ -14,7 +14,7 @@ const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export const processCampaignExcel = async (
+export const processSurveyExcel = async (
 	excelBuffer,
 	templateName,
 	campaignName
@@ -25,7 +25,7 @@ export const processCampaignExcel = async (
 		console.log("Texto de la Plantilla:", templateText);
 
 		// Extract variables from template text
-		const templateVariables = templateText.match(/{{\d+}}/g) || [];
+		const templateVariables = templateText.match(/{{\w+}}/g) || [];
 		const templateVariableCount = templateVariables.length;
 
 		// Process Excel file
@@ -51,7 +51,7 @@ export const processCampaignExcel = async (
 		let successCount = 0;
 		let errorCount = 0;
 		let newLeadsCount = 0;
-		let campaignThread = "";
+		let surveyThread = "";
 
 		// Loop for each record
 		for (const row of data) {
@@ -72,10 +72,9 @@ export const processCampaignExcel = async (
 
 			// Create personalized message by replacing variables in templateText
 			let personalizedMessage = templateText;
-			headers.slice(1).forEach((header, index) => {
-				const variableNumber = index + 1; // {{1}} corresponde a la segunda columna (index 0 + 1)
+			headers.slice(1).forEach((header) => {
 				const variableRegex = new RegExp(
-					escapeRegExp(`{{${variableNumber}}}`),
+					escapeRegExp(`{{${header}}}`),
 					"g"
 				);
 				const value =
@@ -86,11 +85,23 @@ export const processCampaignExcel = async (
 			});
 			console.log("Mensaje individual:", personalizedMessage);
 
-			// From the array of headers, take off  the telephone and map the records that correspond to the variables of the Campaign Template
-			const parameters = headers.slice(1).map((header) => ({
+			// From the array of headers, take off  the telephone and map the records that correspond to the variables of the Survey Template
+			/* const parameters = headers.slice(1).map((header) => ({
 				type: "text",
 				text: row[header] ? row[header].toString() : "",
-			}));
+			})); */
+			const parameters = headers.slice(1).map((header) => {
+				const value = row[header] ? row[header].toString().trim() : null;
+				if (!value) {
+					throw new Error(`El valor para el parámetro ${header} está vacío o es inválido.`);
+				}
+				return {
+					type: "text",
+					text: value,
+				};
+			});
+			
+			console.log("parameters", parameters)
 
 			const messageData = {
 				messaging_product: "whatsapp",
@@ -102,7 +113,7 @@ export const processCampaignExcel = async (
 						code: "es_AR",
 					},
 					components: [
-						{
+						/* {
 							type: "header",
 							parameters: [
 								{
@@ -112,39 +123,46 @@ export const processCampaignExcel = async (
 									},
 								},
 							],
-						},
+						}, */
 						{
 							type: "body",
 							parameters: parameters,
+						},
+						{
+							type: "button",
+							sub_type: "flow",
+							index: 0
 						},
 					],
 				},
 			};
 
+			console.log("Data final para el POST:", JSON.stringify(messageData, null, 2));
+
 			try {
-				// Post the Campaign to the customer
+				// Post the Survey to the customer
 				const response = await axios.post(url, messageData, {
 					headers: { "Content-Type": "application/json" },
 				});
 				console.log(
-					`Mensaje enviado a ${telefono}: ${response.data.messages[0].id}`
+					`Encuesta enviada a ${telefono}: ${response.data.messages[0].id}`
 				);
 
 				// Increment counter
 				successCount++;
 
-				// Create a thread for the Campaign with the initial messages
-				campaignThread = await createCampaignOrSurveyThread(personalizedMessage);
+				// Create a thread for the Survey with the initial messages
+				surveyThread = await createCampaignOrSurveyThread(personalizedMessage);
 				//console.log("campaignthreadID-->", campaignThread);
 
 				// Prepare a Campaign detail object
-				const campaignDetail = {
-					campaignName: campaignName,
-					campaignDate: new Date(),
-					campaignThreadId: campaignThread,
+				const surveyDetail = {
+					//surveyName: campaignName,
+					surveyDate: new Date(),
+					surveyThreadId: surveyThread,
 					messages: `MegaBot: ${personalizedMessage}`,
 					client_status: "contactado",
-					campaign_status: "activa",
+					survey_status: "activa",
 					error: "",
 				};
 
@@ -164,13 +182,13 @@ export const processCampaignExcel = async (
 						thread_id: generalThread,
 						botSwitch: "ON",
 						responses: 0,
-						campaigns: [campaignDetail],
+						surveys: [surveyDetail],
 					});
 					await lead.save();
 					newLeadsCount++;
 				} else {
 					// Update existing lead with Campaign
-					lead.campaigns.push(campaignDetail);
+					lead.surveys.push(surveyDetail);
 					await lead.save();
 				}
 			} catch (error) {
@@ -181,13 +199,13 @@ export const processCampaignExcel = async (
 				errorCount++;
 
 				// Handle the Error
-				const campaignDetail = {
-					campaignName: campaignName,
-					campaignDate: new Date(),
-					campaignThreadId: campaignThread,
-					messages: `Error al contactar cliente por la Campaña ${campaignName}.`,
+				const surveyDetail = {
+					//surveyName: campaignName,
+					surveyDate: new Date(),
+					surveyThreadId: surveyThread,
+					messages: `Error al contactar cliente por la Encuesta.`,
 					client_status: "error",
-					campaign_status: "activa",
+					survey_status: "activa",
 					error: error.response?.data || error.message,
 				};
 
@@ -201,14 +219,14 @@ export const processCampaignExcel = async (
 							botSwitch: "ON",
 							responses: 0,
 						},
-						$push: { campaigns: campaignDetail },
+						$push: { surveys: surveyDetail },
 					},
 					{ upsert: true, new: true }
 				);
 
 				errorCount++;
 				await adminWhatsAppNotification(
-					`*NOTIFICACION de Error de Campaña para ${telefono}-${
+					`*NOTIFICACION de Error de Encuesta para ${telefono}-${
 						row[headers[1]] || ""
 					}:*\n" + ${error.message}`
 				);
@@ -218,14 +236,14 @@ export const processCampaignExcel = async (
 			await delay(3000);
 		}
 
-		const summaryMessage = `*NOTIFICACION de Campaña:*\nMensajes enviados: ${successCount}\nErrores: ${errorCount}`;
+		const summaryMessage = `*NOTIFICACION de Encuesta:*\nMensajes enviados: ${successCount}\nErrores: ${errorCount}`;
 		await adminWhatsAppNotification(summaryMessage);
 	} catch (error) {
-		console.error("Error processing campaign Excel:", error.message);
+		console.error("Error in processSurveyExcel.js:", error.message);
 
 		// Receives the throw new error && others
 		await adminWhatsAppNotification(
-			`*NOTIFICACION de Error de Campaña:*\n${error.message}`
+			`*NOTIFICACION de Error de Encuesta:*\n${error.message}`
 		);
 	}
 };

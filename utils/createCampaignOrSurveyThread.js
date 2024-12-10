@@ -7,7 +7,7 @@ const openai = new OpenAI({
 	apiKey: API_KEY,
 });
 
-export const createCampaignThread = async (personalizedMessage) => {
+export const createCampaignOrSurveyThread = async (personalizedMessage) => {
 	try {
 		// Create a new thread with the initial messages
 		const thread = await openai.beta.threads.create({
@@ -26,7 +26,7 @@ export const createCampaignThread = async (personalizedMessage) => {
 		
 		return threadId;
 	} catch (error) {
-		console.log("Error en createCampaignThread:", error.message);
+		console.log("Error en createCampaignOrSurveyThread:", error.message);
 		throw error;
 	}
 };
