@@ -29,9 +29,9 @@ export const adminWhatsAppNotification = async (notification) => {
 					"Content-Type": "application/json",
 				},
 			})
-			.then((response) => {
+			/* .then((response) => {
 				console.log("Response for WhatsApp Notification:", response.data);
-			})
+			}) */
 			.catch((error) => {
 				console.error(
 					"Error enviando a Facebook------------>",

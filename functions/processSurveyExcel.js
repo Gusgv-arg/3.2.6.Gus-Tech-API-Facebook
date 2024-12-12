@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import axios from "axios";
 import xlsx from "xlsx";
+import { v4 as uuidv4 } from "uuid";
 import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js";
 import Leads from "../models/leads.js";
 import { createCampaignOrSurveyThread } from "../utils/createCampaignOrSurveyThread.js";
@@ -45,7 +46,7 @@ export const processSurveyExcel = async (
 		}
 
 		// URL where to post Campaign
-		const url = `https://graph.facebook.com/v20.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
+		const url = `https://graph.facebook.com/v16.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
 
 		// Variables to track Campaign
 		let successCount = 0;
@@ -70,78 +71,80 @@ export const processSurveyExcel = async (
 				return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 			}
 
+			// Asignar los valores de las columnas B y C a los parámetros
+			const nombre = row[headers[1]] ? row[headers[1]].toString().trim() : ""; // Columna B
+			const modelo = row[headers[2]] ? row[headers[2]].toString().trim() : ""; // Columna C
+
 			// Create personalized message by replacing variables in templateText
 			let personalizedMessage = templateText;
-			headers.slice(1).forEach((header) => {
-				const variableRegex = new RegExp(
-					escapeRegExp(`{{${header}}}`),
-					"g"
-				);
-				const value =
-					row[header] !== undefined ? row[header].toString().trim() : "";
 
-				const beforeReplace = personalizedMessage;
-				personalizedMessage = personalizedMessage.replace(variableRegex, value);
-			});
+			personalizedMessage = templateText.replace(
+				/{{(\d+)}}/g,
+				(match, number) => {
+					switch (number) {
+						case "1":
+							return nombre;
+						case "2":
+							return modelo;
+						default:
+							return match; // Devuelve la variable sin reemplazo si no hay coincidencia
+					}
+				}
+			);
+
 			console.log("Mensaje individual:", personalizedMessage);
 
-			// From the array of headers, take off  the telephone and map the records that correspond to the variables of the Survey Template
-			/* const parameters = headers.slice(1).map((header) => ({
-				type: "text",
-				text: row[header] ? row[header].toString() : "",
-			})); */
-			const parameters = headers.slice(1).map((header) => {
-				const value = row[header] ? row[header].toString().trim() : null;
-				if (!value) {
-					throw new Error(`El valor para el parámetro ${header} está vacío o es inválido.`);
-				}
-				return {
-					type: "text",
-					text: value,
-				};
-			});
-			
-			console.log("parameters", parameters)
+			// Generate a flow token
+			const flowToken = uuidv4();
 
-			const messageData = {
+			// Payload for sending a template with an integrated flow
+			const payload = {
 				messaging_product: "whatsapp",
-				to: telefono.toString(),
+				recipient_type: "individual",
+				to: telefono,
 				type: "template",
 				template: {
-					name: templateName,
-					language: {
-						code: "es_AR",
-					},
+					name: "prueba_flow",
+					language: { code: "es_AR" }, // Adjust language code as needed
 					components: [
-						/* {
-							type: "header",
-							parameters: [
-								{
-									type: "image",
-									image: {
-										link: "https://github.com/Gusgv-arg/3.2.6.Gus-Tech-API-Facebook/blob/34944992248264371781beaaf3e3c155713dc70a/assets/Gus%20Tech%20logo%20Whatsapp.jpg?raw=true",
-									},
-								},
-							],
-						}, */
 						{
 							type: "body",
-							parameters: parameters,
+							parameters: [
+								{
+									type: "text",
+									text: nombre,
+								},
+								{
+									type: "text",
+									text: modelo,
+								},
+							],
 						},
 						{
-							type: "button",
+							type: "BUTTON",
 							sub_type: "flow",
-							index: 0
-						},
+							index: 0,
+							parameters: [
+								{
+									"type": "action",
+									"action": {
+									  "flow_token": flowToken,   //optional, default is "unused"
+									  "flow_action_data": {
+										 
+									  }   // optional, json object with the data payload for the first screen
+									}
+							}  						
+							],							
+						  }
 					],
 				},
 			};
 
-			console.log("Data final para el POST:", JSON.stringify(messageData, null, 2));
+			console.log("Data final para el POST:", JSON.stringify(payload, null, 2));
 
 			try {
 				// Post the Survey to the customer
-				const response = await axios.post(url, messageData, {
+				const response = await axios.post(url, payload, {
 					headers: { "Content-Type": "application/json" },
 				});
 				console.log(
@@ -196,6 +199,7 @@ export const processSurveyExcel = async (
 					`Error enviando mensaje a ${telefono}:`,
 					error.response?.data || error.message
 				);
+				console.log("error.message:", error.message);
 				errorCount++;
 
 				// Handle the Error
@@ -206,7 +210,9 @@ export const processSurveyExcel = async (
 					messages: `Error al contactar cliente por la Encuesta.`,
 					client_status: "error",
 					survey_status: "activa",
-					error: error.response?.data || error.message,
+					error: error?.response?.data
+						? JSON.stringify(error.response.data.message)
+						: error.message,
 				};
 
 				await Leads.findOneAndUpdate(
@@ -228,7 +234,11 @@ export const processSurveyExcel = async (
 				await adminWhatsAppNotification(
 					`*NOTIFICACION de Error de Encuesta para ${telefono}-${
 						row[headers[1]] || ""
-					}:*\n" + ${error.message}`
+					}:*\n + ${
+						error?.response?.data
+							? JSON.stringify(error.response.error.message)
+							: error.message
+					}`
 				);
 			}
 
@@ -239,11 +249,20 @@ export const processSurveyExcel = async (
 		const summaryMessage = `*NOTIFICACION de Encuesta:*\nMensajes enviados: ${successCount}\nErrores: ${errorCount}`;
 		await adminWhatsAppNotification(summaryMessage);
 	} catch (error) {
-		console.error("Error in processSurveyExcel.js:", error.message);
+		console.error(
+			"Error in processSurveyExcel.js:",
+			error?.response?.data
+				? JSON.stringify(error.response.data)
+				: error.message
+		);
 
 		// Receives the throw new error && others
 		await adminWhatsAppNotification(
-			`*NOTIFICACION de Error de Encuesta:*\n${error.message}`
+			`*NOTIFICACION de Error de Encuesta:*\n${
+				error?.response?.data
+					? JSON.stringify(error.response.data)
+					: error.message
+			}`
 		);
 	}
 };
