@@ -19,6 +19,8 @@ const myPhone = process.env.MY_PHONE;
 
 export const adminFunctionsMiddleware = async (req, res, next) => {
 	const body = req.body;
+	console.log("Body", body)
+	
 	let channel = body.entry[0].changes ? "WhatsApp" : "Other";
 	let status = body?.entry?.[0].changes?.[0].value?.statuses?.[0]
 		? "status"

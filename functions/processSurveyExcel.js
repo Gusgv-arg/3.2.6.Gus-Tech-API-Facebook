@@ -121,7 +121,7 @@ export const processSurveyExcel = async (
 							],
 						},
 						{
-							type: "BUTTON",
+							type: "button",
 							sub_type: "flow",
 							index: 0,
 							parameters: [
