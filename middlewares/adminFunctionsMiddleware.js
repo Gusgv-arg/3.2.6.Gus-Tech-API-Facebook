@@ -40,10 +40,10 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			: "other type";
 
 		if (typeOfWhatsappMessage === "other type") {
-			console.log("Other type message entered:", body);
+			console.log("Other type message entered:", body.entry[0].changes[0]);
 		}
-		
-		const userPhone = body.entry[0].changes[0].value.messages[0].from;
+
+		const userPhone = body?.entry?.[0]?.changes[0]?.value?.messages?.[0]?.from;
 
 		// Admin INSTRUCTIONS: can be text or document format in case of Campaign!!!
 		if (
