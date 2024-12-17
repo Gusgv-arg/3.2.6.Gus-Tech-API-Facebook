@@ -45,18 +45,19 @@ app.use(
 		credentials: true,
 	})
 );
-app.use(express.json());
-app.use(morgan("dev"));
-app.use(express.static(path.join(__dirname, "public")));
-app.use(express.urlencoded({ extended: true }));
+//app.use(express.json());
 app.use(
 	express.json({
 		// store the raw request body to use it for signature verification
 		verify: (req, res, buf, encoding) => {
 			req.rawBody = buf?.toString(encoding || "utf8");
+			//console.log("raw body:", req.rawBody)
 		},
 	})
 );
+app.use(morgan("dev"));
+app.use(express.static(path.join(__dirname, "public")));
+app.use(express.urlencoded({ extended: true }));
 
 // Looking for General Bot Switch
 let botSwitchInstance;
@@ -79,18 +80,21 @@ try {
 
 // WHATSAPP endpoint config
 app.post("/", async (req, res) => {
-	console.log("req.body:", req.body);
+	//console.log("req.body:", req.body);
 
 	try {
 		if (!WHATSAPP_PRIVATE_KEY) {
+			console.log("Entró en el if(!WHATSAPP_PRIVATE_KEY)")
 			throw new Error(
 				'Private key is empty. Please check your env variable "WHATSAPP_PRIVATE_KEY".'
 			);
+
 		}
 
 		if (!isRequestSignatureValid(req)) {
 			// Return status code 432 if request signature does not match.
 			// To learn more about return error codes visit: https://developers.facebook.com/docs/whatsapp/flows/reference/error-codes#endpoint_error_codes
+			console.log("Entró en el if (!isReuqestSignatureValid)")
 			return res.status(432).send();
 		}
 
@@ -101,8 +105,9 @@ app.post("/", async (req, res) => {
 				WHATSAPP_PRIVATE_KEY,
 				WHATSAPP_PUBLIC_KEY_PASSWORD
 			);
+			//console.log("decryptedRequest:", decryptedRequest)
 		} catch (err) {
-			console.error(err);
+			console.error("Error in try of decryptRequest:", err);
 			if (err instanceof FlowEndpointException) {
 				return res.status(err.statusCode).send();
 			}
@@ -116,7 +121,7 @@ app.post("/", async (req, res) => {
 		// If the flow token becomes invalid, return HTTP code 427 to disable the flow and show the message in `error_msg` to the user
 		// Refer to the docs for details https://developers.facebook.com/docs/whatsapp/flows/reference/error-codes#endpoint_error_codes
 
-		if (!isValidFlowToken(decryptedBody.flow_token)) {
+		/* if (!isValidFlowToken(decryptedBody.flow_token)) {
 			const error_response = {
 				error_msg: `The message is no longer available`,
 			};
@@ -125,7 +130,7 @@ app.post("/", async (req, res) => {
 				.send(
 					encryptResponse(error_response, aesKeyBuffer, initialVectorBuffer)
 				);
-		}
+		} */
 
 		const screenResponse = await getNextScreen(decryptedBody);
 		console.log("👉 Response to Encrypt:", screenResponse);
@@ -135,6 +140,7 @@ app.post("/", async (req, res) => {
 		);
 	} catch (error) {
 		console.error("Error en index.js:", error.message);
+		console.error("Error en index.js:", error);
 		return res.status(500).send({ error: "Internal Server Error" });
 	}
 });

@@ -2,8 +2,11 @@ import crypto from "crypto";
 
 export const decryptRequest = (body, privatePem, passphrase) => {
   const { encrypted_aes_key, encrypted_flow_data, initial_vector } = body;
+  //console.log("Body en decryptRequest:", body)
 
   const privateKey = crypto.createPrivateKey({ key: privatePem, passphrase });
+  console.log("privateKey:", privateKey)
+
   let decryptedAesKey = null;
   try {
     // decrypt AES key created by client
@@ -15,8 +18,9 @@ export const decryptRequest = (body, privatePem, passphrase) => {
       },
       Buffer.from(encrypted_aes_key, "base64")
     );
+    console.log("decryptedAesKey:", decryptedAesKey)
   } catch (error) {
-    console.error(error);
+    console.log("error en el catch de decryptRequest:", error);
     /*
     Failed to decrypt. Please verify your private key.
     If you change your public key. You need to return HTTP status code 421 to refresh the public key on the client
