@@ -20,7 +20,7 @@ const myPhone = process.env.MY_PHONE;
 export const adminFunctionsMiddleware = async (req, res, next) => {
 	const body = req.body;
 	//console.log("Body desde adminMiddleware", body)
-	
+
 	let channel = body.entry[0].changes ? "WhatsApp" : "Other";
 	let status = body?.entry?.[0].changes?.[0].value?.statuses?.[0]
 		? "status"
@@ -34,10 +34,15 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 
 	// Check if its WhatsApp text message from Admin phone
 	if (channel === "WhatsApp" && body?.entry[0]) {
-		let typeOfWhatsappMessage = body.entry[0].changes[0]?.value?.messages[0]
+		let typeOfWhatsappMessage = body.entry[0].changes[0]?.value?.messages?.[0]
 			?.type
 			? body.entry[0].changes[0].value.messages[0].type
 			: "other type";
+
+		if (typeOfWhatsappMessage === "other type") {
+			console.log("Other type message entered:", body);
+		}
+		
 		const userPhone = body.entry[0].changes[0].value.messages[0].from;
 
 		// Admin INSTRUCTIONS: can be text or document format in case of Campaign!!!
@@ -102,9 +107,8 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 
 				res.status(200).send("EVENT_RECEIVED");
 			} else if (message.startsWith("encuesta")) {
-				
 				res.status(200).send("EVENT_RECEIVED");
-				
+
 				// Survey format: "encuesta" "template name"
 				const parts = message.split(" ");
 				const templateName = parts[1];
@@ -126,7 +130,6 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 					templateName,
 					campaignName
 				);
-
 			} else if (message.startsWith("inactivar")) {
 				const parts = message.split(" ");
 				const campaignName = parts.slice(1).join("_");
@@ -147,9 +150,9 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				await listCampaigns();
 
 				res.status(200).send("EVENT_RECEIVED");
-			} else if (message==="megabot leads"){
+			} else if (message === "megabot leads") {
 				const leads = await exportLeadsToExcel();
-				
+
 				res.status(200).send("EVENT_RECEIVED");
 			} else {
 				// Does next if its an admin message but is not an instruction
