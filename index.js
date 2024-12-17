@@ -19,6 +19,7 @@ import {
 } from "./wab_encryption/encryption.js";
 import { getNextScreen } from "./wab_encryption/flow.js";
 import crypto from "crypto";
+import { isRequestSignatureValid } from "./wab_encryption/isRequestSignatureValid.js";
 
 dotenv.config();
 
