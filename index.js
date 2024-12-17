@@ -23,11 +23,7 @@ import { isRequestSignatureValid } from "./wab_encryption/isRequestSignatureVali
 
 dotenv.config();
 
-const {
-	FACEBOOK_APP_SECRET,
-	WHATSAPP_PRIVATE_KEY,
-	WHATSAPP_PUBLIC_KEY_PASSWORD,
-} = process.env;
+const { WHATSAPP_PRIVATE_KEY, WHATSAPP_PUBLIC_KEY_PASSWORD } = process.env;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -84,7 +80,7 @@ try {
 // WHATSAPP endpoint config
 app.post("/", async (req, res) => {
 	console.log("req.body:", req.body);
-	
+
 	try {
 		if (!WHATSAPP_PRIVATE_KEY) {
 			throw new Error(
