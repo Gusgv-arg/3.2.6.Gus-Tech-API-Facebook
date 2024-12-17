@@ -44,6 +44,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			if (body.entry[0].changes[0].field === "flows"){
 				console.log("Se recibió un evento de flows:", body.entry[0].changes[0].value)
 				res.status(200).send("EVENT_RECEIVED");
+				return
 			}
 		}
 
