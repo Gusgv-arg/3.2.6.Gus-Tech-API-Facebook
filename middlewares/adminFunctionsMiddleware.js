@@ -40,7 +40,11 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			: "other type";
 
 		if (typeOfWhatsappMessage === "other type") {
-			console.log("Other type message entered:", body.entry[0].changes[0]);
+			//console.log("Other type message entered:", body.entry[0].changes[0]);
+			if (body.entry[0].changes[0].field === "flows"){
+				console.log("Se recibió un evento de flows:", body.entry[0].changes[0].value)
+				res.status(200).send("EVENT_RECEIVED");
+			}
 		}
 
 		const userPhone = body?.entry?.[0]?.changes[0]?.value?.messages?.[0]?.from;
