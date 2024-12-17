@@ -41,7 +41,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 
 		if (typeOfWhatsappMessage === "other type") {
 			//console.log("Other type message entered:", body.entry[0].changes[0]);
-			if (body.entry[0].changes[0].field === "flows"){
+			if (body.entry[0].changes[0].field === "flows" || body.entry[0].changes[0].field === "message_template_status_update" ){
 				console.log("Se recibió un evento de flows:", body.entry[0].changes[0].value)
 				res.status(200).send("EVENT_RECEIVED");
 				return
