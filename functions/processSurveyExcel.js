@@ -104,7 +104,7 @@ export const processSurveyExcel = async (
 				to: telefono,
 				type: "template",
 				template: {
-					name: "prueba_flow",
+					name: "prueba2",
 					language: { code: "es_AR" }, // Adjust language code as needed
 					components: [
 						{
