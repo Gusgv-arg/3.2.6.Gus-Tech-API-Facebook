@@ -5,7 +5,7 @@ export const decryptRequest = (body, privatePem, passphrase) => {
   //console.log("Body en decryptRequest:", body)
 
   const privateKey = crypto.createPrivateKey({ key: privatePem, passphrase });
-  console.log("privateKey:", privateKey)
+  //console.log("privateKey:", privateKey)
 
   let decryptedAesKey = null;
   try {
