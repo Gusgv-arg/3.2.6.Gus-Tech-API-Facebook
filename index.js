@@ -81,20 +81,19 @@ try {
 // WHATSAPP endpoint config
 app.post("/", async (req, res) => {
 	//console.log("req.body:", req.body);
-
+	console.log("Whatsapp private key:", WHATSAPP_PRIVATE_KEY);
 	try {
 		if (!WHATSAPP_PRIVATE_KEY) {
-			console.log("Entró en el if(!WHATSAPP_PRIVATE_KEY)")
+			console.log("Entró en el if(!WHATSAPP_PRIVATE_KEY)");
 			throw new Error(
 				'Private key is empty. Please check your env variable "WHATSAPP_PRIVATE_KEY".'
 			);
-
 		}
 
 		if (!isRequestSignatureValid(req)) {
 			// Return status code 432 if request signature does not match.
 			// To learn more about return error codes visit: https://developers.facebook.com/docs/whatsapp/flows/reference/error-codes#endpoint_error_codes
-			console.log("Entró en el if (!isReuqestSignatureValid)")
+			console.log("Entró en el if (!isReuqestSignatureValid)");
 			return res.status(432).send();
 		}
 
