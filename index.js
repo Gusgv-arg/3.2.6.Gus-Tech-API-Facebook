@@ -81,7 +81,7 @@ try {
 // WHATSAPP endpoint config
 app.post("/", async (req, res) => {
 	//console.log("req.body:", req.body);
-	console.log("Whatsapp private key:", WHATSAPP_PRIVATE_KEY);
+	//console.log("Whatsapp private key:", WHATSAPP_PRIVATE_KEY);
 	try {
 		if (!WHATSAPP_PRIVATE_KEY) {
 			console.log("Entró en el if(!WHATSAPP_PRIVATE_KEY)");

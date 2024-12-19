@@ -18,7 +18,7 @@ export const decryptRequest = (body, privatePem, passphrase) => {
       },
       Buffer.from(encrypted_aes_key, "base64")
     );
-    console.log("decryptedAesKey:", decryptedAesKey)
+    //console.log("decryptedAesKey:", decryptedAesKey)
   } catch (error) {
     console.log("error en el catch de decryptRequest:", error);
     /*

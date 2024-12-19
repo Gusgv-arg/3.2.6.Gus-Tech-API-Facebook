@@ -104,7 +104,7 @@ export const processSurveyExcel = async (
 				to: telefono,
 				type: "template",
 				template: {
-					name: "prueba2",
+					name: "productos",
 					language: { code: "es_AR" }, // Adjust language code as needed
 					components: [
 						{
@@ -113,11 +113,11 @@ export const processSurveyExcel = async (
 								{
 									type: "text",
 									text: nombre,
-								},
+								},/* 
 								{
 									type: "text",
 									text: modelo,
-								},
+								}, */
 							],
 						},
 						{
