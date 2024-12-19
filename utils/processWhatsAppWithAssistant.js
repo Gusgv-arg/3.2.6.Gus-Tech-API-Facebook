@@ -9,7 +9,7 @@ import {
 	errorMessage5,
 } from "./errorMessages.js";
 import { cleanThread } from "./cleanThread.js";
-import { noPromotions } from "./notificationMessages.js";
+import { flowNotification, noPromotions } from "./notificationMessages.js";
 
 dotenv.config();
 
@@ -58,31 +58,28 @@ export const processWhatsAppWithAssistant = async (
 		let campaignThreadId = lastCampaign ? lastCampaign.campaignThreadId : null;
 		let campaignStatus = lastCampaign ? lastCampaign.campaign_status : null;
 		//console.log("Last campaign thread Id:", campaignThreadId)
-		
+
 		// Both threads exist, use Campaign thread
 		if (generalThreadId && campaignThreadId && campaignStatus === "activa") {
 			threadId = campaignThreadId;
 			assistantId = process.env.OPENAI_CAMPAIGN_ID;
 			campaignFlag = true;
-
 		} else if (generalThreadId) {
 			// Only general thread exists
 			threadId = generalThreadId;
-			assistantId = process.env.OPENAI_ASSISTANT_ID
-			campaignFlag = false
-
+			assistantId = process.env.OPENAI_ASSISTANT_ID;
+			campaignFlag = false;
 		} else if (campaignThreadId && campaignStatus === "activa") {
 			// Only campaign thread exists
 			threadId = campaignThreadId;
-			assistantId = process.env.OPENAI_CAMPAIGN_ID
-			campaignFlag = true
-
+			assistantId = process.env.OPENAI_CAMPAIGN_ID;
+			campaignFlag = true;
 		} else {
 			// No valid threadId found
 			console.error("No valid threadId found for user:", senderId);
 		}
-		console.log("ThreadID utilizado:", threadId)
-		
+		console.log("ThreadID utilizado:", threadId);
+
 		//View messages in thread
 		/* const thread_messages = await openai.beta.threads.messages.list(threadId)
 		thread_messages.data.forEach(message => {
@@ -98,6 +95,9 @@ export const processWhatsAppWithAssistant = async (
 			userMessage.toLowerCase() === "detener promociones"
 		) {
 			const notification = noPromotions;
+			return { notification, threadId, campaignFlag };
+		} else if (type === "interactive") {
+			const notification = flowNotification;
 			return { notification, threadId, campaignFlag };
 		}
 

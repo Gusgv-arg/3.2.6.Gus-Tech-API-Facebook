@@ -7,3 +7,5 @@ export const helpFunctionNotification = `*¡Bienvenido Administrador de MegaBot!
 export const noPromotions = "*NOTIFICACION:* Tomamos conocimiento de que *NO* desea recibir más promociones. ¡Que tenga un buen día!"
 
 export const templateError = `*NOTIFICACION de Error:*\nPara generar una Campaña debe enviar en la descripción del Excel que adjunta la palabra 'campaña' seguido del nombre de la plantilla de WhatsApp seguido del nombre que le quiera dar a la Campaña. (Ejemplo: "campaña plantilla1 campaña1").`
+
+export const flowNotification = "*NOTIFICACION:* ¡Gracias por su respuesta al Flow!"
