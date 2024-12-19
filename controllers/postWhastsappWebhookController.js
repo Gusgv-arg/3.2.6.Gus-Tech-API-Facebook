@@ -47,7 +47,7 @@ export const postWhatsappWebhookController = async (req, res) => {
 					? body.entry[0].changes[0].value.messages[0].document.caption
 					: type === "button"
 					? body.entry[0].changes[0].value.messages[0].button.text
-					: type = "interactive"
+					: type === "interactive"
 					? body.entry[0].changes[0].value.messages[0].interactive.nfm_reply.response_json
 					: "unknown message";
 			const userPhone = body.entry[0].changes[0].value.messages[0].from;
