@@ -13,7 +13,7 @@ import { processCampaignExcel } from "../functions/processCampaignExcel.js";
 import { changeCampaignStatus } from "../utils/changeCampaignStatus.js";
 import listCampaigns from "../utils/listCampaigns.js";
 import { exportLeadsToExcel } from "../utils/exportLeadsToExcel.js";
-import { processSurveyExcel } from "../functions/processSurveyExcel.js";
+import { processTemplateExcel } from "../functions/processTemplateExcel.js";
 
 const myPhone = process.env.MY_PHONE;
 
@@ -111,7 +111,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				);
 
 				res.status(200).send("EVENT_RECEIVED");
-			} else if (message.startsWith("encuesta")) {
+			} else if (message.startsWith("plantilla")) {
 				res.status(200).send("EVENT_RECEIVED");
 
 				// Survey format: "encuesta" "template name"
@@ -130,7 +130,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				//console.log("Document download:", documentBufferData);
 
 				// Call the new function to process the campaign
-				await processSurveyExcel(
+				await processTemplateExcel(
 					documentBufferData,
 					templateName,
 					campaignName

@@ -15,7 +15,7 @@ const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export const processSurveyExcel = async (
+export const processTemplateExcel = async (
 	excelBuffer,
 	templateName,
 	campaignName
