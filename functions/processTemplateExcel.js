@@ -104,8 +104,8 @@ export const processTemplateExcel = async (
 				to: telefono,
 				type: "template",
 				template: {
-					name: "productos",
-					language: { code: "es_AR" }, // Adjust language code as needed
+					name: templateName,
+					language: { code: "es" }, // Adjust language code as needed
 					components: [
 						{
 							type: "body",
