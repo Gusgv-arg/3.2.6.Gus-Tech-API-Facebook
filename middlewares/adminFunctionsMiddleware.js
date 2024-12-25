@@ -50,7 +50,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 
 		const userPhone = body?.entry?.[0]?.changes[0]?.value?.messages?.[0]?.from;
 
-		// Admin INSTRUCTIONS: can be text or document format in case of Campaign!!!
+		// Admin INSTRUCTIONS: can be text or document format in case of Templates!
 		if (
 			(typeOfWhatsappMessage === "text" && userPhone === myPhone) ||
 			(typeOfWhatsappMessage === "document" && userPhone === myPhone)
@@ -114,7 +114,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 			} else if (message.startsWith("plantilla")) {
 				res.status(200).send("EVENT_RECEIVED");
 
-				// Survey format: "encuesta" "template name"
+				// Template format: "plantilla" "template name"
 				const parts = message.split(" ");
 				const templateName = parts[1];
 				const campaignName = parts.slice(2).join("_");
