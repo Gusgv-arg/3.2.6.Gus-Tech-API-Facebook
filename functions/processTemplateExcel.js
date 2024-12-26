@@ -200,6 +200,7 @@ export const processTemplateExcel = async (
 					error.response?.data || error.message
 				);
 				console.log("error.message:", error.message);
+				console.log("error:", error);
 				errorCount++;
 
 				// Handle the Error
