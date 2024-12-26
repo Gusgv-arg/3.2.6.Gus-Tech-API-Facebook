@@ -46,7 +46,7 @@ export const processTemplateExcel = async (
 		}
 
 		// URL where to post Campaign
-		const userToken="967627425181153|31ff08bf597889397c518d4a0acff908"
+		const userToken="967627425181153|4a5a1ed0624fbf91c1a2a96c17482393"
 		//const url = `https://graph.facebook.com/v21.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
 		const url = `https://graph.facebook.com/v21.0/${myPhoneNumberId}/messages?access_token=${userToken}`;
 
