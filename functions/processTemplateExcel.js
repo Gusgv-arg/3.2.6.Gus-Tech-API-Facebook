@@ -12,6 +12,7 @@ dotenv.config();
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
+const appToken=process.env.WHATSAPP_APP_TOKEN
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -46,9 +47,8 @@ export const processTemplateExcel = async (
 		}
 
 		// URL where to post Campaign
-		const userToken="967627425181153|4a5a1ed0624fbf91c1a2a96c17482393"
 		//const url = `https://graph.facebook.com/v21.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
-		const url = `https://graph.facebook.com/v21.0/${myPhoneNumberId}/messages?access_token=${userToken}`;
+		const url = `https://graph.facebook.com/v21.0/${myPhoneNumberId}/messages?access_token=${appToken}`;
 
 		// Variables to track Campaign
 		let successCount = 0;
