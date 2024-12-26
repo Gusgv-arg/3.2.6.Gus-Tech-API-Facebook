@@ -47,8 +47,8 @@ export const processTemplateExcel = async (
 		}
 
 		// URL where to post Campaign
-		//const url = `https://graph.facebook.com/v21.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
-		const url = `https://graph.facebook.com/v21.0/${myPhoneNumberId}/messages?access_token=${appToken}`;
+		const url = `https://graph.facebook.com/v21.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
+		//const url = `https://graph.facebook.com/v21.0/${myPhoneNumberId}/messages?access_token=${appToken}`;
 
 		// Variables to track Campaign
 		let successCount = 0;
