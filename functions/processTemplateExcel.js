@@ -46,7 +46,9 @@ export const processTemplateExcel = async (
 		}
 
 		// URL where to post Campaign
-		const url = `https://graph.facebook.com/v21.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
+		const userToken="967627425181153|31ff08bf597889397c518d4a0acff908"
+		//const url = `https://graph.facebook.com/v21.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
+		const url = `https://graph.facebook.com/v21.0/${myPhoneNumberId}/messages?access_token=${userToken}`;
 
 		// Variables to track Campaign
 		let successCount = 0;
@@ -148,7 +150,7 @@ export const processTemplateExcel = async (
 					headers: { "Content-Type": "application/json" },
 				});
 				console.log(
-					`Encuesta enviada a ${telefono}: ${response.data.messages[0].id}`
+					`Plantilla enviada a ${telefono}: ${response.data.messages[0].id}`
 				);
 
 				// Increment counter
@@ -247,7 +249,7 @@ export const processTemplateExcel = async (
 			await delay(3000);
 		}
 
-		const summaryMessage = `*NOTIFICACION de Encuesta:*\nMensajes enviados: ${successCount}\nErrores: ${errorCount}`;
+		const summaryMessage = `*NOTIFICACION de Plantilla:*\nMensajes enviados: ${successCount}\nErrores: ${errorCount}`;
 		await adminWhatsAppNotification(summaryMessage);
 	} catch (error) {
 		console.error(
@@ -259,7 +261,7 @@ export const processTemplateExcel = async (
 
 		// Receives the throw new error && others
 		await adminWhatsAppNotification(
-			`*NOTIFICACION de Error de Encuesta:*\n${
+			`*NOTIFICACION de Error de Plantilla:*\n${
 				error?.response?.data
 					? JSON.stringify(error.response.data)
 					: error.message
