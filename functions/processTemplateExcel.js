@@ -12,7 +12,7 @@ dotenv.config();
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
-const appToken=process.env.WHATSAPP_APP_TOKEN
+const appToken = process.env.WHATSAPP_APP_TOKEN;
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -115,15 +115,15 @@ export const processTemplateExcel = async (
 								{
 									type: "text",
 									text: nombre,
-								},/* 
+								} /* 
 								{
 									type: "text",
 									text: modelo,
-								}, */
+								}, */,
 							],
 						},
-						{
-							type: "button",
+						/* {
+							type: "BUTTON",
 							sub_type: "flow",
 							index: 0,
 							parameters: [
@@ -137,7 +137,13 @@ export const processTemplateExcel = async (
 									}
 							}  						
 							],							
-						  }
+						  } */
+						{
+							type: "BUTTON",
+							sub_type: "flow",
+							index: "0",
+							parameters: [{ type: "action", action: {} }],
+						},
 					],
 				},
 			};
