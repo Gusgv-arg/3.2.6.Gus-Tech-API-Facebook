@@ -16,7 +16,7 @@ const appToken = process.env.WHATSAPP_APP_TOKEN;
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export const processTemplateExcel = async (
+export const processFlowExcel = async (
 	excelBuffer,
 	templateName,
 	campaignName
@@ -46,11 +46,10 @@ export const processTemplateExcel = async (
 			);
 		}
 
-		// URL where to post Campaign
+		// URL where to post 
 		const url = `https://graph.facebook.com/v21.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
-		//const url = `https://graph.facebook.com/v21.0/${myPhoneNumberId}/messages?access_token=${appToken}`;
-
-		// Variables to track Campaign
+		
+		// Variables to track
 		let successCount = 0;
 		let errorCount = 0;
 		let newLeadsCount = 0;
@@ -96,8 +95,8 @@ export const processTemplateExcel = async (
 
 			console.log("Mensaje individual:", personalizedMessage);
 
-			// Generate a flow token
-			const flowToken = uuidv4();
+			// Generate a flow token (optional)
+			//const flowToken = uuidv4();
 
 			// Payload for sending a template with an integrated flow
 			const payload = {
@@ -121,23 +120,7 @@ export const processTemplateExcel = async (
 									text: modelo,
 								}, */,
 							],
-						},
-						/* {
-							type: "BUTTON",
-							sub_type: "flow",
-							index: 0,
-							parameters: [
-								{
-									"type": "action",
-									"action": {
-									  "flow_token": flowToken,   //optional, default is "unused"
-									  "flow_action_data": {
-										 
-									  }   // optional, json object with the data payload for the first screen
-									}
-							}  						
-							],							
-						  } */
+						},						
 						{
 							type: "BUTTON",
 							sub_type: "flow",
@@ -166,8 +149,8 @@ export const processTemplateExcel = async (
 				surveyThread = await createCampaignOrSurveyThread(personalizedMessage);
 				//console.log("campaignthreadID-->", campaignThread);
 
-				// Prepare a Campaign detail object
-				const surveyDetail = {
+				// Prepare a detailed object
+				const detail = {
 					//surveyName: campaignName,
 					surveyDate: new Date(),
 					surveyThreadId: surveyThread,
@@ -193,13 +176,13 @@ export const processTemplateExcel = async (
 						thread_id: generalThread,
 						botSwitch: "ON",
 						responses: 0,
-						surveys: [surveyDetail],
+						surveys: [detail],
 					});
 					await lead.save();
 					newLeadsCount++;
 				} else {
 					// Update existing lead with Campaign
-					lead.surveys.push(surveyDetail);
+					lead.surveys.push(detail);
 					await lead.save();
 				}
 			} catch (error) {
@@ -212,11 +195,11 @@ export const processTemplateExcel = async (
 				errorCount++;
 
 				// Handle the Error
-				const surveyDetail = {
+				const detail = {
 					//surveyName: campaignName,
 					surveyDate: new Date(),
 					surveyThreadId: surveyThread,
-					messages: `Error al contactar cliente por la Encuesta.`,
+					messages: `Error al contactar cliente por la Plantilla.`,
 					client_status: "error",
 					survey_status: "activa",
 					error: error?.response?.data
@@ -234,14 +217,14 @@ export const processTemplateExcel = async (
 							botSwitch: "ON",
 							responses: 0,
 						},
-						$push: { surveys: surveyDetail },
+						$push: { surveys: detail },
 					},
 					{ upsert: true, new: true }
 				);
 
 				errorCount++;
 				await adminWhatsAppNotification(
-					`*NOTIFICACION de Error de Encuesta para ${telefono}-${
+					`*NOTIFICACION de Error de Plantilla para ${telefono}-${
 						row[headers[1]] || ""
 					}:*\n + ${
 						error?.response?.data
@@ -259,7 +242,7 @@ export const processTemplateExcel = async (
 		await adminWhatsAppNotification(summaryMessage);
 	} catch (error) {
 		console.error(
-			"Error in processSurveyExcel.js:",
+			"Error in processFlowExcel.js:",
 			error?.response?.data
 				? JSON.stringify(error.response.data)
 				: error.message

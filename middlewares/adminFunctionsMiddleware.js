@@ -13,7 +13,7 @@ import { processCampaignExcel } from "../functions/processCampaignExcel.js";
 import { changeCampaignStatus } from "../utils/changeCampaignStatus.js";
 import listCampaigns from "../utils/listCampaigns.js";
 import { exportLeadsToExcel } from "../utils/exportLeadsToExcel.js";
-import { processTemplateExcel } from "../functions/processTemplateExcel.js";
+import { processFlowExcel } from "../functions/processFlowExcel.js";
 
 const myPhone = process.env.MY_PHONE;
 
@@ -41,10 +41,16 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 
 		if (typeOfWhatsappMessage === "other type") {
 			//console.log("Other type message entered:", body.entry[0].changes[0]);
-			if (body.entry[0].changes[0].field === "flows" || body.entry[0].changes[0].field === "message_template_status_update" ){
-				console.log("Se recibió un evento de flows:", body.entry[0].changes[0].value)
+			if (
+				body.entry[0].changes[0].field === "flows" ||
+				body.entry[0].changes[0].field === "message_template_status_update"
+			) {
+				console.log(
+					"Se recibió un evento de flows:",
+					body.entry[0].changes[0].value
+				);
 				res.status(200).send("EVENT_RECEIVED");
-				return
+				return;
 			}
 		}
 
@@ -130,11 +136,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				//console.log("Document download:", documentBufferData);
 
 				// Call the new function to process the campaign
-				await processTemplateExcel(
-					documentBufferData,
-					templateName,
-					campaignName
-				);
+				await processFlowExcel(documentBufferData, templateName, campaignName);
 			} else if (message.startsWith("inactivar")) {
 				const parts = message.split(" ");
 				const campaignName = parts.slice(1).join("_");
