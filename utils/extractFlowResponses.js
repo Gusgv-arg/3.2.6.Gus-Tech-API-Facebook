@@ -61,6 +61,4 @@ export const extractFlowResponses = (userMessage, userName) => {
 	}
 };
 
-extractFlowResponses(
-	'{"Motomel":"Blitz 110","Benelli":"Leoncino 500","Suzuki":"GSX 125","Método de Pago":["Efectivo","Préstamo Personal"],"DNI":"383838383","Preguntas o comentarios":"Hola","flow_token":"1"}', "Gustavo"
-);
+//extractFlowResponses(	'{"Motomel":"Blitz 110","Benelli":"Leoncino 500","Suzuki":"GSX 125","Método de Pago":["Efectivo","Préstamo Personal"],"DNI":"383838383","Preguntas o comentarios":"Hola","flow_token":"1"}', "Gustavo");
