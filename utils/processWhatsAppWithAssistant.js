@@ -10,6 +10,7 @@ import {
 } from "./errorMessages.js";
 import { cleanThread } from "./cleanThread.js";
 import { flowNotification, noPromotions } from "./notificationMessages.js";
+import { extractFlowResponses } from "./extractFlowResponses.js";
 
 dotenv.config();
 
@@ -23,7 +24,8 @@ export const processWhatsAppWithAssistant = async (
 	senderId,
 	userMessage,
 	imageURL,
-	type
+	type,
+	userName
 ) => {
 	let assistantId;
 	let threadId;
@@ -97,7 +99,7 @@ export const processWhatsAppWithAssistant = async (
 			const notification = noPromotions;
 			return { notification, threadId, campaignFlag };
 		} else if (type === "interactive") {
-			const notification = flowNotification;
+			const notification = extractFlowResponses(userMessage, userName);
 			return { notification, threadId, campaignFlag };
 		}
 

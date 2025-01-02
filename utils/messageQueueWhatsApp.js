@@ -110,7 +110,8 @@ export class MessageQueueWhatsApp {
 					senderId,
 					newMessage.message,
 					imageURL,
-					newMessage.type
+					newMessage.type,
+					newMessage.name
 				);
 
 				if (newMessage.channel === "whatsapp") {
