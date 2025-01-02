@@ -30,6 +30,7 @@ export const processWhatsAppWithAssistant = async (
 	let assistantId;
 	let threadId;
 	let campaignFlag;
+	let flowFlag;
 	//console.log("sender_psid:", senderId, "userMessage:", userMessage);
 	//console.log("Image URL recibida en processmessageWith..:", imageURL)
 
@@ -99,8 +100,9 @@ export const processWhatsAppWithAssistant = async (
 			const notification = noPromotions;
 			return { notification, threadId, campaignFlag };
 		} else if (type === "interactive") {
+			flowFlag = true;
 			const notification = extractFlowResponses(userMessage, userName);
-			return { notification, threadId, campaignFlag };
+			return { notification, threadId, campaignFlag, flowFlag };
 		}
 
 		if (imageURL) {

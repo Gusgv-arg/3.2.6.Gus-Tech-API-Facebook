@@ -10,13 +10,13 @@ const campaignDetailSchema = new mongoose.Schema({
 	error: String,
 });
 
-const surveyDetailSchema = new mongoose.Schema({
-	//surveyName: String,
-	surveyDate: Date,
-	surveyThreadId: String,
+const flowDetailSchema = new mongoose.Schema({
+	flowName: String,
+	flowDate: Date,
+	flowThreadId: String,
 	messages: String,
 	client_status: { type: String, enum: ["contactado", "respuesta", "error"] },
-	survey_status: { type: String, enum: ["activa", "inactiva"] },
+	flow_status: { type: String, enum: ["activa", "inactiva"] },
 	error: String,
 });
 
@@ -31,7 +31,7 @@ const leadsSchema = new mongoose.Schema(
 		botSwitch: { type: String, enum: ["ON", "OFF"], required: true },
 		responses: { type: Number },
 		campaigns: [campaignDetailSchema],
-		surveys: [surveyDetailSchema],
+		flows: [flowDetailSchema],
 	},
 	{
 		timestamps: true,

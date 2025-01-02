@@ -1,7 +1,7 @@
 
 export const extractFlowResponses = (userMessage, userName) => {
 
-    let notification = `¡Hola ${userName}! En breve te va a contactar un vendedor por tu consulta:\n`;
+    let notification = `¡Hola ${userName} 👋! En breve te va a contactar un vendedor por tu consulta:\n\n`;
 
     if (userMessage.includes('"flow_token":"1"')) {
 		// Definir las marcas a buscar
@@ -54,9 +54,9 @@ export const extractFlowResponses = (userMessage, userName) => {
 			notification += `Preguntas o comentarios: ${preguntasMatch[1]}`;
 		}
 
-        notification = notification + `\n\n¡Gracias por confiar en Megamoto!`
+        notification = notification + `\n\n¡Gracias por confiar en Megamoto! 🏍️`
 	
-        console.log(notification);
+        //console.log(notification);
 		return notification;
 	}
 };

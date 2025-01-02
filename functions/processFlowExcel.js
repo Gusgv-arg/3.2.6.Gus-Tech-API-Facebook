@@ -18,8 +18,7 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const processFlowExcel = async (
 	excelBuffer,
-	templateName,
-	campaignName
+	templateName	
 ) => {
 	try {
 		// Look for the template text body
@@ -152,17 +151,17 @@ export const processFlowExcel = async (
 				successCount++;
 
 				// Create a thread with the initial messages
-				surveyThread = await createCampaignOrSurveyThread(personalizedMessage);
+				flowThreadId = await createCampaignOrSurveyThread(personalizedMessage);
 				//console.log("campaignthreadID-->", campaignThread);
 
 				// Prepare a detailed object
 				const detail = {
-					//surveyName: campaignName,
-					surveyDate: new Date(),
-					surveyThreadId: surveyThread,
+					flowName: templateName,
+					flowDate: new Date(),
+					flowThreadId: flowThreadId,
 					messages: `MegaBot: ${personalizedMessage}`,
 					client_status: "contactado",
-					survey_status: "activa",
+					flow_status: "activa",
 					error: "",
 				};
 
@@ -182,13 +181,13 @@ export const processFlowExcel = async (
 						thread_id: generalThread,
 						botSwitch: "ON",
 						responses: 0,
-						surveys: [detail],
+						flows: [detail],
 					});
 					await lead.save();
 					newLeadsCount++;
 				} else {
 					// Update existing lead with Campaign
-					lead.surveys.push(detail);
+					lead.flows.push(detail);
 					await lead.save();
 				}
 			} catch (error) {
@@ -202,12 +201,12 @@ export const processFlowExcel = async (
 
 				// Handle the Error
 				const detail = {
-					//surveyName: campaignName,
-					surveyDate: new Date(),
-					surveyThreadId: surveyThread,
+					flowName: templateName,
+					flowDate: new Date(),
+					flowThreadId: flowThreadId,
 					messages: `Error al contactar cliente por la Plantilla.`,
 					client_status: "error",
-					survey_status: "activa",
+					flow_status: "activa",
 					error: error?.response?.data
 						? JSON.stringify(error.response.data.message)
 						: error.message,
@@ -223,7 +222,7 @@ export const processFlowExcel = async (
 							botSwitch: "ON",
 							responses: 0,
 						},
-						$push: { surveys: detail },
+						$push: { flows: detail },
 					},
 					{ upsert: true, new: true }
 				);

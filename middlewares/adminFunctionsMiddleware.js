@@ -136,7 +136,8 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				//console.log("Document download:", documentBufferData);
 
 				// Call the new function to process the flow
-				await processFlowExcel(documentBufferData, templateName, campaignName);
+				await processFlowExcel(documentBufferData, templateName);
+				
 			} else if (message.startsWith("inactivar")) {
 				const parts = message.split(" ");
 				const campaignName = parts.slice(1).join("_");

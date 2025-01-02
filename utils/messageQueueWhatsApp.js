@@ -135,7 +135,8 @@ export class MessageQueueWhatsApp {
 							: response.notification,
 						response?.threadId ? response.threadId : null,
 						newMessage,
-						response?.campaignFlag
+						response?.campaignFlag,
+						response?.flowFlag
 					);
 				}
 			} catch (error) {

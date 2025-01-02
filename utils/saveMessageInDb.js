@@ -6,7 +6,8 @@ export const saveMessageInDb = async (
 	messageGpt,
 	threadId,
 	newMessage,
-	campaignFlag
+	campaignFlag,
+	flowFlag
 ) => {
 	// Save the sent message to the database
 	try {
