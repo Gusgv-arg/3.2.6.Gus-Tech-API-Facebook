@@ -52,7 +52,7 @@ export const processFlowExcel = async (
 		let successCount = 0;
 		let errorCount = 0;
 		let newLeadsCount = 0;
-		let surveyThread = "";
+		let flowThreadId = "";
 
 		// Loop for each record
 		for (const row of data) {
