@@ -125,16 +125,16 @@ export const processFlowExcel = async (
 							type: "BUTTON",
 							sub_type: "flow",
 							index: "0",
-							parameters: [{ type: "action", action: {} }],
+							parameters: [{ type: "action", action: {}, flow_token: 1 }],
 						},
 					],
 				},
 			};
 
-			console.log("Data final para el POST:", JSON.stringify(payload, null, 2));
+			//console.log("Data final para el POST:", JSON.stringify(payload, null, 2));
 
 			try {
-				// Post the Survey to the customer
+				// Post to the customer
 				const response = await axios.post(url, payload, {
 					headers: { "Content-Type": "application/json" },
 				});
@@ -145,7 +145,7 @@ export const processFlowExcel = async (
 				// Increment counter
 				successCount++;
 
-				// Create a thread for the Survey with the initial messages
+				// Create a thread with the initial messages
 				surveyThread = await createCampaignOrSurveyThread(personalizedMessage);
 				//console.log("campaignthreadID-->", campaignThread);
 
