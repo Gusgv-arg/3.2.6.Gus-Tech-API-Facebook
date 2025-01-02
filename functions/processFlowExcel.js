@@ -72,9 +72,9 @@ export const processFlowExcel = async (
 				return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 			}
 
-			// Asignar los valores de las columnas B y C a los parámetros
-			const nombre = row[headers[1]] ? row[headers[1]].toString().trim() : ""; // Columna B
-			const modelo = row[headers[2]] ? row[headers[2]].toString().trim() : ""; // Columna C
+			// Asignar los valores de las columnas a los parámetros
+			const columnB = row[headers[1]] ? row[headers[1]].toString().trim() : ""; // Columna B
+			const columnC = row[headers[2]] ? row[headers[2]].toString().trim() : ""; // Columna C
 
 			// Create personalized message by replacing variables in templateText
 			let personalizedMessage = templateText;
@@ -84,9 +84,9 @@ export const processFlowExcel = async (
 				(match, number) => {
 					switch (number) {
 						case "1":
-							return nombre;
+							return columnB;
 						case "2":
-							return modelo;
+							return columnC;
 						default:
 							return match; // Devuelve la variable sin reemplazo si no hay coincidencia
 					}
@@ -95,8 +95,21 @@ export const processFlowExcel = async (
 
 			console.log("Mensaje individual:", personalizedMessage);
 
-			// Generate a flow token (optional)
-			//const flowToken = uuidv4();
+			// Generate a flow token && parameters to identify it among others
+			let flowToken;
+			let parameters;
+
+			if (templateName === "flow6") {
+				flowToken = 1;
+				parameters = [
+					{
+						type: "text",
+						text: columnB,
+					},
+				];
+			} else {
+				flowToken = 0;
+			}
 
 			// Payload for sending a template with an integrated flow
 			const payload = {
@@ -110,22 +123,15 @@ export const processFlowExcel = async (
 					components: [
 						{
 							type: "body",
-							parameters: [
-								{
-									type: "text",
-									text: nombre,
-								} /* 
-								{
-									type: "text",
-									text: modelo,
-								}, */,
-							],
+							parameters: parameters
 						},
 						{
 							type: "BUTTON",
 							sub_type: "flow",
 							index: "0",
-							parameters: [{ type: "action", action: { flow_token: 1 } }],
+							parameters: [
+								{ type: "action", action: { flow_token: flowToken } },
+							],
 						},
 					],
 				},
