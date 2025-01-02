@@ -46,9 +46,9 @@ export const processFlowExcel = async (
 			);
 		}
 
-		// URL where to post 
+		// URL where to post
 		const url = `https://graph.facebook.com/v21.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
-		
+
 		// Variables to track
 		let successCount = 0;
 		let errorCount = 0;
@@ -120,13 +120,12 @@ export const processFlowExcel = async (
 									text: modelo,
 								}, */,
 							],
-						},						
+						},
 						{
 							type: "BUTTON",
 							sub_type: "flow",
 							index: "0",
-							flow_token: 1,
-							parameters: [{ type: "action", action: {}  }],
+							parameters: [{ type: "action", action: { flow_token: 1 } }],
 						},
 					],
 				},
