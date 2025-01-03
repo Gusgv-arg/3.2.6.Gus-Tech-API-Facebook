@@ -7,7 +7,7 @@ const openai = new OpenAI({
 	apiKey: API_KEY,
 });
 
-export const createCampaignOrSurveyThread = async (personalizedMessage) => {
+export const createCampaignOrFlowThread = async (personalizedMessage) => {
 	try {
 		// Create a new thread with the initial messages
 		const thread = await openai.beta.threads.create({

@@ -29,19 +29,20 @@ export const processWhatsAppWithAssistant = async (
 ) => {
 	let assistantId;
 	let threadId;
-	let campaignFlag;
-	let flowFlag;
+	let campaignFlag = false;
+	let flowFlag = false;
 	//console.log("sender_psid:", senderId, "userMessage:", userMessage);
 	//console.log("Image URL recibida en processmessageWith..:", imageURL)
 
 	let existingThread;
 	try {
-		// Check if there is an existing thread for the user (general or campaign)
+		// Check if there is an existing thread for the user (general, campaign or flow)
 		existingThread = await Leads.findOne({
 			id_user: senderId,
 			$or: [
 				{ thread_id: { $exists: true, $ne: "", $ne: null } },
 				{ campaigns: { $exists: true, $ne: [] } },
+				{ flows: { $exists: true, $ne: [] } },
 			],
 		});
 	} catch (error) {
@@ -51,36 +52,55 @@ export const processWhatsAppWithAssistant = async (
 
 	// Pass in the user question into the existing thread
 	if (existingThread) {
-		// Determine if it's General or Campaign thread
+		// Determine if it's General or Campaign or Flow thread
 		let generalThreadId = existingThread.thread_id;
+		let campaigns = existingThread.campaigns || [];
+		let flows = existingThread.flows || [];
 		//console.log("General thread Id:", generalThreadId)
 
-		// Get the last campaign info
-		let campaigns = existingThread.campaigns || [];
-		let lastCampaign = campaigns[campaigns.length - 1];
-		let campaignThreadId = lastCampaign ? lastCampaign.campaignThreadId : null;
-		let campaignStatus = lastCampaign ? lastCampaign.campaign_status : null;
-		//console.log("Last campaign thread Id:", campaignThreadId)
+		// Filtrar campañas y flujos activos
+		let activeCampaigns = campaigns.filter(
+			(campaign) => campaign.campaign_status === "activa"
+		);
+		let activeFlows = flows.filter((flow) => flow.flow_status === "activa");
 
-		// Both threads exist, use Campaign thread
-		if (generalThreadId && campaignThreadId && campaignStatus === "activa") {
-			threadId = campaignThreadId;
-			assistantId = process.env.OPENAI_CAMPAIGN_ID;
-			campaignFlag = true;
+		if (activeCampaigns.length > 0 || activeFlows.length > 0) {
+			// Tomar el último registro activo de campañas o flujos
+			let lastActiveCampaign = activeCampaigns[activeCampaigns.length - 1];
+			let lastActiveFlow = activeFlows[activeFlows.length - 1];
+
+			if (lastActiveCampaign && lastActiveFlow) {
+				// Comparar las fechas de la última campaña y el último flujo
+				if (
+					new Date(lastActiveCampaign.campaignDate) >=
+					new Date(lastActiveFlow.flowDate)
+				) {
+					threadId = lastActiveCampaign.campaignThreadId;
+					assistantId = process.env.OPENAI_CAMPAIGN_ID;
+					campaignFlag = true;					
+				} else {
+					threadId = lastActiveFlow.flowThreadId;
+					assistantId = process.env.OPENAI_FLOW_ID;
+					flowFlag = true;
+				}
+			} else if (lastActiveCampaign) {
+				threadId = lastActiveCampaign.campaignThreadId;
+				assistantId = process.env.OPENAI_CAMPAIGN_ID;
+				campaignFlag = true;
+			} else if (lastActiveFlow) {
+				threadId = lastActiveFlow.flowThreadId;
+				assistantId = process.env.OPENAI_FLOW_ID; 
+				flowFlag = true;
+			}
 		} else if (generalThreadId) {
-			// Only general thread exists
+			// Solo existe el hilo general
 			threadId = generalThreadId;
-			assistantId = process.env.OPENAI_ASSISTANT_ID;
-			campaignFlag = false;
-		} else if (campaignThreadId && campaignStatus === "activa") {
-			// Only campaign thread exists
-			threadId = campaignThreadId;
-			assistantId = process.env.OPENAI_CAMPAIGN_ID;
-			campaignFlag = true;
+			assistantId = process.env.OPENAI_ASSISTANT_ID;			
 		} else {
 			// No valid threadId found
 			console.error("No valid threadId found for user:", senderId);
 		}
+
 		console.log("ThreadID utilizado:", threadId);
 
 		//View messages in thread
@@ -92,13 +112,13 @@ export const processWhatsAppWithAssistant = async (
 		// If type is Document or Button return a specific message
 		if (type === "document") {
 			const errorMessage = errorMessage5;
-			return { errorMessage, threadId, campaignFlag };
+			return { errorMessage, threadId, campaignFlag, flowFlag };
 		} else if (
 			type === "button" &&
 			userMessage.toLowerCase() === "detener promociones"
 		) {
 			const notification = noPromotions;
-			return { notification, threadId, campaignFlag };
+			return { notification, threadId, campaignFlag, flowFlag };
 		} else if (type === "interactive") {
 			flowFlag = true;
 			const notification = extractFlowResponses(userMessage, userName);
@@ -139,13 +159,13 @@ export const processWhatsAppWithAssistant = async (
 		// If type is Document or Button return a specific message
 		if (type === "document") {
 			const errorMessage = errorMessage5;
-			return { errorMessage, threadId, campaignFlag };
+			return { errorMessage, threadId, campaignFlag, flowFlag };
 		} else if (
 			type === "button" &&
 			userMessage.toLowerCase() === "detener promociones"
 		) {
 			const notification = noPromotions;
-			return { notification, threadId, campaignFlag };
+			return { notification, threadId, campaignFlag, flowFlag };
 		}
 
 		if (imageURL) {
@@ -242,7 +262,7 @@ export const processWhatsAppWithAssistant = async (
 						await cleanThread(senderId);
 
 						// Return error message to the user
-						return { errorMessage, senderId, campaignFlag };
+						return { errorMessage, senderId, campaignFlag, flowFlag };
 					} else {
 						errorMessage = errorMessage1;
 					}
@@ -265,7 +285,7 @@ export const processWhatsAppWithAssistant = async (
 				console.error("Exceeded maximum attempts. Exiting the loop.");
 				errorMessage = errorMessage1;
 
-				return { errorMessage, threadId, campaignFlag };
+				return { errorMessage, threadId, campaignFlag, flowFlag };
 			}
 		}
 	} while (currentAttempt < maxAttempts);
@@ -284,6 +304,6 @@ export const processWhatsAppWithAssistant = async (
 	if (lastMessageForRun) {
 		let messageGpt = lastMessageForRun.content[0].text.value;
 		console.log("MessagGpt-->", messageGpt);
-		return { messageGpt, senderId, threadId, campaignFlag };
+		return { messageGpt, senderId, threadId, campaignFlag, flowFlag };
 	}
 };

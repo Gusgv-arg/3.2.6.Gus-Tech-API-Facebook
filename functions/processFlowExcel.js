@@ -4,9 +4,9 @@ import xlsx from "xlsx";
 import { v4 as uuidv4 } from "uuid";
 import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js";
 import Leads from "../models/leads.js";
-import { createCampaignOrSurveyThread } from "../utils/createCampaignOrSurveyThread.js";
 import { searchTemplate } from "../utils/searchTemplate.js";
 import { createGeneralThread } from "../utils/createGeneralThread.js";
+import { createCampaignOrFlowThread } from "../utils/createCampaignOrFlowThread.js";
 
 dotenv.config();
 
@@ -94,7 +94,7 @@ export const processFlowExcel = async (
 
 			console.log("Mensaje individual:", personalizedMessage);
 
-			// Generate a flow token && parameters to identify it among others
+			// Generate a flow token && parameters to identify the flow among others
 			let flowToken;
 			let parameters;
 
@@ -151,7 +151,7 @@ export const processFlowExcel = async (
 				successCount++;
 
 				// Create a thread with the initial messages
-				flowThreadId = await createCampaignOrSurveyThread(personalizedMessage);
+				flowThreadId = await createCampaignOrFlowThread(personalizedMessage);
 				//console.log("campaignthreadID-->", campaignThread);
 
 				// Prepare a detailed object

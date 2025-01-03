@@ -3,7 +3,7 @@ import axios from "axios";
 import xlsx from "xlsx";
 import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js";
 import Leads from "../models/leads.js";
-import { createCampaignOrSurveyThread } from "../utils/createCampaignOrSurveyThread.js";
+import { createCampaignOrFlowThread } from "../utils/createCampaignOrFlowThread.js";
 import { searchTemplate } from "../utils/searchTemplate.js";
 import { createGeneralThread } from "../utils/createGeneralThread.js";
 
@@ -134,7 +134,7 @@ export const processCampaignExcel = async (
 				successCount++;
 
 				// Create a thread for the Campaign with the initial messages
-				campaignThread = await createCampaignOrSurveyThread(personalizedMessage);
+				campaignThread = await createCampaignOrFlowThread(personalizedMessage);
 				//console.log("campaignthreadID-->", campaignThread);
 
 				// Prepare a Campaign detail object

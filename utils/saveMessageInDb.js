@@ -32,8 +32,8 @@ export const saveMessageInDb = async (
 
 			let newContent;
 
-			// Determine wether it's a general thread or campaign
-			if (campaignFlag === false || campaignFlag === undefined) {
+			// Determine wether it's a general thread, campaign or flow
+			if (campaignFlag === false && flowFlag === false) {
 				// Concatenate in the general thread the new messages from user && GPT to the existing content
 				newContent = `${lead.content}\n${currentDateTime} - ${newMessage.name}: ${newMessage.message}\nMegaBot: ${messageGpt}`;
 
@@ -45,7 +45,9 @@ export const saveMessageInDb = async (
 
 				// Save the updated lead
 				await lead.save();
-				console.log("Lead updated with GPT message in Leads DB");
+				console.log(
+					"Lead in General Thread updated with GPT message in Leads DB"
+				);
 				return;
 			} else if (campaignFlag === true) {
 				// Look for Campaign in the array of Campaigns
@@ -61,7 +63,7 @@ export const saveMessageInDb = async (
 				// Concatenate the campaign message with the previous ones
 				const newMessageContent = `\n${currentDateTime} - ${newMessage.name}: ${newMessage.message}\nMegaBot: ${messageGpt}`;
 
-				// Replace the messages history with the new one  
+				// Replace the messages history with the new one
 				currentCampaign.messages = currentCampaign.messages
 					? currentCampaign.messages + newMessageContent
 					: newMessageContent;
@@ -76,9 +78,39 @@ export const saveMessageInDb = async (
 
 				// Update lead
 				await lead.save();
-				console.log("Lead updated with campaign message in Leads DB");
+				console.log("Lead updated with Campaign message in Leads DB");
 				return;
-				
+			} else if (flowFlag === true) {
+				// Look for Flow in the array of Flows
+				const currentFlow = lead.flows.find(
+					(flow) => flow.flowThreadId === threadId
+				);
+
+				if (!currentFlow) {
+					console.log("Flow not found for this thread");
+					return;
+				}
+
+				// Concatenate the Flow message with the previous ones
+				const newMessageContent = `\n${currentDateTime} - ${newMessage.name}: ${newMessage.message}\nMegaBot: ${messageGpt}`;
+
+				// Replace the messages history with the new one
+				currentFlow.messages = currentFlow.messages
+					? currentFlow.messages + newMessageContent
+					: newMessageContent;
+
+				// Update Flow status
+				currentFlow.client_status = "respuesta";
+
+				// Clean error if it existed
+				if (currentFlow.error) {
+					currentFlow.error = null;
+				}
+
+				// Update lead
+				await lead.save();
+				console.log("Lead updated with flow message in Leads DB");
+				return;
 			} else {
 				console.log("there is no campaign flag so nothing was stored in DB!!");
 				return;
