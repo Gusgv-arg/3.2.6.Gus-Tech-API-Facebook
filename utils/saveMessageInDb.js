@@ -46,7 +46,7 @@ export const saveMessageInDb = async (
 				// Save the updated lead
 				await lead.save();
 				console.log(
-					"Lead in General Thread updated with GPT message in Leads DB"
+					"Lead in GENERAL THREAD updated with GPT message in Leads DB"
 				);
 				return;
 			} else if (campaignFlag === true) {
@@ -78,7 +78,7 @@ export const saveMessageInDb = async (
 
 				// Update lead
 				await lead.save();
-				console.log("Lead updated with Campaign message in Leads DB");
+				console.log("Lead updated with CAMPAIGN message in Leads DB");
 				return;
 			} else if (flowFlag === true) {
 				// Look for Flow in the array of Flows
@@ -109,10 +109,10 @@ export const saveMessageInDb = async (
 
 				// Update lead
 				await lead.save();
-				console.log("Lead updated with flow message in Leads DB");
+				console.log("Lead updated with FLOW message in Leads DB");
 				return;
 			} else {
-				console.log("there is no campaign flag so nothing was stored in DB!!");
+				console.log("there is no campaign or flow flag so nothing was stored in DB!!");
 				return;
 			}
 		}

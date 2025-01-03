@@ -6,6 +6,7 @@ import { getMediaWhatsappUrl } from "./getMediaWhatsappUrl.js";
 import { handleWhatsappMessage } from "./handleWhatsappMessage.js";
 import { newErrorWhatsAppNotification } from "./newErrorWhatsAppNotification.js";
 import { processWhatsAppWithAssistant } from "./processWhatsAppWithAssistant.js";
+import { salesWhatsAppNotification } from "./salesWhatsAppNotification.js";
 import { saveMessageInDb } from "./saveMessageInDb.js";
 
 // Class definition for the Queue
@@ -138,6 +139,14 @@ export class MessageQueueWhatsApp {
 						response?.campaignFlag,
 						response?.flowFlag
 					);
+
+					// If it's a FLOW send notification to Admin or salesman
+					if (response.flowFlag === true) {
+						const notification = `*NOTIFICACION DE LEAD: cel. - ${senderId}*\n${response.notification}`;
+						
+						await salesWhatsAppNotification(notification);
+					}
+					
 				}
 			} catch (error) {
 				console.error(`14. Error processing message: ${error.message}`);
