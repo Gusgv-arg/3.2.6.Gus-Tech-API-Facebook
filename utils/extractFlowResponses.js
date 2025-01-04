@@ -1,5 +1,5 @@
 export const extractFlowResponses = (userMessage, userName) => {
-	let notification = `¡Hola ${userName} 👋! En breve te va a contactar un vendedor por tu consulta:\n\n`;
+	let notification = `*¡Hola ${userName} 👋!* En breve te va a contactar un vendedor por tu consulta:\n\n`;
 
 	// FLOW_TOKEN = 1
 	if (userMessage.includes('"flow_token":"1"')) {
