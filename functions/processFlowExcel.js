@@ -7,6 +7,7 @@ import Leads from "../models/leads.js";
 import { searchTemplate } from "../utils/searchTemplate.js";
 import { createGeneralThread } from "../utils/createGeneralThread.js";
 import { createCampaignOrFlowThread } from "../utils/createCampaignOrFlowThread.js";
+import { searchFlowStructure } from "../utils/searchFlowStructure.js";
 
 dotenv.config();
 
@@ -16,10 +17,7 @@ const appToken = process.env.WHATSAPP_APP_TOKEN;
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export const processFlowExcel = async (
-	excelBuffer,
-	templateName	
-) => {
+export const processFlowExcel = async (excelBuffer, templateName) => {
 	try {
 		// Look for the template text body
 		const templateText = await searchTemplate(templateName);
@@ -94,9 +92,13 @@ export const processFlowExcel = async (
 
 			console.log("Mensaje individual:", personalizedMessage);
 
+			const flowStructure = searchFlowStructure(templateName, columnB, columnC);
+			const { components, language } = flowStructure;
+
 			// Generate a flow token && parameters to identify the flow among others
-			let flowToken;
+			/* let flowToken;
 			let parameters;
+			let language;
 
 			if (templateName === "flow6") {
 				flowToken = 1;
@@ -106,9 +108,19 @@ export const processFlowExcel = async (
 						text: columnB,
 					},
 				];
+				language = "es";
+			} else if (templateName === "pedidos_megamoto") {
+				flowToken = 2;
+				parameters = [
+					{
+						type: "text",
+						text: columnB,
+					},
+				];
+				language = "es_AR";
 			} else {
 				flowToken = 0;
-			}
+			} */
 
 			// Payload for sending a template with an integrated flow
 			const payload = {
@@ -118,11 +130,11 @@ export const processFlowExcel = async (
 				type: "template",
 				template: {
 					name: templateName,
-					language: { code: "es" }, // Adjust language code as needed
-					components: [
+					language: { code: language },
+					/* components: [
 						{
 							type: "body",
-							parameters: parameters
+							parameters: parameters,
 						},
 						{
 							type: "BUTTON",
@@ -132,7 +144,8 @@ export const processFlowExcel = async (
 								{ type: "action", action: { flow_token: flowToken } },
 							],
 						},
-					],
+					], */
+					components: components,
 				},
 			};
 
