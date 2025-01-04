@@ -59,8 +59,13 @@ export const searchFlowStructure = (templateName, columnB, columnC) => {
 				index: "0",
 				parameters: [{ type: "action", action: { flow_token: flowToken } }],
 			},
-		]),
-			(language = "es_AR");
+		])
+        
+        if ( templateName === "flow7"){
+            language = "es";
+        } else if (templateName === "pedidos_megamoto"){
+            language = "es_AR";
+        }	
 
 		return { components, language };
 	} else {
