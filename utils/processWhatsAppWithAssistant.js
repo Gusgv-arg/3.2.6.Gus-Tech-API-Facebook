@@ -119,8 +119,10 @@ export const processWhatsAppWithAssistant = async (
 		) {
 			const notification = noPromotions;
 			return { notification, threadId, campaignFlag, flowFlag };
+		
 		} else if (type === "interactive") {
 			flowFlag = true;
+			// Function that identifies Flow with the TOKEN and extracts information
 			const notification = extractFlowResponses(userMessage, userName);
 			return { notification, threadId, campaignFlag, flowFlag };
 		}

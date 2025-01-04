@@ -26,11 +26,12 @@ export const searchFlowStructure = (templateName, columnB, columnC) => {
 			},
 		]),
 			(language = "es");
-		console.log("Components:", components);
-		console.log("Language:", language);
+		//console.log("Components:", components);
+		//console.log("Language:", language);
 
 		return { components, language };
-	} else if (templateName === "pedidos_megamoto" || templateName === "flow7") {
+	
+    } else if (templateName === "flow8") {
 		flowToken = 2;
 		(components = [
 			{
@@ -61,14 +62,15 @@ export const searchFlowStructure = (templateName, columnB, columnC) => {
 			},
 		])
         
-        if ( templateName === "flow7"){
+        if ( templateName === "flow8"){
             language = "es";
         } else if (templateName === "pedidos_megamoto"){
             language = "es_AR";
         }	
 
 		return { components, language };
-	} else {
+	
+    } else {
 		flowToken = 0;
 		console.log("Cannot find template in searchFlowStructure.js");
 		return;
