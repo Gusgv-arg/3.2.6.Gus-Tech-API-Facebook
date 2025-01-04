@@ -6,9 +6,9 @@ export const searchFlowStructure = (templateName, columnB, columnC) => {
 	let components;
 	let language;
 
-	if (templateName === "flow6" || templateName === "flow7") {
+	if (templateName === "flow6") {
 		flowToken = 1;
-		components = [
+		(components = [
 			{
 				type: "body",
 				parameters: [
@@ -24,26 +24,26 @@ export const searchFlowStructure = (templateName, columnB, columnC) => {
 				index: "0",
 				parameters: [{ type: "action", action: { flow_token: flowToken } }],
 			},
-		],
-		language = "es";
-        console.log("Components:", components)
-        console.log("Language:", language)
+		]),
+			(language = "es");
+		console.log("Components:", components);
+		console.log("Language:", language);
 
 		return { components, language };
-	} else if (templateName === "pedidos_megamoto") {
-        flowToken = 2;
-        components = [
-            {
-                type: "header",
-                parameters: [
-                    {
-                        type: "image",
-                        image: {
-                            link: "https://github.com/Gusgv-arg/3.2.10.MEGAMOTO-Campania-WhatsApp/blob/main/assets/foto_campa%C3%B1a_pedidosya.jpg?raw=true",
-                        },
-                    },
-                ],
-            },
+	} else if (templateName === "pedidos_megamoto" || templateName === "flow7") {
+		flowToken = 2;
+		(components = [
+			{
+				type: "header",
+				parameters: [
+					{
+						type: "image",
+						image: {
+							link: "https://github.com/Gusgv-arg/3.2.10.MEGAMOTO-Campania-WhatsApp/blob/main/assets/foto_campa%C3%B1a_pedidosya.jpg?raw=true",
+						},
+					},
+				],
+			},
 			{
 				type: "body",
 				parameters: [
@@ -59,14 +59,13 @@ export const searchFlowStructure = (templateName, columnB, columnC) => {
 				index: "0",
 				parameters: [{ type: "action", action: { flow_token: flowToken } }],
 			},
-		],
-        
-		language = "es_AR";
+		]),
+			(language = "es_AR");
 
 		return { components, language };
 	} else {
 		flowToken = 0;
-        console.log("Cannot find template in searchFlowStructure.js")
-        return
+		console.log("Cannot find template in searchFlowStructure.js");
+		return;
 	}
 };
