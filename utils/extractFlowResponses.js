@@ -92,7 +92,7 @@ export const extractFlowResponses = (userMessage, userName) => {
 		}
 
 		// Extraer el método de pago
-		const metodoPagoRegex = /"Seleccione lo que corresponda":\s*(\[[^\]]*\])/;
+		const metodoPagoRegex = /"Seleccionar lo que corresponda":\s*(\[[^\]]*\])/;
 		const metodoPagoMatch = userMessage.match(metodoPagoRegex);
 
 		if (metodoPagoMatch && metodoPagoMatch[1]) {
@@ -108,7 +108,7 @@ export const extractFlowResponses = (userMessage, userName) => {
 		}
 
 		// Extraer las preguntas o comentarios
-		const preguntasRegex = /"Preguntas o comentarios":"([^"]+)"/;
+		const preguntasRegex = /"Preguntas":"([^"]+)"/;
 		const preguntasMatch = userMessage.match(preguntasRegex);
 		if (preguntasMatch && preguntasMatch[1]) {
 			notification += `Preguntas o comentarios: ${preguntasMatch[1]}`;
@@ -116,9 +116,10 @@ export const extractFlowResponses = (userMessage, userName) => {
 
 		notification = notification + `\n\n¡Gracias por confiar en Megamoto! 🏍️`;
 
-		//console.log(notification);
+		console.log(notification);
 		return notification;
 	}
 };
 
-//extractFlowResponses(	'{"Motomel":"Blitz 110","Benelli":"Leoncino 500","Suzuki":"GSX 125","Método de Pago":["Efectivo","Préstamo Personal"],"DNI":"383838383","Preguntas o comentarios":"Hola","flow_token":"1"}', "Gustavo");
+extractFlowResponses('{"Preguntas":"Hola","DNI":"2151515","Seleccionar lo que corresponda":["Efectivo o Transferencia"],"Benelli":"502 C","flow_token":"2"}',
+ "Gustavo");

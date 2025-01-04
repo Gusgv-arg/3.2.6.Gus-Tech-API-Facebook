@@ -31,7 +31,7 @@ export const searchFlowStructure = (templateName, columnB, columnC) => {
 
 		return { components, language };
 	
-    } else if (templateName === "flow8") {
+    } else if (templateName === "flow9") {
 		flowToken = 2;
 		(components = [
 			{
@@ -62,12 +62,8 @@ export const searchFlowStructure = (templateName, columnB, columnC) => {
 			},
 		])
         
-        if ( templateName === "flow8"){
-            language = "es";
-        } else if (templateName === "pedidos_megamoto"){
-            language = "es_AR";
-        }	
-
+        language = "es";
+        
 		return { components, language };
 	
     } else {
