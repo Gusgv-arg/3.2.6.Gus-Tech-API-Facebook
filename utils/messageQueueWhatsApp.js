@@ -142,7 +142,7 @@ export class MessageQueueWhatsApp {
 
 					// If it's a FLOW send notification to Admin or salesman
 					if (response.flowFlag === true) {
-						const notification = `*¡NOTIFICACION DE LEAD!:* cel. - ${senderId}\nMensaje enviado al cliente: ${response.notification}`;
+						const notification = `*NOTIFICACION DE LEAD:* cel. - ${senderId}\nMensaje enviado al cliente: ${response.notification}`;
 						
 						await salesWhatsAppNotification(notification);
 					}
