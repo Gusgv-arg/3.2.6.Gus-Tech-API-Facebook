@@ -92,36 +92,10 @@ export const processFlowExcel = async (excelBuffer, templateName) => {
 
 			console.log("Mensaje individual:", personalizedMessage);
 
+			// Search Flow structure for post request
 			const flowStructure = searchFlowStructure(templateName, columnB, columnC);
 			const { components, language } = flowStructure;
-
-			// Generate a flow token && parameters to identify the flow among others
-			/* let flowToken;
-			let parameters;
-			let language;
-
-			if (templateName === "flow6") {
-				flowToken = 1;
-				parameters = [
-					{
-						type: "text",
-						text: columnB,
-					},
-				];
-				language = "es";
-			} else if (templateName === "pedidos_megamoto") {
-				flowToken = 2;
-				parameters = [
-					{
-						type: "text",
-						text: columnB,
-					},
-				];
-				language = "es_AR";
-			} else {
-				flowToken = 0;
-			} */
-
+			
 			// Payload for sending a template with an integrated flow
 			const payload = {
 				messaging_product: "whatsapp",
@@ -131,20 +105,6 @@ export const processFlowExcel = async (excelBuffer, templateName) => {
 				template: {
 					name: templateName,
 					language: { code: language },
-					/* components: [
-						{
-							type: "body",
-							parameters: parameters,
-						},
-						{
-							type: "BUTTON",
-							sub_type: "flow",
-							index: "0",
-							parameters: [
-								{ type: "action", action: { flow_token: flowToken } },
-							],
-						},
-					], */
 					components: components,
 				},
 			};

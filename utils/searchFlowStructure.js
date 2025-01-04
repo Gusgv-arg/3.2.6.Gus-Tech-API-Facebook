@@ -31,10 +31,42 @@ export const searchFlowStructure = (templateName, columnB, columnC) => {
 
 		return { components, language };
 	} else if (templateName === "pedidos_megamoto") {
-		flowToken = 2;
-
+        flowToken = 2;
+        components = [
+            {
+                type: "header",
+                parameters: [
+                    {
+                        type: "image",
+                        image: {
+                            link: "https://github.com/Gusgv-arg/3.2.10.MEGAMOTO-Campania-WhatsApp/blob/main/assets/foto_campa%C3%B1a_pedidosya.jpg?raw=true",
+                        },
+                    },
+                ],
+            },
+			{
+				type: "body",
+				parameters: [
+					{
+						type: "text",
+						text: columnB,
+					},
+				],
+			},
+			{
+				type: "BUTTON",
+				sub_type: "flow",
+				index: "0",
+				parameters: [{ type: "action", action: { flow_token: flowToken } }],
+			},
+		],
+        
 		language = "es_AR";
+
+		return { components, language };
 	} else {
 		flowToken = 0;
+        console.log("Cannot find template in searchFlowStructure.js")
+        return
 	}
 };
