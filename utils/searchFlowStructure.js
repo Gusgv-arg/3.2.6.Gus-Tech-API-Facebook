@@ -8,7 +8,7 @@ export const searchFlowStructure = (templateName, columnB, columnC) => {
 
 	if (templateName === "flow6") {
 		flowToken = 1;
-		components: [
+		components = [
 			{
 				type: "body",
 				parameters: [
@@ -26,6 +26,8 @@ export const searchFlowStructure = (templateName, columnB, columnC) => {
 			},
 		],
 		language = "es";
+        console.log("Components:", components)
+        console.log("Language:", language)
 
 		return { components, language };
 	} else if (templateName === "pedidos_megamoto") {
