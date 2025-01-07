@@ -5,7 +5,7 @@ const campaignDetailSchema = new mongoose.Schema({
 	campaignDate: Date,
 	campaignThreadId: String,
 	messages: String,
-	client_status: { type: String, enum: ["contactado", "respuesta", "error"] },
+	client_status: { type: String, enum: ["contactado", "respuesta", "respuesta incompleta", "error", "vendedor"] },
 	campaign_status: { type: String, enum: ["activa", "inactiva"] },
 	error: String,
 });
@@ -15,7 +15,7 @@ const flowDetailSchema = new mongoose.Schema({
 	flowDate: Date,
 	flowThreadId: String,
 	messages: String,
-	client_status: { type: String, enum: ["contactado", "respuesta", "error"] },
+	client_status: { type: String, enum: ["contactado", "respuesta", "respuesta incompleta", "error", "vendedor"] },
 	flow_status: { type: String, enum: ["activa", "inactiva"] },
 	error: String,
 });

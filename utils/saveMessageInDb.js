@@ -10,6 +10,8 @@ export const saveMessageInDb = async (
 	flowFlag
 ) => {
 	// Save the sent message to the database
+	let currentFlow;
+	
 	try {
 		// Find the lead by threadId
 		let lead = await Leads.findOne({ id_user: senderId });
@@ -82,7 +84,7 @@ export const saveMessageInDb = async (
 				return;
 			} else if (flowFlag === true) {
 				// Look for Flow in the array of Flows
-				const currentFlow = lead.flows.find(
+				currentFlow = lead.flows.find(
 					(flow) => flow.flowThreadId === threadId
 				);
 
@@ -98,9 +100,18 @@ export const saveMessageInDb = async (
 				currentFlow.messages = currentFlow.messages
 					? currentFlow.messages + newMessageContent
 					: newMessageContent;
-
+					
 				// Update Flow status
-				currentFlow.client_status = "respuesta";
+				if (newMessage.message.includes("IMPORTANTE:")){
+					currentFlow.client_status = "respuesta incompleta";
+
+				} else if (newMessage.message.includes("En breve te va a contactar un vendedor")){
+					currentFlow.client_status = "vendedor";
+
+				} else {
+					currentFlow.client_status = "respuesta";
+					
+				}
 
 				// Clean error if it existed
 				if (currentFlow.error) {
