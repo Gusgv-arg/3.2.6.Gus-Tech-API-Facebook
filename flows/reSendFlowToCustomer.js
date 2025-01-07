@@ -10,7 +10,7 @@ const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
 const appToken = process.env.WHATSAPP_APP_TOKEN;
 
-export const reSendFlowToCustomer = async (senderId, templateName, name) => {
+export const reSendFlowToCustomer = async (senderId, flowName, name) => {
 	// URL where to post
 	const url = `https://graph.facebook.com/v21.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
 
@@ -18,7 +18,7 @@ export const reSendFlowToCustomer = async (senderId, templateName, name) => {
 	let flowThreadId = "";
 
 	// Search Flow structure for post request
-	const flowStructure = searchFlowStructure(templateName, name);
+	const flowStructure = searchFlowStructure(flowName, name);
 	const { components, language } = flowStructure;
 
 	// Payload for sending a template with an integrated flow
@@ -28,7 +28,7 @@ export const reSendFlowToCustomer = async (senderId, templateName, name) => {
 		to: senderId,
 		type: "template",
 		template: {
-			name: templateName,
+			name: flowName,
 			language: { code: language },
 			components: components,
 		},
@@ -47,7 +47,7 @@ export const reSendFlowToCustomer = async (senderId, templateName, name) => {
 		let lead = await Leads.findOne({ id_user: senderId.toString() });
 
 		// Update existing lead
-		lead.flows[flows.length - 1].messages += `MegaBot: se envió el Flow ${templateName} nuevamente al cliente.`;
+		lead.flows[flows.length - 1].messages += `MegaBot: se envió el Flow ${flowName} nuevamente al cliente.`;
 		await lead.save();
 	} catch (error) {
 		console.error(
@@ -62,7 +62,7 @@ export const reSendFlowToCustomer = async (senderId, templateName, name) => {
 		let lead = await Leads.findOne({ id_user: senderId.toString() });
 
 		// Update existing lead
-		lead.flows[flows.length - 1].messages += `MegaBot: NO se pudo enviar el Flow ${templateName} nuevamente al cliente. Error: ${error.message}`;
+		lead.flows[flows.length - 1].messages += `MegaBot: NO se pudo enviar el Flow ${flowName} nuevamente al cliente. Error: ${error.message}`;
 		await lead.save();
 
 		// Notify Error to the Admin 
