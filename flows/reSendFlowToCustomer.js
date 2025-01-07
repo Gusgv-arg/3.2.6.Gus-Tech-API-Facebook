@@ -45,11 +45,13 @@ export const reSendFlowToCustomer = async (senderId, flowName, name) => {
 
 		// Looks existent lead
 		let lead = await Leads.findOne({ id_user: senderId });
-		console.log("Lead:", lead)
+		//console.log("Lead:", lead)
 
 		// Update existing lead
-		lead.flows[flows.length - 1].messages += `MegaBot: se envió el Flow ${flowName} nuevamente al cliente.`;
+		lead.flows[lead.flows.length - 1].messages += `MegaBot: se envió el Flow ${flowName} nuevamente al cliente.`;
+		console.log("Ultimo flow:", lead.flows[lead.flows.length - 1], )
 		await lead.save();
+
 	} catch (error) {
 		console.error(
 			`Error en reSendFlowToCustomer.js:`,
@@ -63,7 +65,7 @@ export const reSendFlowToCustomer = async (senderId, flowName, name) => {
 		let lead = await Leads.findOne({ id_user: senderId });
 
 		// Update existing lead
-		lead.flows[flows.length - 1].messages += `MegaBot: NO se pudo enviar el Flow ${flowName} nuevamente al cliente. Error: ${error.message}`;
+		lead.flows[lead.flows.length - 1].messages += `MegaBot: NO se pudo enviar el Flow ${flowName} nuevamente al cliente. Error: ${error.message}`;
 		await lead.save();
 
 		// Notify Error to the Admin 
