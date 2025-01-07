@@ -102,10 +102,10 @@ export const saveMessageInDb = async (
 					: newMessageContent;
 					
 				// Update Flow status
-				if (newMessage.message.includes("IMPORTANTE:")){
+				if (messageGpt.includes("IMPORTANTE:")){
 					currentFlow.client_status = "respuesta incompleta";
 
-				} else if (newMessage.message.includes("En breve te va a contactar un vendedor")){
+				} else if (messageGpt.includes("En breve te va a contactar un vendedor")){
 					currentFlow.client_status = "vendedor";
 
 				} else {
