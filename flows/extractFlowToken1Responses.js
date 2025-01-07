@@ -29,7 +29,7 @@ export const extractFlowToken1Responses = (userMessage) => {
 	} else {
 	// Caso que el cliente no informa marca y modelo. Se lo notifica y se le vuelve a enviar el flow 
 
-		extraction = "¡IMPORTANTE!\nPor favor informanos tu modelo de interes. Para esto te volvemos a enviar el Formulario. ¡Esto nos permitirá atenderte mejor y más rápido 🙂!";
+		extraction = "IMPORTANTE: Por favor informanos tu modelo de interes. Para esto te volvemos a enviar el Formulario. ¡Esto nos permitirá atenderte mejor y más rápido 🙂!";
 
 		return extraction
 	}
