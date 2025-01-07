@@ -9,8 +9,8 @@ import {
 	errorMessage5,
 } from "./errorMessages.js";
 import { cleanThread } from "./cleanThread.js";
-import { flowNotification, noPromotions } from "./notificationMessages.js";
-import { extractFlowResponses } from "./extractFlowResponses.js";
+import { noPromotions } from "./notificationMessages.js";
+import {extractFlowResponses} from "../flows/extractFlowResponses.js"
 
 dotenv.config();
 

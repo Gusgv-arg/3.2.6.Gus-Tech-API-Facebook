@@ -1,13 +1,12 @@
 import dotenv from "dotenv";
 import axios from "axios";
 import xlsx from "xlsx";
-import { v4 as uuidv4 } from "uuid";
 import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js";
 import Leads from "../models/leads.js";
 import { searchTemplate } from "../utils/searchTemplate.js";
 import { createGeneralThread } from "../utils/createGeneralThread.js";
-import { createCampaignOrFlowThread } from "../utils/createCampaignOrFlowThread.js";
-import { searchFlowStructure } from "../utils/searchFlowStructure.js";
+import { createCampaignOrFlowThread } from "../flows/createCampaignOrFlowThread.js";
+import { searchFlowStructure } from "../flows/searchFlowStructure.js";
 
 dotenv.config();
 
