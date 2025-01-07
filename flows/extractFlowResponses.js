@@ -5,14 +5,14 @@ export const extractFlowResponses = (userMessage, userName) => {
 
 	if (userMessage.includes('"flow_token":"1"')) {
 		// FLOW_TOKEN = 1
-		const greet = `*¡Hola ${userName} 👋!* En breve te va a contactar un vendedor por tu consulta:\n\n`;
 		//console.log(greet);
 		const extraction = extractFlowToken1Responses(userMessage);
 		
 		// Verificar si extraction comienza con "¡IMPORTANTE!"
-		if (extraction.startsWith("¡IMPORTANTE!")) {
-			return extraction; 
+		if (extraction.includes("¡IMPORTANTE!")) {
+			return `*¡Hola ${userName} 👋!*\n${extraction}`; 
 		} else {
+			const greet = `*¡Hola ${userName} 👋!* En breve te va a contactar un vendedor por tu consulta:\n\n`;
 			finalNotification = greet + extraction;
 			return finalNotification; 
 		}
