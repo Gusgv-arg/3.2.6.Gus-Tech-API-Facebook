@@ -44,7 +44,8 @@ export const reSendFlowToCustomer = async (senderId, flowName, name) => {
 		console.log(`Flow enviado a ${senderId}: ${response.data.messages[0].id}`);
 
 		// Looks existent lead
-		let lead = await Leads.findOne({ id_user: senderId.toString() });
+		let lead = await Leads.findOne({ id_user: senderId });
+		console.log("Lead:", lead)
 
 		// Update existing lead
 		lead.flows[flows.length - 1].messages += `MegaBot: se envió el Flow ${flowName} nuevamente al cliente.`;
@@ -59,7 +60,7 @@ export const reSendFlowToCustomer = async (senderId, flowName, name) => {
 		
 		// Handle the Error
 		// Looks existent lead or creates a new one
-		let lead = await Leads.findOne({ id_user: senderId.toString() });
+		let lead = await Leads.findOne({ id_user: senderId });
 
 		// Update existing lead
 		lead.flows[flows.length - 1].messages += `MegaBot: NO se pudo enviar el Flow ${flowName} nuevamente al cliente. Error: ${error.message}`;
