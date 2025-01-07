@@ -54,7 +54,7 @@ export const extractFlowToken1Responses = (userMessage) => {
 	// Verificar si hay un préstamo y el DNI está vacío
 	if (metodoPagoArray.includes("Préstamo Personal") || metodoPagoArray.includes("Préstamo Prendario")) {
 		if (!dniMatch || !dniMatch[1]) {
-			extraction = "¡IMPORTANTE!\nPor favor si vas a solicitar un préstamo indicanos tu DNI. Para esto te volvemos a enviar el Formulario. ¡Esto nos permitirá atenderte mejor y más rápido 🙂!";
+			extraction = "IMPORTANTE: Por favor si vas a solicitar un préstamo indicanos tu DNI. Para esto te volvemos a enviar el Formulario. ¡Esto nos permitirá atenderte mejor y más rápido 🙂!";
 
 			return extraction
 		}

@@ -143,7 +143,7 @@ export class MessageQueueWhatsApp {
 
 					// If it's a FLOW send notification 
 					if (response.flowFlag === true) {
-						if (response.notification.includes("¡IMPORTANTE!")){
+						if (response.notification.includes("IMPORTANTE:")){
 							// Si faltan datos en Flow, volver a enviar al cliente
 							const flowName="flow9"
 							await reSendFlowToCustomer(senderId, flowName, newMessage.name)

@@ -9,7 +9,7 @@ export const extractFlowResponses = (userMessage, userName) => {
 		const extraction = extractFlowToken1Responses(userMessage);
 		
 		// Verificar si extraction comienza con "¡IMPORTANTE!"
-		if (extraction.includes("¡IMPORTANTE!")) {
+		if (extraction.includes("IMPORTANTE:")) {
 			return `*¡Hola ${userName} 👋!*\n${extraction}`; 
 		} else {
 			const greet = `*¡Hola ${userName} 👋!* En breve te va a contactar un vendedor por tu consulta:\n\n`;
