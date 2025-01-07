@@ -37,9 +37,10 @@ export const extractFlowToken1Responses = (userMessage) => {
 	// Extraer el método de pago
 	const metodoPagoRegex = /"Seleccionar lo que corresponda":\s*(\[[^\]]*\])/;
 	const metodoPagoMatch = userMessage.match(metodoPagoRegex);
+	let metodoPagoArray = [];
 
 	if (metodoPagoMatch && metodoPagoMatch[1]) {
-		const metodoPagoArray = JSON.parse(metodoPagoMatch[1]);
+		metodoPagoArray = JSON.parse(metodoPagoMatch[1]);
 		extraction += `Método de pago: ${metodoPagoArray.join(", ")}\n`;
 	}
 

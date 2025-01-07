@@ -3,7 +3,7 @@ import axios from "axios";
 import xlsx from "xlsx";
 import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js";
 import Leads from "../models/leads.js";
-import { createCampaignOrFlowThread } from "../utils/createCampaignOrFlowThread.js";
+import { createCampaignOrFlowThread } from "../flows/createCampaignOrFlowThread.js";
 import { searchTemplate } from "../utils/searchTemplate.js";
 import { createGeneralThread } from "../utils/createGeneralThread.js";
 

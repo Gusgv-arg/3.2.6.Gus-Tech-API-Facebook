@@ -27,7 +27,7 @@ export const extractFlowResponses = (userMessage, userName) => {
 	}
 };
 
-extractFlowResponses(
+/* extractFlowResponses(
 	'{"DNI":"52225","Seleccionar lo que corresponda":["Préstamo Prendario"],"TVS":"NEO XR 110","Teknial":"TK-REVOLT","flow_token":"1"}',
 	"Gustavo"
-);
+); */
