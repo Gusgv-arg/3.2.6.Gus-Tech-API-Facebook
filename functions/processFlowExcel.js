@@ -131,6 +131,7 @@ export const processFlowExcel = async (excelBuffer, templateName) => {
 					messages: `MegaBot: ${personalizedMessage}`,
 					client_status: "contactado",
 					flow_status: "activa",
+					history: `${new Date().toISOString()}: Primer contacto.`,
 					error: "",
 				};
 
@@ -138,6 +139,7 @@ export const processFlowExcel = async (excelBuffer, templateName) => {
 				let lead = await Leads.findOne({ id_user: telefono.toString() });
 
 				if (!lead) {
+					
 					// Create a General Thread (just in case the campaign is stopped)
 					const generalThread = await createGeneralThread();
 
@@ -155,7 +157,7 @@ export const processFlowExcel = async (excelBuffer, templateName) => {
 					await lead.save();
 					newLeadsCount++;
 				} else {
-					// Update existing lead with Campaign
+					// Update existing lead with New Flow
 					lead.flows.push(detail);
 					await lead.save();
 				}
