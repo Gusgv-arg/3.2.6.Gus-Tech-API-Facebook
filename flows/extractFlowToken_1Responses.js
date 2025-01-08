@@ -1,4 +1,4 @@
-export const extractFlowToken1Responses = (userMessage) => {
+export const extractFlowToken_1Responses = (userMessage) => {
 	let extraction = "";
 
 	// Definir las marcas a buscar

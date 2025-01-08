@@ -1,4 +1,4 @@
-import { extractFlowToken1Responses } from "./extractFlowToken1Responses.js";
+import { extractFlowToken_1Responses } from "./extractFlowToken_1Responses.js";
 
 export const extractFlowResponses = (userMessage, userName) => {
 	let finalNotification = "";
@@ -6,7 +6,7 @@ export const extractFlowResponses = (userMessage, userName) => {
 	if (userMessage.includes('"flow_token":"1"')) {
 		// FLOW_TOKEN = 1
 		//console.log(greet);
-		const extraction = extractFlowToken1Responses(userMessage);
+		const extraction = extractFlowToken_1Responses(userMessage);
 		
 		// Verificar si extraction comienza con "¡IMPORTANTE!"
 		if (extraction.includes("IMPORTANTE:")) {
