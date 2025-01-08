@@ -156,7 +156,8 @@ export class MessageQueueWhatsApp {
 							await salesWhatsAppNotification(notification);
 
 							// Envío de Flow al vendedor
-							await salesFlowNotification(senderId, response.notification)
+							const prueba="hola, esto es una prueba"
+							await salesFlowNotification(senderId, prueba)
 						}
 					}
 				}
