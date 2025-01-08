@@ -150,14 +150,14 @@ export class MessageQueueWhatsApp {
 							await reSendFlow_1ToCustomer(senderId, flowName, newMessage.name);
 						} else {
 							// Notificar al Vendedor si todo está ok en el Flow
-							const notification = `*NOTIFICACION DE LEAD:* cel. - ${senderId}\nMensaje enviado al cliente: ${response.notification}`;
+							//const notification = `*NOTIFICACION DE LEAD:* cel. - ${senderId}\nMensaje enviado al cliente: ${response.notification}`;
+							const notification="hola, esto es una prueba"
 														
 							// Envío de mensaje simple al vendedor (reemplazar x Flow)
-							await salesWhatsAppNotification(notification);
+							//await salesWhatsAppNotification(notification);
 
 							// Envío de Flow al vendedor
-							const prueba="hola, esto es una prueba"
-							await salesFlowNotification(senderId, prueba)
+							await salesFlowNotification(senderId, notification)
 						}
 					}
 				}
