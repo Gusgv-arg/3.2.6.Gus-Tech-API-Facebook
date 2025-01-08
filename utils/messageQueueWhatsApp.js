@@ -1,4 +1,5 @@
 import { reSendFlowToCustomer } from "../flows/reSendFlowToCustomer.js";
+import { salesFlowNotification } from "../flows/salesFlowNotification.js";
 import audioToText from "./audioToText.js";
 import { convertBufferImageToUrl } from "./convertBufferImageToUrl.js";
 import { downloadWhatsAppMedia } from "./downloadWhatsAppMedia.js";
@@ -150,8 +151,12 @@ export class MessageQueueWhatsApp {
 						} else {
 							// Notificar al Vendedor si todo está ok en el Flow
 							const notification = `*NOTIFICACION DE LEAD:* cel. - ${senderId}\nMensaje enviado al cliente: ${response.notification}`;
-
+														
+							// Envío de mensaje simple al vendedor
 							await salesWhatsAppNotification(notification);
+
+							// Envío de Flow al vendedor
+							await salesFlowNotification(senderId, response.notification)
 						}
 					}
 				}

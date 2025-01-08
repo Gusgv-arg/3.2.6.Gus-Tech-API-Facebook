@@ -14,6 +14,18 @@ const appToken = process.env.WHATSAPP_APP_TOKEN;
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const processFlowExcel = async (excelBuffer, templateName) => {
+	
+	// Obtain current date and hour
+	const currentDateTime = new Date().toLocaleString("es-AR", {
+		timeZone: "America/Argentina/Buenos_Aires",
+		day: "2-digit",
+		month: "2-digit",
+		year: "numeric",
+		hour: "2-digit",
+		minute: "2-digit",
+		second: "2-digit",
+	});
+	
 	try {
 		// Look for the template text body
 		const templateText = await searchTemplate(templateName);
@@ -91,7 +103,7 @@ export const processFlowExcel = async (excelBuffer, templateName) => {
 			// Search Flow structure for post request
 			const flowStructure = searchFlowStructure(templateName, columnB, columnC);
 			const { components, language } = flowStructure;
-			
+
 			// Payload for sending a template with an integrated flow
 			const payload = {
 				messaging_product: "whatsapp",
@@ -126,12 +138,12 @@ export const processFlowExcel = async (excelBuffer, templateName) => {
 				// Prepare a detailed object
 				const detail = {
 					flowName: templateName,
-					flowDate: new Date(),
+					flowDate: currentDateTime,
 					flowThreadId: flowThreadId,
 					messages: `MegaBot: ${personalizedMessage}`,
 					client_status: "contactado",
 					flow_status: "activa",
-					history: `${new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString()}: Primer contacto.`,
+					history: `${currentDateTime}: Primer contacto. `,
 					error: "",
 				};
 
@@ -139,7 +151,6 @@ export const processFlowExcel = async (excelBuffer, templateName) => {
 				let lead = await Leads.findOne({ id_user: telefono.toString() });
 
 				if (!lead) {
-					
 					// Create a General Thread (just in case the campaign is stopped)
 					const generalThread = await createGeneralThread();
 
@@ -173,11 +184,12 @@ export const processFlowExcel = async (excelBuffer, templateName) => {
 				// Handle the Error
 				const detail = {
 					flowName: templateName,
-					flowDate: new Date(),
+					flowDate: currentDateTime,
 					flowThreadId: flowThreadId,
 					messages: `Error al contactar cliente por la Plantilla.`,
 					client_status: "error",
 					flow_status: "activa",
+					history: `${currentDateTime}: Status Ciente: Error -> ${error.message}`,
 					error: error?.response?.data
 						? JSON.stringify(error.response.data.message)
 						: error.message,

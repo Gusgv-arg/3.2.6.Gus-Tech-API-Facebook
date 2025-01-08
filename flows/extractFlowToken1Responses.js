@@ -29,7 +29,7 @@ export const extractFlowToken1Responses = (userMessage) => {
 	} else {
 	// Caso que el cliente no informa marca y modelo. Se lo notifica y se le vuelve a enviar el flow 
 
-		extraction = "IMPORTANTE: Por favor informanos tu modelo de interes. Para esto te volvemos a enviar el Formulario. ¡Esto nos permitirá atenderte mejor y más rápido 🙂!";
+		extraction = "IMPORTANTE: Por favor informanos tu modelo de interes. Para esto te volvemos a enviar el Formulario. ¡Esto nos permitirá atenderte mejor y más rápido 🙂!\n\nPD: Si estas en tu PC y no ves el formulario entrá en tu celular.";
 
 		return extraction
 	}
@@ -49,12 +49,12 @@ export const extractFlowToken1Responses = (userMessage) => {
 	const dniMatch = userMessage.match(dniRegex);
 	if (dniMatch && dniMatch[1]) {
 		extraction += `DNI: ${dniMatch[1]}\n`;
-	}
+	} 
 
-	// Verificar si hay un préstamo y el DNI está vacío
+	// Verificar si hay un préstamo y el DNI está vacío para volver a enviar el Flow
 	if (metodoPagoArray.includes("Préstamo Personal") || metodoPagoArray.includes("Préstamo Prendario")) {
 		if (!dniMatch || !dniMatch[1]) {
-			extraction = "IMPORTANTE: Por favor si vas a solicitar un préstamo indicanos tu DNI. Para esto te volvemos a enviar el Formulario. ¡Esto nos permitirá atenderte mejor y más rápido 🙂!";
+			extraction = "IMPORTANTE: Por favor si vas a solicitar un préstamo indicanos tu DNI. Para esto te volvemos a enviar el Formulario. ¡Esto nos permitirá atenderte mejor y más rápido 🙂!\n\nPD: Si estas en tu PC y no ves el formulario entrá en tu celular.";
 
 			return extraction
 		}
