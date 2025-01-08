@@ -1,4 +1,5 @@
 import { extractFlowToken_1Responses } from "./extractFlowToken_1Responses.js";
+import { extractFlowToken_2Responses } from "./extractFlowToken_2Responses.js";
 
 export const extractFlowResponses = (userMessage, userName) => {
 	let finalNotification = "";
@@ -19,8 +20,8 @@ export const extractFlowResponses = (userMessage, userName) => {
 		
 	} else if (userMessage.includes('"flow_token":"2"')) {
 		// FLOW_TOKEN = 2
-		console.log("Hacer la lógica para el flow con token 2");
-		return;
+		const extraction = extractFlowToken_2Responses(userMessage)
+		return extraction;
 	} else {
 		console.log("No se encontró el Flow Token");
 		return;
