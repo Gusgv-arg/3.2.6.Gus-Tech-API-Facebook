@@ -1,16 +1,14 @@
-import dotenv from "dotenv";
 import axios from "axios";
 import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js";
 import Leads from "../models/leads.js";
-import { searchFlowStructure } from "./searchFlowStructure.js";
+import { searchFlow_1Structure } from "./searchFlow_1Structure.js";
 
-dotenv.config();
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
 const appToken = process.env.WHATSAPP_APP_TOKEN;
 
-export const reSendFlowToCustomer = async (senderId, flowName, name) => {
+export const reSendFlow_1ToCustomer = async (senderId, flowName, name) => {
 	// URL where to post
 	const url = `https://graph.facebook.com/v21.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
 
@@ -18,7 +16,7 @@ export const reSendFlowToCustomer = async (senderId, flowName, name) => {
 	let flowThreadId = "";
 
 	// Search Flow structure for post request
-	const flowStructure = searchFlowStructure(flowName, name);
+	const flowStructure = searchFlow_1Structure(flowName, name);
 	const { components, language } = flowStructure;
 
 	// Payload for sending a template with an integrated flow

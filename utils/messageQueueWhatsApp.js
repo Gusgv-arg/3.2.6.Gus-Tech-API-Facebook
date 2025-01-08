@@ -1,4 +1,4 @@
-import { reSendFlowToCustomer } from "../flows/reSendFlowToCustomer.js";
+import { reSendFlow_1ToCustomer } from "../flows/reSendFlow_1ToCustomer.js";
 import { salesFlowNotification } from "../flows/salesFlowNotification.js";
 import audioToText from "./audioToText.js";
 import { convertBufferImageToUrl } from "./convertBufferImageToUrl.js";
@@ -147,12 +147,12 @@ export class MessageQueueWhatsApp {
 						if (response.notification.includes("IMPORTANTE:")) {
 							// Si faltan datos en Flow, volver a enviar al cliente
 							const flowName = process.env.FLOW_1;
-							await reSendFlowToCustomer(senderId, flowName, newMessage.name);
+							await reSendFlow_1ToCustomer(senderId, flowName, newMessage.name);
 						} else {
 							// Notificar al Vendedor si todo está ok en el Flow
 							const notification = `*NOTIFICACION DE LEAD:* cel. - ${senderId}\nMensaje enviado al cliente: ${response.notification}`;
 														
-							// Envío de mensaje simple al vendedor
+							// Envío de mensaje simple al vendedor (reemplazar x Flow)
 							await salesWhatsAppNotification(notification);
 
 							// Envío de Flow al vendedor

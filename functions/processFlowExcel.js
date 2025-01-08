@@ -5,7 +5,7 @@ import Leads from "../models/leads.js";
 import { searchTemplate } from "../utils/searchTemplate.js";
 import { createGeneralThread } from "../utils/createGeneralThread.js";
 import { createCampaignOrFlowThread } from "../flows/createCampaignOrFlowThread.js";
-import { searchFlowStructure } from "../flows/searchFlowStructure.js";
+import { searchFlow_1Structure } from "../flows/searchFlow_1Structure.js";
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
@@ -101,7 +101,7 @@ export const processFlowExcel = async (excelBuffer, templateName) => {
 			console.log("Mensaje individual:", personalizedMessage);
 
 			// Search Flow structure for post request
-			const flowStructure = searchFlowStructure(templateName, columnB, columnC);
+			const flowStructure = searchFlow_1Structure(templateName, columnB, columnC);
 			const { components, language } = flowStructure;
 
 			// Payload for sending a template with an integrated flow

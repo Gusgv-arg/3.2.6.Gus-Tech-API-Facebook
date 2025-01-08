@@ -1,6 +1,6 @@
 import Leads from "../models/leads.js";
 import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js";
-import { searchFlowStructure } from "./searchFlowStructure.js";
+import { searchFlow_2Structure } from "./searchFlow_2Structure.js";
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
@@ -14,7 +14,7 @@ export const salesFlowNotification = async (senderId, notification) => {
 
 	try {
 		// Search Flow structure for post request
-		const flowStructure = searchFlowStructure(
+		const flowStructure = searchFlow_2Structure(
 			templateName,
 			senderId,
 			notification

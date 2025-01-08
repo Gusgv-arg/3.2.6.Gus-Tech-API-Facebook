@@ -1,6 +1,6 @@
 // Searches Flow structure to return format por post request
 
-export const searchFlowStructure = (templateName, senderId, notification) => {
+export const searchFlow_1Structure = (templateName, columnB, columnC) => {
 	// Generate a flow token && parameters to identify the flow among others
 	let flowToken;
 	let components;
@@ -25,40 +25,7 @@ export const searchFlowStructure = (templateName, senderId, notification) => {
 				parameters: [
 					{
 						type: "text",
-						text: notification,
-					},
-				],
-			},
-			{
-				type: "BUTTON",
-				sub_type: "flow",
-				index: "0",
-				parameters: [{ type: "action", action: { flow_token: flowToken } }],
-			},
-		];
-
-		language = "es";
-
-		return { components, language };
-
-	} else if (templateName === process.env.FLOW_2) {
-		flowToken = 2;
-		components = [			
-			{
-				type: "header",
-				parameters: [
-					{
-						type: "text",
-						text: senderId,
-					},
-				],
-			},
-			{
-				type: "body",
-				parameters: [
-					{
-						type: "text",
-						text: notification,
+						text: columnB,
 					},
 				],
 			},
