@@ -131,7 +131,7 @@ export const processFlowExcel = async (excelBuffer, templateName) => {
 					messages: `MegaBot: ${personalizedMessage}`,
 					client_status: "contactado",
 					flow_status: "activa",
-					history: `${new Date().toISOString()}: Primer contacto.`,
+					history: `${new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString()}: Primer contacto.`,
 					error: "",
 				};
 
