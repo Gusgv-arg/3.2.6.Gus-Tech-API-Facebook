@@ -141,21 +141,19 @@ export class MessageQueueWhatsApp {
 						response?.flowFlag
 					);
 
-					// If it's a FLOW send notification 
+					// If it's a FLOW send notification
 					if (response.flowFlag === true) {
-						if (response.notification.includes("IMPORTANTE:")){
+						if (response.notification.includes("IMPORTANTE:")) {
 							// Si faltan datos en Flow, volver a enviar al cliente
-							const flowName="flow9"
-							await reSendFlowToCustomer(senderId, flowName, newMessage.name)
-							
+							const flowName = process.env.FLOW_1;
+							await reSendFlowToCustomer(senderId, flowName, newMessage.name);
 						} else {
 							// Notificar al Vendedor si todo está ok en el Flow
 							const notification = `*NOTIFICACION DE LEAD:* cel. - ${senderId}\nMensaje enviado al cliente: ${response.notification}`;
-							
+
 							await salesWhatsAppNotification(notification);
 						}
 					}
-
 				}
 			} catch (error) {
 				console.error(`14. Error processing message: ${error.message}`);

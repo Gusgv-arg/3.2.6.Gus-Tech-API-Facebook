@@ -1,4 +1,3 @@
-import dotenv from "dotenv";
 import axios from "axios";
 import xlsx from "xlsx";
 import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js";
@@ -7,8 +6,6 @@ import { searchTemplate } from "../utils/searchTemplate.js";
 import { createGeneralThread } from "../utils/createGeneralThread.js";
 import { createCampaignOrFlowThread } from "../flows/createCampaignOrFlowThread.js";
 import { searchFlowStructure } from "../flows/searchFlowStructure.js";
-
-dotenv.config();
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;

@@ -6,7 +6,7 @@ export const searchFlowStructure = (templateName, columnB, columnC) => {
 	let components;
 	let language;
 
-	if (templateName === "flow9") {
+	if (templateName === process.env.FLOW_1) {
 		flowToken = 1;
 		(components = [
 			{

@@ -104,13 +104,15 @@ export const saveMessageInDb = async (
 				// Update Flow status
 				if (messageGpt.includes("IMPORTANTE:")){
 					currentFlow.client_status = "respuesta incompleta";
-
+					currentFlow.history += `${currentDateTime}: Status Cliente: Respuesta Incompleta. `
+					
 				} else if (messageGpt.includes("En breve te va a contactar un vendedor")){
-					currentFlow.client_status = "vendedor";
-
+					currentFlow.client_status = "transferido al vendedor";
+					currentFlow.history += `${currentDateTime}: Status Cliente: Transferido al Vendedor. `
+					
 				} else {
 					currentFlow.client_status = "respuesta";
-					
+					currentFlow.history += `${currentDateTime}: Status Cliente: Respuesta. `					
 				}
 
 				// Clean error if it existed
