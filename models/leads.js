@@ -15,7 +15,7 @@ const campaignDetailSchema = new mongoose.Schema({
 
 const flowDetailSchema = new mongoose.Schema({
 	flowName: String,
-	flowDate: Date,
+	flowDate: String,
 	flowThreadId: String,
 	messages: String,
 	client_status: { type: String, enum: ["contactado", "respuesta", "respuesta incompleta", "error","transferido al vendedor", "vendedor", "compró", "sin definición", "no compró"] },
