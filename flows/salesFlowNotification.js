@@ -61,7 +61,7 @@ export const salesFlowNotification = async (senderId, notification) => {
 		let currentFlow = lead.flows[lead.flows.length - 1];
 
 		// Change Client Status and History
-		currentFlow.client_status = "transferido a vendedor",
+		currentFlow.client_status = "transferido al vendedor",
 		currentFlow.history += `${currentDateTime}: Status Cliente: Transferido al Vendedor. `,
 
 		// Update lead
