@@ -1,4 +1,4 @@
-const flow = {   "version": "6.0",
+const flow1 = {   "version": "6.0",
   "screens": [
     {
       "id": "QUESTION_ONE",
@@ -546,6 +546,55 @@ const flow = {   "version": "6.0",
                     "TVS": "${data.TVS}",
                     "Tarpan":"${data.Tarpan}",
                     "Teknial": "${data.Teknial}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
+
+const flow2= {
+  "version": "6.0",
+  "screens": [
+    {
+      "id": "QUESTION_ONE",
+      "title": "Nuevo Lead",
+      "data": {},
+      "terminal": true,
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "flow_path",
+            "children": [
+              {
+                "type": "RadioButtonsGroup",
+                "label": "Atención del Cliente",
+                "required": true,
+                "name": "Atención del Cliente",
+                "data-source": [
+                  {
+                    "id": "Atender",
+                    "title": "Atender"
+                  },
+                  {
+                    "id": "No Atender",
+                    "title": "No Atender"
+                  }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Enviar",
+                "on-click-action": {
+                  "name": "complete",
+                  "payload": {
+                    "Atención del Cliente": "${form.Atención del Cliente}"
                   }
                 }
               }
