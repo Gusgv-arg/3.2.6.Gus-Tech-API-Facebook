@@ -25,11 +25,12 @@ export const extractFlowResponses = (userMessage, userName) => {
 			const flowToken = 1;
 			return { finalNotification, flowToken };
 		}
-	} else if (userMessage.includes('"flow_token":"2"')) {
+	} else if (userMessage.includes('"flow_token":"2')) {
 		// FLOW_TOKEN = 2
 		const responses = extractFlowToken_2Responses(userMessage);
 		const { extraction, flowToken } = responses;
 		finalNotification = extraction;
+		
 		return { finalNotification, flowToken };
 	} else {
 		console.log("No se encontró el Flow Token");
@@ -38,6 +39,6 @@ export const extractFlowResponses = (userMessage, userName) => {
 };
 
 /* extractFlowResponses(
-	'{"DNI":"52225","Seleccionar lo que corresponda":["Préstamo Prendario"],"TVS":"NEO XR 110","Teknial":"TK-REVOLT","flow_token":"1"}',
+	'{"Atención del Cliente":"Atender","flow_token":"276cd06cf-6e30-49c7-b193-8e0cd575abe7"}',
 	"Gustavo"
 ); */
