@@ -17,7 +17,8 @@ export const saveVendorFlow_2Response = async (senderId, notification) => {
 	try {
 		// Looks existent lead
 		let lead = await Leads.findOne({ id_user: senderId });
-
+		console.log("Notification en saveVendorFlow_2Response:", notification)
+		
 		// Update existing lead
 		if (notification === "Respuesta del Vendedor: Atender") {
 			lead.flows[lead.flows.length - 1].client_status = "vendedor";

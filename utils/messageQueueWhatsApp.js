@@ -150,22 +150,27 @@ export class MessageQueueWhatsApp {
 							const flowName = process.env.FLOW_1;
 							await reSendFlow_1ToCustomer(senderId, flowName, newMessage.name);
 						
-						} else if (response.notification.includes("Respuesta del Vendedor:")){
+						} else if (
+							response.notification.includes("Respuesta del Vendedor:")
+						) {
 							// Grabar en base de datos
-							await saveVendorFlow_2Response(senderId, response.notification) 
-
-						}else {
+							await saveVendorFlow_2Response(senderId, response.notification);
+						
+						} else {
+							console.log("entre en el ultimo else de messageQueueWhatsApp")
 							// Notificar al Vendedor si todo está ok en el Flow
 							const notification = `*NOTIFICACION DE LEAD:* cel. - ${senderId}\nConsulta del cliente: ${response.notification}`;
-							
-							const cleanedNotification = response.notification.replace(/\n/g, ' ').replace(/ +/g, ' ');							
-							console.log("cleaned notification:", cleanedNotification)
+
+							const cleanedNotification = response.notification
+								.replace(/\n/g, " ")
+								.replace(/ +/g, " ");
+							console.log("cleaned notification:", cleanedNotification);
 
 							// Envío de mensaje simple al vendedor (reemplazar x Flow)
 							//await salesWhatsAppNotification(notification);
 
 							// Envío de Flow al vendedor
-							await salesFlowNotification(senderId, cleanedNotification)
+							await salesFlowNotification(senderId, cleanedNotification);
 						}
 					}
 				}
