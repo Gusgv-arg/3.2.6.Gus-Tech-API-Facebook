@@ -8,7 +8,8 @@ export const extractFlowResponses = (userMessage, userName) => {
 		// FLOW_TOKEN = 1
 		//console.log(greet);
 		const extraction = extractFlowToken_1Responses(userMessage);
-		
+		console.log("extraction en extractFlowResponses:", extraction)
+
 		// Verificar si extraction comienza con "¡IMPORTANTE!"
 		if (extraction.includes("IMPORTANTE:")) {
 			finalNotification = `*¡Hola ${userName} 👋!*\n${extraction}`; 
@@ -16,6 +17,7 @@ export const extractFlowResponses = (userMessage, userName) => {
 		} else {
 			const greet = `*¡Hola ${userName} 👋!* En breve te va a contactar un vendedor por tu consulta:\n\n`;
 			finalNotification = greet + extraction;
+			console.log("finalNotification en extractFlowResponses:", finalNotification)
 			return finalNotification; 
 		}
 		
@@ -25,7 +27,7 @@ export const extractFlowResponses = (userMessage, userName) => {
 		const {extraction, flowToken} = responses
 		finalNotification = extraction
 		return {finalNotification, flowToken};
-		
+
 	} else {
 		console.log("No se encontró el Flow Token");
 		return;
