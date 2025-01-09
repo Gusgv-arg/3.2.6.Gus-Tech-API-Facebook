@@ -33,7 +33,7 @@ export const searchFlow_2Structure = (templateName, senderId, notification) => {
 			},
 		];
 
-		language = "es";
+		language = "es_AR";
 
 		return { components, language };
 	} else {
