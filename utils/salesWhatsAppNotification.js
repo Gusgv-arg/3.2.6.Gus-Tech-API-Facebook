@@ -7,7 +7,7 @@ const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
 const salesPhone = process.env.MY_PHONE
 
-export const salesWhatsAppNotification = async (notification) => {
+export const salesWhatsAppNotification = async (senderId, notification) => {
 	try {
 		
 		// Posts the message to Whatsapp
@@ -15,7 +15,7 @@ export const salesWhatsAppNotification = async (notification) => {
 		const data = {
 			messaging_product: "whatsapp",
 			recipient_type: "individual",
-			to: salesPhone,
+			to: senderId ? senderId: salesPhone,
 			type: "text",
 			text: {
 				preview_url: true,

@@ -125,13 +125,9 @@ export const processWhatsAppWithAssistant = async (
 			flowFlag = true;
 			// Function that identifies Flow with the TOKEN and extracts information
 			const responses = extractFlowResponses(userMessage, userName);
-			console.log("responses en processWhatsapp:", responses)
 			const { finalNotification, flowToken } = responses;
-			console.log("finalNotification en processWhatsApp:", finalNotification)
-			console.log("flowToken en processWhatsApp:", flowToken)
 			const notification = finalNotification;
-			console.log("notification en processWhatsApp:", notification)
-
+			
 			return { notification, threadId, campaignFlag, flowFlag, flowToken };
 		}
 

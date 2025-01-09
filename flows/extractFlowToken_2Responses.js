@@ -9,9 +9,6 @@ export const extractFlowToken_2Responses = (userMessage) => {
 	// Extraer token
 	const regex2 = /"flow_token":"([^"]+)"/;
 	const flowToken = userMessage.match(regex2)[1];
-	console.log("toke", flowToken);
-
-	console.log(extraction);
 	return { extraction, flowToken };
 };
 

@@ -21,9 +21,7 @@ export const saveVendorFlow_2Response = async (
 	try {
 		// Looks existent with flowToken
 		let lead = await Leads.findOne({"flows.flow_token": flowToken});
-		console.log("Notification en saveVendorFlow_2Response:", notification);
-		console.log("Token en saveVendorFlow_2Response:", flowToken);
-
+		
 		// Update existing lead
 		if (notification.includes("Respuesta del Vendedor: Atender")) {
 			lead.flows[0].client_status = "vendedor";

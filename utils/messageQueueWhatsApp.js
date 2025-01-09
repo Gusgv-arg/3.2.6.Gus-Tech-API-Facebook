@@ -120,7 +120,6 @@ export class MessageQueueWhatsApp {
 
 				if (newMessage.channel === "whatsapp") {
 					// Send response to user by Whatsapp (can be gpt, error message, notification)
-					console.log("response en queue:", response)
 					await handleWhatsappMessage(
 						senderId,
 						response?.messageGpt
@@ -155,9 +154,16 @@ export class MessageQueueWhatsApp {
 						} else if (
 							response.notification.includes("Respuesta del Vendedor:")
 						) {
-							// Grabar en base de datos
-							await saveVendorFlow_2Response(senderId, response.notification, response.flowToken);
+							// Grabar respuesta del vendedor en BD y buscar nombre del cliente
+							const customerName = await saveVendorFlow_2Response(senderId, response.notification, response.flowToken);
 						
+							// Notificar al vendedor que aceptó
+							const notification = `*NOTIFICACION de Atención de Cliente: ${customerName}*\n${response.notification}`
+							await salesWhatsAppNotification(senderId, notification);							
+
+							// Notificar al cliente que el vendedor lo va a atender
+							// FALTA HACER ESTO!!!!!!!!!!
+
 						} else {
 							console.log("entre en el ultimo else de messageQueueWhatsApp")
 							// Notificar al Vendedor si todo está ok en el Flow
@@ -168,8 +174,6 @@ export class MessageQueueWhatsApp {
 								.replace(/ +/g, " ");
 							console.log("cleaned notification:", cleanedNotification);
 
-							// Envío de mensaje simple al vendedor (reemplazar x Flow)
-							//await salesWhatsAppNotification(notification);
 
 							// Envío de Flow al vendedor
 							await salesFlow_2Notification(senderId, cleanedNotification);
