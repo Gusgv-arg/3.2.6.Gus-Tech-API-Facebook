@@ -15,6 +15,6 @@ export const extractFlowToken_2Responses = (userMessage) => {
 	return { extraction, flowToken };
 };
 
-extractFlowToken_2Responses(
+/* extractFlowToken_2Responses(
 	'{"Atención del Cliente":"Atender","flow_token":"2"}'
-);
+); */

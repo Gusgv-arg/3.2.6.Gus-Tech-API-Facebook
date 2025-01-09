@@ -69,6 +69,6 @@ export const extractFlowToken_1Responses = (userMessage) => {
 
 	extraction = extraction + `\n\n¡Gracias por confiar en Megamoto! 🏍️`;
 
-	console.log(extraction);
+	console.log("Generado en extractFlowToken_1Responses.js",extraction);
 	return extraction;
 };

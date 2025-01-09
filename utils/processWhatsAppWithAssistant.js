@@ -125,8 +125,8 @@ export const processWhatsAppWithAssistant = async (
 			flowFlag = true;
 			// Function that identifies Flow with the TOKEN and extracts information
 			const responses = extractFlowResponses(userMessage, userName);
-			const { extraction, flowToken } = responses;
-			const notification = extraction;
+			const { finalNotification, flowToken } = responses;
+			const notification = finalNotification;
 
 			return { notification, threadId, campaignFlag, flowFlag, flowToken };
 		}
