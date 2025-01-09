@@ -120,6 +120,7 @@ export class MessageQueueWhatsApp {
 
 				if (newMessage.channel === "whatsapp") {
 					// Send response to user by Whatsapp (can be gpt, error message, notification)
+					console.log("response en queue:", response)
 					await handleWhatsappMessage(
 						senderId,
 						response?.messageGpt
