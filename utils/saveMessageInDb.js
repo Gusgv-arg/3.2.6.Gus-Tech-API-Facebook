@@ -106,7 +106,7 @@ export const saveMessageInDb = async (
 					currentFlow.client_status = "respuesta incompleta";
 					currentFlow.history += `${currentDateTime}: Status Cliente: Respuesta Incompleta. `
 					
-				} else {
+				} else if (messageGpt.includes("¡Gracias por confiar en Megamoto!")) {
 					currentFlow.client_status = "respuesta";
 					currentFlow.history += `${currentDateTime}: Status Cliente: Respuesta. `					
 				}
