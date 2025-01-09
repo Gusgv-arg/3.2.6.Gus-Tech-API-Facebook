@@ -40,6 +40,8 @@ export const saveVendorFlow_2Response = async (
 		}
 
 		await lead.save();
+
+		return lead.name
 	} catch (error) {
 		console.error(
 			"Error in saveVendorFlow_2Response.js:",

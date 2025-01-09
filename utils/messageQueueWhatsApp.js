@@ -166,15 +166,12 @@ export class MessageQueueWhatsApp {
 
 						} else {
 							console.log("entre en el ultimo else de messageQueueWhatsApp")
-							// Notificar al Vendedor si todo está ok en el Flow
-							const notification = `*NOTIFICACION DE LEAD:* cel. - ${senderId}\nConsulta del cliente: ${response.notification}`;
-
+							
+							// Sacar espacios x restricción de WhatsApp
 							const cleanedNotification = response.notification
 								.replace(/\n/g, " ")
 								.replace(/ +/g, " ");
-							console.log("cleaned notification:", cleanedNotification);
-
-
+							
 							// Envío de Flow al vendedor
 							await salesFlow_2Notification(senderId, cleanedNotification);
 						}
