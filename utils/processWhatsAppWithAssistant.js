@@ -10,7 +10,7 @@ import {
 } from "./errorMessages.js";
 import { cleanThread } from "./cleanThread.js";
 import { noPromotions } from "./notificationMessages.js";
-import {extractFlowResponses} from "../flows/extractFlowResponses.js"
+import { extractFlowResponses } from "../flows/extractFlowResponses.js";
 
 dotenv.config();
 
@@ -77,7 +77,7 @@ export const processWhatsAppWithAssistant = async (
 				) {
 					threadId = lastActiveCampaign.campaignThreadId;
 					assistantId = process.env.OPENAI_CAMPAIGN_ID;
-					campaignFlag = true;					
+					campaignFlag = true;
 				} else {
 					threadId = lastActiveFlow.flowThreadId;
 					assistantId = process.env.OPENAI_FLOW_ID;
@@ -89,13 +89,13 @@ export const processWhatsAppWithAssistant = async (
 				campaignFlag = true;
 			} else if (lastActiveFlow) {
 				threadId = lastActiveFlow.flowThreadId;
-				assistantId = process.env.OPENAI_FLOW_ID; 
+				assistantId = process.env.OPENAI_FLOW_ID;
 				flowFlag = true;
 			}
 		} else if (generalThreadId) {
 			// Solo existe el hilo general
 			threadId = generalThreadId;
-			assistantId = process.env.OPENAI_ASSISTANT_ID;			
+			assistantId = process.env.OPENAI_ASSISTANT_ID;
 		} else {
 			// No valid threadId found
 			console.error("No valid threadId found for user:", senderId);
@@ -113,6 +113,7 @@ export const processWhatsAppWithAssistant = async (
 		if (type === "document") {
 			const errorMessage = errorMessage5;
 			return { errorMessage, threadId, campaignFlag, flowFlag };
+		
 		} else if (
 			type === "button" &&
 			userMessage.toLowerCase() === "detener promociones"
@@ -123,8 +124,11 @@ export const processWhatsAppWithAssistant = async (
 		} else if (type === "interactive") {
 			flowFlag = true;
 			// Function that identifies Flow with the TOKEN and extracts information
-			const notification = extractFlowResponses(userMessage, userName);
-			return { notification, threadId, campaignFlag, flowFlag };
+			const responses = extractFlowResponses(userMessage, userName);
+			const { extraction, flowToken } = responses;
+			const notification = extraction;
+
+			return { notification, threadId, campaignFlag, flowFlag, flowToken };
 		}
 
 		if (imageURL) {

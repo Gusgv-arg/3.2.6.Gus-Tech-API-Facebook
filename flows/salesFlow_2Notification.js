@@ -9,7 +9,7 @@ const appToken = process.env.WHATSAPP_APP_TOKEN;
 const templateName = process.env.FLOW_2;
 const salesPhone = process.env.MY_PHONE;
 
-export const salesFlowNotification = async (senderId, notification) => {
+export const salesFlow_2Notification = async (senderId, notification) => {
 	// URL where to post
 	const url = `https://graph.facebook.com/v21.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
 
@@ -20,7 +20,7 @@ export const salesFlowNotification = async (senderId, notification) => {
 			senderId,
 			notification
 		);
-		const { components, language } = flowStructure;
+		const { components, language, flowToken } = flowStructure;
 
 		// Payload for sending a template with an integrated flow
 		const payload = {
@@ -60,9 +60,11 @@ export const salesFlowNotification = async (senderId, notification) => {
 		// Take last Flow record
 		let currentFlow = lead.flows[lead.flows.length - 1];
 
-		// Change Client Status and History
+		// Change Client Status and History && save flow token and vendor phone
 		currentFlow.client_status = "transferido al vendedor",
 		currentFlow.history += `${currentDateTime}: Status Cliente: Transferido al Vendedor. `,
+		currentFlow.flow_token = flowToken
+		currentFlow.vendor_phone = salesPhone
 
 		// Update lead
 		await lead.save();

@@ -1,5 +1,5 @@
 import { reSendFlow_1ToCustomer } from "../flows/reSendFlow_1ToCustomer.js";
-import { salesFlowNotification } from "../flows/salesFlowNotification.js";
+import { salesFlow_2Notification } from "../flows/salesFlow_2Notification.js";
 import { saveVendorFlow_2Response } from "../flows/saveVendorFlow_2Response.js";
 import audioToText from "./audioToText.js";
 import { convertBufferImageToUrl } from "./convertBufferImageToUrl.js";
@@ -140,7 +140,8 @@ export class MessageQueueWhatsApp {
 						response?.threadId ? response.threadId : null,
 						newMessage,
 						response?.campaignFlag,
-						response?.flowFlag
+						response?.flowFlag,
+						response?.flowToken
 					);
 
 					// If it's a FLOW send notification
@@ -154,7 +155,7 @@ export class MessageQueueWhatsApp {
 							response.notification.includes("Respuesta del Vendedor:")
 						) {
 							// Grabar en base de datos
-							await saveVendorFlow_2Response(senderId, response.notification);
+							await saveVendorFlow_2Response(senderId, response.notification, response.flowToken);
 						
 						} else {
 							console.log("entre en el ultimo else de messageQueueWhatsApp")
@@ -170,7 +171,7 @@ export class MessageQueueWhatsApp {
 							//await salesWhatsAppNotification(notification);
 
 							// Envío de Flow al vendedor
-							await salesFlowNotification(senderId, cleanedNotification);
+							await salesFlow_2Notification(senderId, cleanedNotification);
 						}
 					}
 				}

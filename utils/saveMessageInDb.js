@@ -7,11 +7,12 @@ export const saveMessageInDb = async (
 	threadId,
 	newMessage,
 	campaignFlag,
-	flowFlag
+	flowFlag,
+	flowToken
 ) => {
 	// Save the sent message to the database
 	let currentFlow;
-	
+
 	try {
 		// Find the lead by threadId
 		let lead = await Leads.findOne({ id_user: senderId });
@@ -84,9 +85,7 @@ export const saveMessageInDb = async (
 				return;
 			} else if (flowFlag === true) {
 				// Look for Flow in the array of Flows
-				currentFlow = lead.flows.find(
-					(flow) => flow.flowThreadId === threadId
-				);
+				currentFlow = lead.flows.find((flow) => flow.flowThreadId === threadId);
 
 				if (!currentFlow) {
 					console.log("Flow not found for this thread");
@@ -100,15 +99,17 @@ export const saveMessageInDb = async (
 				currentFlow.messages = currentFlow.messages
 					? currentFlow.messages + newMessageContent
 					: newMessageContent;
-					
+
+				// Update Flow Token
+				currentFlow.flow_token = flowToken;
+
 				// Update Flow status
-				if (messageGpt.includes("IMPORTANTE:")){
+				if (messageGpt.includes("IMPORTANTE:")) {
 					currentFlow.client_status = "respuesta incompleta";
-					currentFlow.history += `${currentDateTime}: Status Cliente: Respuesta Incompleta. `
-					
+					currentFlow.history += `${currentDateTime}: Status Cliente: Respuesta Incompleta. `;
 				} else if (messageGpt.includes("¡Gracias por confiar en Megamoto!")) {
 					currentFlow.client_status = "respuesta";
-					currentFlow.history += `${currentDateTime}: Status Cliente: Respuesta. `					
+					currentFlow.history += `${currentDateTime}: Status Cliente: Respuesta. `;
 				}
 
 				// Clean error if it existed
@@ -121,7 +122,9 @@ export const saveMessageInDb = async (
 				console.log("Lead updated with FLOW message in Leads DB");
 				return;
 			} else {
-				console.log("there is no campaign or flow flag so nothing was stored in DB!!");
+				console.log(
+					"there is no campaign or flow flag so nothing was stored in DB!!"
+				);
 				return;
 			}
 		}

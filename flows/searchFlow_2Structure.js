@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 export const searchFlow_2Structure = (templateName, senderId, notification) => {
 	// Generate a flow token && parameters to identify the flow among others
 	let flowToken;
@@ -5,7 +7,7 @@ export const searchFlow_2Structure = (templateName, senderId, notification) => {
 	let language;
 
 	if (templateName === process.env.FLOW_2) {
-		flowToken = 2;
+		flowToken = `2${uuidv4()}`;
 		components = [			
 			{
 				type: "header",
@@ -35,9 +37,8 @@ export const searchFlow_2Structure = (templateName, senderId, notification) => {
 
 		language = "es_AR";
 
-		return { components, language };
+		return { components, language, flowToken };
 	} else {
-		flowToken = 0;
 		console.log("Cannot find template in searchFlowStructure.js");
 		return;
 	}
