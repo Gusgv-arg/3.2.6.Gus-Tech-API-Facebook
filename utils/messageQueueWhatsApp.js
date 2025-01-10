@@ -120,7 +120,7 @@ export class MessageQueueWhatsApp {
 
 				if (newMessage.channel === "whatsapp") {
 					// If it's not a Flow send response to user by Whatsapp (can be gpt, error message, notification)
-					if (response.flowFlag !== true){
+					if (response.flowFlag !== true || response.notification.includes("¡Gracias por confiar en Megamoto!")){
 						await handleWhatsappMessage(
 							senderId,
 							response?.messageGpt
