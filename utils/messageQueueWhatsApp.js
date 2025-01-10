@@ -119,15 +119,17 @@ export class MessageQueueWhatsApp {
 				);
 
 				if (newMessage.channel === "whatsapp") {
-					// Send response to user by Whatsapp (can be gpt, error message, notification)
-					await handleWhatsappMessage(
-						senderId,
-						response?.messageGpt
-							? response.messageGpt
-							: response.errorMessage
-							? response.errorMessage
-							: response.notification
-					);
+					// If it's not a Flow send response to user by Whatsapp (can be gpt, error message, notification)
+					if (response.flowFlag !== true){
+						await handleWhatsappMessage(
+							senderId,
+							response?.messageGpt
+								? response.messageGpt
+								: response.errorMessage
+								? response.errorMessage
+								: response.notification
+						);
+					}
 
 					// Save the message in the database
 					await saveMessageInDb(
