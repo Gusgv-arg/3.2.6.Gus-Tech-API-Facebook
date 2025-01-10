@@ -119,7 +119,7 @@ export class MessageQueueWhatsApp {
 				);
 
 				if (newMessage.channel === "whatsapp") {
-					// If it's not a Flow send response to user by Whatsapp (can be gpt, error message, notification)
+					// If it's not a Flow send response to user by Whatsapp (can be gpt, error message, notification) && save in DB
 					if (
 						response.flowFlag !== true ||
 						response.notification.includes("¡Gracias por confiar en Megamoto!")
@@ -132,22 +132,22 @@ export class MessageQueueWhatsApp {
 								? response.errorMessage
 								: response.notification
 						);
+					
+						// Save the message in the database
+						await saveMessageInDb(
+							senderId,
+							response?.messageGpt
+								? response.messageGpt
+								: response.errorMessage
+								? response.errorMessage
+								: response.notification,
+							response?.threadId ? response.threadId : null,
+							newMessage,
+							response?.campaignFlag,
+							response?.flowFlag,
+							response?.flowToken
+						);
 					}
-
-					// Save the message in the database
-					await saveMessageInDb(
-						senderId,
-						response?.messageGpt
-							? response.messageGpt
-							: response.errorMessage
-							? response.errorMessage
-							: response.notification,
-						response?.threadId ? response.threadId : null,
-						newMessage,
-						response?.campaignFlag,
-						response?.flowFlag,
-						response?.flowToken
-					);
 
 					// If it's a FLOW send notification
 					if (response.flowFlag === true) {
@@ -155,6 +155,7 @@ export class MessageQueueWhatsApp {
 							// Si faltan datos en Flow, volver a enviar al cliente
 							const flowName = process.env.FLOW_1;
 							await reSendFlow_1ToCustomer(senderId, flowName, newMessage.name);
+
 						} else if (
 							response.notification.includes("Respuesta del Vendedor:")
 						) {
@@ -175,7 +176,9 @@ export class MessageQueueWhatsApp {
 							if (response.notification.includes("No")) {
 								notification = `*NOTIFICACION de Atención de Cliente: ${customerName} - ${customerPhone}*\nNo aceptaste atender al cliente y será transferido a otro vendedor.`;
 								await salesWhatsAppNotification(senderId, notification);
+							
 							} else {
+								// Notificar al vendedor sobre su respuesta
 								notification = `*NOTIFICACION de Atención de Cliente: ${customerName} - ${customerPhone}*\nAceptaste atender al cliente. ¡Buena suerte con tu venta!`;
 
 								await salesWhatsAppNotification(senderId, notification);

@@ -27,7 +27,8 @@ export const saveVendorFlow_2Response = async (
 			console.log("No se encontró el lead o no tiene flujos.");
 			return null; 
 		}
-
+		console.log("FlowToken recibido en saveVendroFlow_2", flowToken)
+		
 		// Find the specific flow to update
 		const flowToUpdate = lead.flows.find(
 			(flow) => flow.flow_token === flowToken
