@@ -21,10 +21,19 @@ export const saveVendorFlow_2Response = async (
 	try {
 		// Looks existent with flowToken
 		let lead = await Leads.findOne({ "flows.flow_token": flowToken });
-		console.log("flow token:", flowToken)
-		console.log("lead en saveVendorFlow_2Response.js", lead)
+		
+		// Check if lead and flows exist
+		if (!lead || !lead.flows || lead.flows.length === 0) {
+			console.log("No se encontró el lead o no tiene flujos.");
+			return null; 
+		}
 
-		if (lead) {
+		// Find the specific flow to update
+		const flowToUpdate = lead.flows.find(
+			(flow) => flow.flow_token === flowToken
+		);
+
+		if (flowToUpdate) {
 			// Update existing lead
 			if (notification.includes("Respuesta del Vendedor: Atender")) {
 				lead.flows[0].client_status = "vendedor";
