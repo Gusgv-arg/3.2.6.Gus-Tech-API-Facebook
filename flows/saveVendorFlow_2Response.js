@@ -59,8 +59,13 @@ export const saveVendorFlow_2Response = async (
 		}
 
 		await lead.save();
+		
+		const customerName = lead.name
+		const customerPhone = lead.id_user
+		const vendorPhone = flowToUpdate.vendor_phone
+		
+		return {customerName, customerPhone, vendorPhone};
 
-		return lead.name;
 	} catch (error) {
 		console.error(
 			"Error in saveVendorFlow_2Response.js:",

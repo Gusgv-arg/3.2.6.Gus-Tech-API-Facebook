@@ -120,7 +120,10 @@ export class MessageQueueWhatsApp {
 
 				if (newMessage.channel === "whatsapp") {
 					// If it's not a Flow send response to user by Whatsapp (can be gpt, error message, notification)
-					if (response.flowFlag !== true || response.notification.includes("¡Gracias por confiar en Megamoto!")){
+					if (
+						response.flowFlag !== true ||
+						response.notification.includes("¡Gracias por confiar en Megamoto!")
+					) {
 						await handleWhatsappMessage(
 							senderId,
 							response?.messageGpt
@@ -152,34 +155,48 @@ export class MessageQueueWhatsApp {
 							// Si faltan datos en Flow, volver a enviar al cliente
 							const flowName = process.env.FLOW_1;
 							await reSendFlow_1ToCustomer(senderId, flowName, newMessage.name);
-						
 						} else if (
 							response.notification.includes("Respuesta del Vendedor:")
 						) {
-							console.log("entre en el if de includes Respuesta del Vendedor en messageQueueWhatsApp")
+							console.log(
+								"entre en el if de includes Respuesta del Vendedor en messageQueueWhatsApp"
+							);
 							// Grabar respuesta del vendedor en BD y buscar nombre del cliente
-							const customerName = await saveVendorFlow_2Response(senderId, response.notification, response.flowToken);
-							
-							let notification
-							// Notificar al vendedor que aceptó
-							if (response.notification.includes("No")){
-								notification = `*NOTIFICACION de Atención de Cliente: ${customerName}*\nNo aceptaste atender al cliente y será transferido a otro vendedor.`
+							const customerData = await saveVendorFlow_2Response(
+								senderId,
+								response.notification,
+								response.flowToken
+							);
+
+							const { customerName, customerPhone, vendorPhone } = customerData;
+
+							let notification;
+							// Notificar al vendedor sobre su respuesta
+							if (response.notification.includes("No")) {
+								notification = `*NOTIFICACION de Atención de Cliente: ${customerName} - ${customerPhone}*\nNo aceptaste atender al cliente y será transferido a otro vendedor.`;
+								await salesWhatsAppNotification(senderId, notification);
 							} else {
-								notification = `*NOTIFICACION de Atención de Cliente: ${customerName}*\nAceptaste atender al cliente. ¡Buena suerte con tu venta!`
+								notification = `*NOTIFICACION de Atención de Cliente: ${customerName} - ${customerPhone}*\nAceptaste atender al cliente. ¡Buena suerte con tu venta!`;
+
+								await salesWhatsAppNotification(senderId, notification);
+
+								// Notificar al cliente sobre el vendedor
+								const customerNotification = `¡Hola ${customerName} 👋! Te contactamos de Megamoto para informarte que tu vendedor asignado es NOMBRE DEL VENDEDOR con celular ${vendorPhone}.\n\n!Mucha suerte! `;
+
+								await handleWhatsappMessage(
+									customerPhone,
+									customerNotification
+								);
 							}
-							await salesWhatsAppNotification(senderId, notification);							
-
-							// Notificar al cliente que el vendedor lo va a atender
-							// FALTA HACER ESTO!!!!!!!!!!
-
-						} else {
-							console.log("entre en el ultimo else de messageQueueWhatsApp")
 							
+						} else {
+							console.log("entre en el ultimo else de messageQueueWhatsApp");
+
 							// Sacar espacios x restricción de WhatsApp
 							const cleanedNotification = response.notification
 								.replace(/\n/g, " ")
 								.replace(/ +/g, " ");
-							
+
 							// Envío de Flow al vendedor
 							await salesFlow_2Notification(senderId, cleanedNotification);
 						}
