@@ -62,7 +62,7 @@ export const salesFlow_2Notification = async (senderId, notification) => {
 
 		// Change Client Status and History && save flow token and vendor phone
 		currentFlow.client_status = "transferido al vendedor",
-		currentFlow.history += `${currentDateTime}: Status Cliente: Transferido al Vendedor. `,
+		currentFlow.history += `${currentDateTime}: Status Cliente: Transferido al Vendedor ${salesPhone}. `,
 		currentFlow.flow_token = flowToken
 		currentFlow.vendor_phone = salesPhone
 

@@ -154,6 +154,7 @@ export class MessageQueueWhatsApp {
 						} else if (
 							response.notification.includes("Respuesta del Vendedor:")
 						) {
+							console.log("entre en el if de includes Respuesta del Vendedor en messageQueueWhatsApp")
 							// Grabar respuesta del vendedor en BD y buscar nombre del cliente
 							const customerName = await saveVendorFlow_2Response(senderId, response.notification, response.flowToken);
 						
