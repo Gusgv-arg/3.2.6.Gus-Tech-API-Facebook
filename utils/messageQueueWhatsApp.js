@@ -159,9 +159,14 @@ export class MessageQueueWhatsApp {
 							console.log("entre en el if de includes Respuesta del Vendedor en messageQueueWhatsApp")
 							// Grabar respuesta del vendedor en BD y buscar nombre del cliente
 							const customerName = await saveVendorFlow_2Response(senderId, response.notification, response.flowToken);
-						
+							
+							let notification
 							// Notificar al vendedor que aceptó
-							const notification = `*NOTIFICACION de Atención de Cliente: ${customerName}*\n${response.notification}`
+							if (response.notification === "Respuesta del Vendedor: Atender"){
+								notification = `*NOTIFICACION de Atención de Cliente: ${customerName}*\nAceptaste atender al cliente. ¡Buena suerte con tu venta!`
+							} else {
+								notification = `*NOTIFICACION de Atención de Cliente: ${customerName}*\nNo aceptaste atender al cliente y será transferido a otro vendedor.`
+							}
 							await salesWhatsAppNotification(senderId, notification);							
 
 							// Notificar al cliente que el vendedor lo va a atender
