@@ -36,16 +36,16 @@ export const saveVendorFlow_2Response = async (
 		if (flowToUpdate) {
 			// Update existing lead
 			if (notification.includes("Respuesta del Vendedor: Atender")) {
-				lead.flows[0].client_status = "vendedor";
-				lead.flows[0].vendor_phone = senderId;
-				lead.flows[0].history += `${currentDateTime} - Status Cliente: Vendedor `;
+				flowToUpdate.client_status = "vendedor";
+				flowToUpdate.vendor_phone = senderId;
+				flowToUpdate.history += `${currentDateTime} - Status Cliente: Vendedor `;
 				console.log(
 					`El vendedor ${senderId} aceptó atender al cliente ${lead.name}`
 				);
 			} else if (notification.includes("Respuesta del Vendedor: No Atender")) {
-				lead.flows[0].client_status = "respuesta";
-				lead.flows[0].vendor_phone = null;
-				lead.flows[0].history += `${currentDateTime} - Status Cliente: Respuesta`;
+				flowToUpdate.client_status = "respuesta";
+				flowToUpdate.vendor_phone = null;
+				flowToUpdate.history += `${currentDateTime} - Status Cliente: Respuesta`;
 				console.log(
 					`El vendedor ${senderId} NO aceptó atender al cliente ${lead.name}!!`
 				);
