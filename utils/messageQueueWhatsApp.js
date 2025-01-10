@@ -162,10 +162,10 @@ export class MessageQueueWhatsApp {
 							
 							let notification
 							// Notificar al vendedor que aceptó
-							if (response.notification === "Respuesta del Vendedor: Atender"){
-								notification = `*NOTIFICACION de Atención de Cliente: ${customerName}*\nAceptaste atender al cliente. ¡Buena suerte con tu venta!`
-							} else {
+							if (response.notification.includes("No")){
 								notification = `*NOTIFICACION de Atención de Cliente: ${customerName}*\nNo aceptaste atender al cliente y será transferido a otro vendedor.`
+							} else {
+								notification = `*NOTIFICACION de Atención de Cliente: ${customerName}*\nAceptaste atender al cliente. ¡Buena suerte con tu venta!`
 							}
 							await salesWhatsAppNotification(senderId, notification);							
 
