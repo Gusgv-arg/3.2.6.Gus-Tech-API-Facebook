@@ -166,10 +166,11 @@ export class MessageQueueWhatsApp {
 							const customerData = await saveVendorFlow_2Response(
 								senderId,
 								response.notification,
-								response.flowToken
+								response.flowToken,
+								newMessage.name
 							);
 
-							const { customerName, customerPhone, vendorPhone } = customerData;
+							const { customerName, customerPhone, vendorPhone, vendorName } = customerData;
 
 							let notification;
 							// Notificar al vendedor sobre su respuesta
@@ -184,7 +185,7 @@ export class MessageQueueWhatsApp {
 								await salesWhatsAppNotification(senderId, notification);
 
 								// Notificar al cliente sobre el vendedor
-								const customerNotification = `¡Hola ${customerName} 👋! Te contactamos de Megamoto para informarte que tu vendedor asignado es NOMBRE DEL VENDEDOR con celular ${vendorPhone}.\n\n!Mucha suerte! `;
+								const customerNotification = `¡Hola ${customerName} 👋! Te contactamos de Megamoto para informarte que tu vendedor asignado es ${vendorName} con el celular ${vendorPhone}.\n\n!Mucha suerte con tu compra! `;
 
 								await handleWhatsappMessage(
 									customerPhone,

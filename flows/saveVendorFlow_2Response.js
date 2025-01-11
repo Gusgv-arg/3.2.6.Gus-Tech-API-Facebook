@@ -5,7 +5,8 @@ import { adminWhatsAppNotification } from "../utils/adminWhatsAppNotification.js
 export const saveVendorFlow_2Response = async (
 	senderId,
 	notification,
-	flowToken
+	flowToken,
+	name
 ) => {
 	// Obtain current date and hour
 	const currentDateTime = new Date().toLocaleString("es-AR", {
@@ -39,16 +40,18 @@ export const saveVendorFlow_2Response = async (
 			if (notification.includes("Respuesta del Vendedor: Atender")) {
 				flowToUpdate.client_status = "vendedor";
 				flowToUpdate.vendor_phone = senderId;
+				flowToUpdate.vendor_name = name;
 				flowToUpdate.history += `${currentDateTime} - Status Cliente: Vendedor `;
 				console.log(
-					`El vendedor ${senderId} aceptó atender al cliente ${lead.name}`
+					`El vendedor ${name} aceptó atender al cliente ${lead.name}`
 				);
 			} else if (notification.includes("Respuesta del Vendedor: No Atender")) {
 				flowToUpdate.client_status = "respuesta";
 				flowToUpdate.vendor_phone = null;
+				flowToUpdate.vendor_name = null;
 				flowToUpdate.history += `${currentDateTime} - Status Cliente: Respuesta`;
 				console.log(
-					`El vendedor ${senderId} NO aceptó atender al cliente ${lead.name}!!`
+					`El vendedor ${name} NO aceptó atender al cliente ${lead.name}!!`
 				);
 			} else {
 				console.log(
@@ -64,8 +67,9 @@ export const saveVendorFlow_2Response = async (
 		const customerName = lead.name
 		const customerPhone = lead.id_user
 		const vendorPhone = flowToUpdate.vendor_phone
+		const vendorName = flowToUpdate.vendor_name
 		
-		return {customerName, customerPhone, vendorPhone};
+		return {customerName, customerPhone, vendorPhone, vendorName};
 
 	} catch (error) {
 		console.error(
