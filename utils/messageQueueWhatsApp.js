@@ -185,7 +185,7 @@ export class MessageQueueWhatsApp {
 								await salesWhatsAppNotification(senderId, notification);
 
 								// Notificar al cliente sobre el vendedor
-								const customerNotification = `¡Hola ${customerName} 👋! Te contactamos de Megamoto para informarte que tu vendedor asignado es ${vendorName} con el celular ${vendorPhone}.\n\n!Mucha suerte con tu compra! `;
+								const customerNotification = `¡Hola ${customerName} 👋! Te contactamos de Megamoto para informarte que tu vendedor asignado es ${vendorName} con el celular ${vendorPhone}. Te recomendamos agendarlo así lo reconoces cuando te contacte. \n\n!Mucha suerte con tu compra! `;
 
 								await handleWhatsappMessage(
 									customerPhone,
