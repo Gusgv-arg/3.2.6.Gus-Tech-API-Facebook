@@ -180,7 +180,7 @@ export class MessageQueueWhatsApp {
 							
 							} else {
 								// Notificar al vendedor sobre su respuesta
-								notification = `*NOTIFICACION de Atención de Cliente: ${customerName} - ${customerPhone}*\nAceptaste atender al cliente. ¡Buena suerte con tu venta!`;
+								notification = `*NOTIFICACION de Atención de Cliente: ${customerName} - ${customerPhone}*\nAceptaste atender al cliente.\n\n ¡Mucha suerte con tu venta!`;
 
 								await salesWhatsAppNotification(senderId, notification);
 
