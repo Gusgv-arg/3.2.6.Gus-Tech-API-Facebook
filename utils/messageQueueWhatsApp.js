@@ -120,7 +120,7 @@ export class MessageQueueWhatsApp {
 
 				if (newMessage.channel === "whatsapp") {
 					// Send Whatsapp to the user (can be gpt, error message, notification) && save in DB
-					// Do not send whatsApp when it´s a flow 
+					// Do not send whatsApp when it´s a flow
 					if (
 						response.flowFlag !== true ||
 						response.notification.includes("¡Gracias por confiar en Megamoto!")
@@ -133,7 +133,7 @@ export class MessageQueueWhatsApp {
 								? response.errorMessage
 								: response.notification
 						);
-					
+
 						// Save the message in the database
 						await saveMessageInDb(
 							senderId,
@@ -154,18 +154,22 @@ export class MessageQueueWhatsApp {
 					if (response.flowFlag === true) {
 						if (response.notification.includes("IMPORTANTE:")) {
 							// Enviar whatsApp al cliente avisando que faltan datos (modelo o DNI)
-							await handleWhatsappMessage(senderId, response.notification)
+							await handleWhatsappMessage(senderId, response.notification);
 
 							// Grabar en BD
-							await saveMessageInDb(senderId, response.notification, newMessage,
+							await saveMessageInDb(
+								senderId,
+								response.notification,
+								response.threadId,
+								newMessage,
 								response?.campaignFlag,
 								response?.flowFlag,
-								response?.flowToken )
+								response?.flowToken
+							);
 
 							// Volver a enviar el Flow al cliente
 							const flowName = process.env.FLOW_1;
 							await reSendFlow_1ToCustomer(senderId, flowName, newMessage.name);
-
 						} else if (
 							response.notification.includes("Respuesta del Vendedor:")
 						) {
@@ -180,14 +184,14 @@ export class MessageQueueWhatsApp {
 								newMessage.name
 							);
 
-							const { customerName, customerPhone, vendorPhone, vendorName } = customerData;
+							const { customerName, customerPhone, vendorPhone, vendorName } =
+								customerData;
 
 							let notification;
 							// Notificar al vendedor sobre su respuesta
 							if (response.notification.includes("No")) {
 								notification = `*NOTIFICACION de Atención de Cliente: ${customerName} - ${customerPhone}*\nNo aceptaste atender al cliente y será transferido a otro vendedor.`;
 								await salesWhatsAppNotification(senderId, notification);
-							
 							} else {
 								// Notificar al vendedor sobre su respuesta
 								notification = `*NOTIFICACION de Atención de Cliente: ${customerName} - ${customerPhone}*\nAceptaste atender al cliente.\n\n ¡Mucha suerte con tu venta!`;
@@ -202,7 +206,6 @@ export class MessageQueueWhatsApp {
 									customerNotification
 								);
 							}
-							
 						} else {
 							console.log("entre en el ultimo else de messageQueueWhatsApp");
 
