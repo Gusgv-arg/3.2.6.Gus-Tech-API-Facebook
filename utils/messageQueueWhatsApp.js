@@ -123,7 +123,7 @@ export class MessageQueueWhatsApp {
 					// Do not send whatsApp when it´s a flow 
 					if (
 						response.flowFlag !== true ||
-						response.notification.includes("¡Gracias por confiar en Megamoto!") || response.notification.startsWith("IMPORTANTE:")
+						response.notification.includes("¡Gracias por confiar en Megamoto!")
 					) {
 						await handleWhatsappMessage(
 							senderId,
@@ -153,7 +153,16 @@ export class MessageQueueWhatsApp {
 					// If it's a FLOW send notification
 					if (response.flowFlag === true) {
 						if (response.notification.includes("IMPORTANTE:")) {
-							// Si faltan datos en Flow, volver a enviar al cliente
+							// Enviar whatsApp al cliente avisando que faltan datos (modelo o DNI)
+							await handleWhatsappMessage(senderId, response.notification)
+
+							// Grabar en BD
+							await saveMessageInDb(senderId, response.notification, newMessage,
+								response?.campaignFlag,
+								response?.flowFlag,
+								response?.flowToken )
+
+							// Volver a enviar el Flow al cliente
 							const flowName = process.env.FLOW_1;
 							await reSendFlow_1ToCustomer(senderId, flowName, newMessage.name);
 
