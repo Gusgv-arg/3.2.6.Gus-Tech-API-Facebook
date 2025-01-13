@@ -119,10 +119,11 @@ export class MessageQueueWhatsApp {
 				);
 
 				if (newMessage.channel === "whatsapp") {
-					// If it's not a Flow send response to user by Whatsapp (can be gpt, error message, notification) && save in DB
+					// Send Whatsapp to the user (can be gpt, error message, notification) && save in DB
+					// Do not send whatsApp when it´s a flow 
 					if (
 						response.flowFlag !== true ||
-						response.notification.includes("¡Gracias por confiar en Megamoto!")
+						response.notification.includes("¡Gracias por confiar en Megamoto!") || response.notification.startsWith("IMPORTANTE:")
 					) {
 						await handleWhatsappMessage(
 							senderId,

@@ -229,21 +229,21 @@ const flow1 = {   "version": "6.0",
               },
               {
                 "type": "Dropdown",
-                "label": "Tarpan",
+                "label": "No sé",
                 "required": false,
-                "name": "Tarpan",
+                "name": "No sé",
                 "data-source": [
                   {
-                    "id": "TARPAN 200 RUN ER",
-                    "title": "TARPAN 200 RUN ER"
+                    "id": "No se",
+                    "title": "´No sé"
                   }
                 ]
               },
               {
                 "type": "Dropdown",
-                "label": "Teknial",
+                "label": "Teknial motos eléctricas",
                 "required": false,
-                "name": "Teknial",
+                "name": "Teknial motos eléctricas",
                 "data-source": [
                   {
                     "id": "TK-REVOLT",
