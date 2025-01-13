@@ -37,7 +37,7 @@ export const saveVendorFlow_2Response = async (
 
 		if (flowToUpdate) {
 			// Update existing lead
-			if (notification.includes("Respuesta del Vendedor: Atender")) {
+			if (notification.includes("Respuesta del Vendedor: Atender") && !notification.includes("más tarde")) {
 				flowToUpdate.client_status = "vendedor";
 				flowToUpdate.vendor_phone = senderId;
 				flowToUpdate.vendor_name = name;
@@ -45,14 +45,34 @@ export const saveVendorFlow_2Response = async (
 				console.log(
 					`El vendedor ${name} aceptó atender al cliente ${lead.name}`
 				);
-			} else if (notification.includes("Respuesta del Vendedor: No Atender")) {
-				flowToUpdate.client_status = "respuesta";
-				flowToUpdate.vendor_phone = null;
-				flowToUpdate.vendor_name = null;
-				flowToUpdate.history += `${currentDateTime} - Status Cliente: Respuesta`;
+			} else if (notification.includes("Respuesta del Vendedor: Atender más tarde")) {
+				flowToUpdate.client_status = "vendedor más tarde";
+				flowToUpdate.vendor_phone = senderId;
+				flowToUpdate.vendor_name = name;
+				flowToUpdate.history += `${currentDateTime} - Status Cliente: Vendedor ${name} más tarde. `;
 				console.log(
-					`El vendedor ${name} NO aceptó atender al cliente ${lead.name}!!`
+					`El vendedor ${name} aceptó atender al cliente ${lead.name} más tarde!!`
 				);
+			} else if (notification.includes("Derivación a Vendedor:")) {
+				
+				if (notification.includes("Gustavo Glunz")){
+					flowToUpdate.client_status = "vendedor derivado";
+					flowToUpdate.vendor_phone = 5491159911742; 
+					flowToUpdate.vendor_name = "Gustavo Glunz"; 
+					flowToUpdate.history += `${currentDateTime} - Status Cliente: Vendedor ${name} derivó su cliente a Gustavo Glunz. `;
+					console.log(
+						`El vendedor ${name} derivó su cliente ${lead.name} al vendedor Gustvo Glunz.`
+					);
+
+				} else if (notification.includes("Gustavo Gómez Villafañe")){
+					flowToUpdate.client_status = "vendedor derivado";
+					flowToUpdate.vendor_phone = 5491161405589; 
+					flowToUpdate.vendor_name = "Gustavo Gómez Villafañe"; 
+					flowToUpdate.history += `${currentDateTime} - Status Cliente: Vendedor ${name} derivó su cliente a Gustavo Gómez Villafañe. `;
+					console.log(
+						`El vendedor ${name} derivó su cliente ${lead.name} al vendedor Gustvo Gómez Villafañe.`
+					);
+				}
 			} else {
 				console.log(
 					"NO SE ESTA GRABANDO NADA en saveVendorFlow_2Response.js!!"

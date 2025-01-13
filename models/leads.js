@@ -18,7 +18,7 @@ const flowDetailSchema = new mongoose.Schema({
 	flowDate: String,
 	flowThreadId: String,
 	messages: String,
-	client_status: { type: String, enum: ["contactado", "respuesta", "falta DNI", "falta modelo", "faltan modelo y DNI", "error","transferido al vendedor", "vendedor", "compró", "sin definición", "no compró"] },
+	client_status: { type: String, enum: ["contactado", "respuesta", "falta DNI", "falta modelo", "faltan modelo y DNI", "error","transferido al vendedor", "vendedor", "vendedor más tarde", "vendedor derivado", "compró", "sin definición", "no compró"] },
 	vendor_name: String,
 	vendor_phone: Number,
 	flow_token: String,

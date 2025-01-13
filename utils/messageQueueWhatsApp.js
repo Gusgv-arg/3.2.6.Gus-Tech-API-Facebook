@@ -187,20 +187,44 @@ export class MessageQueueWhatsApp {
 							const { customerName, customerPhone, vendorPhone, vendorName } =
 								customerData;
 
-							let notification;
-							// Notificar al vendedor sobre su respuesta
-							if (response.notification.includes("No")) {
-								notification = `*NOTIFICACION de Atención de Cliente: ${customerName} - ${customerPhone}*\nNo aceptaste atender al cliente y será transferido a otro vendedor.`;
-								await salesWhatsAppNotification(senderId, notification);
-							} else {
-								// Notificar al vendedor sobre su respuesta
-								notification = `*NOTIFICACION de Atención de Cliente: ${customerName} - ${customerPhone}*\nAceptaste atender al cliente.\n\n ¡Mucha suerte con tu venta!`;
+							let salesNotification;
+							let customerNotification;
 
-								await salesWhatsAppNotification(senderId, notification);
+							// Derivación del vendedor
+							if (response.notification.includes("Derivación")) {
+								salesNotification = `*NOTIFICACION de Atención de Cliente: ${customerName} - ${customerPhone}*\nDerivaste al cliente a ${vendorName}.`;
+
+								// Notificar al vendedor que deriva
+								await salesWhatsAppNotification(senderId, salesNotification);
+
+								// Enviar Flow 2 al vendedor derivado
+								// Sacar espacios x restricción de WhatsApp
+								const cleanedNotification = response.notification
+									.replace(/\n/g, " ")
+									.replace(/ +/g, " ");
+
+								// Envío de Flow al vendedor
+								await salesFlow_2Notification(vendorPhone, cleanedNotification);
+
+							} else if (
+								response.notification.includes("Atender") ||
+								response.notification.includes("Atender más tarde")
+							) {
+								// Notificar al vendedor sobre su respuesta
+								if (response.notification.includes("Atender más tarde")) {
+									salesNotification = `*NOTIFICACION de Atención de Cliente: ${customerName} - ${customerPhone}*\nAceptaste atender al cliente más tarde.\n\n ¡No lo dejes esperando por mucho tiempo!`;
+
+									customerNotification = `¡Hola ${customerName} 👋! Te contactamos de Megamoto para informarte que tu vendedor asignado es ${vendorName} con el celular ${vendorPhone}. Te recomendamos agendarlo así lo reconoces cuando te contacte.\nTe pedimos un poco de paciencia 😀.\n\n!Mucha suerte con tu compra! `;
+								} else {
+									salesNotification = `*NOTIFICACION de Atención de Cliente: ${customerName} - ${customerPhone}*\nAceptaste atender al cliente.\n\n ¡Mucha suerte con tu venta!`;
+
+									customerNotification = `¡Hola ${customerName} 👋! Te contactamos de Megamoto para informarte que tu vendedor asignado es ${vendorName} con el celular ${vendorPhone}. Te recomendamos agendarlo así lo reconoces cuando te contacte. \n\n!Mucha suerte con tu compra! `;
+								}
+
+								// Notificar al vendedor
+								await salesWhatsAppNotification(senderId, salesNotification);
 
 								// Notificar al cliente sobre el vendedor
-								const customerNotification = `¡Hola ${customerName} 👋! Te contactamos de Megamoto para informarte que tu vendedor asignado es ${vendorName} con el celular ${vendorPhone}. Te recomendamos agendarlo así lo reconoces cuando te contacte. \n\n!Mucha suerte con tu compra! `;
-
 								await handleWhatsappMessage(
 									customerPhone,
 									customerNotification

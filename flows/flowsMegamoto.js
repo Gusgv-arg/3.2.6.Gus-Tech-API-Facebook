@@ -561,7 +561,7 @@ const flow2= {
   "screens": [
     {
       "id": "QUESTION_ONE",
-      "title": "Nuevo Lead",
+      "title": "Atención del Lead",
       "data": {},
       "terminal": true,
       "layout": {
@@ -573,19 +573,41 @@ const flow2= {
             "children": [
               {
                 "type": "RadioButtonsGroup",
-                "label": "Atención del Cliente",
-                "required": true,
-                "name": "Atención del Cliente",
+                "label": "Tomar Lead",
+                "required": false,
+                "name": "Tomar Lead",
                 "data-source": [
                   {
                     "id": "Atender",
                     "title": "Atender"
                   },
                   {
-                    "id": "No Atender",
-                    "title": "No Atender"
+                    "id": "Atender más tarde",
+                    "title": "Atender más tarde"
                   }
                 ]
+              },
+              {
+                "type": "RadioButtonsGroup",
+                "label": "Derivar Lead",
+                "required": false,
+                "name": "Derivar Lead",
+                "data-source": [
+                  {
+                    "id": "Gustavo Glunz",
+                    "title": "Gustavo Glunz"
+                  },
+                  {
+                    "id": "Gustavo Gómez Villafañe",
+                    "title": "Gustavo Gómez Villafañe"
+                  }
+                ]
+              },
+              {
+                "type": "TextArea",
+                "label": "Notas sobre el lead",
+                "required": false,
+                "name": "Notas sobre el lead"
               },
               {
                 "type": "Footer",
@@ -593,7 +615,9 @@ const flow2= {
                 "on-click-action": {
                   "name": "complete",
                   "payload": {
-                    "Atención del Cliente": "${form.Atención del Cliente}"
+                    "Tomar Lead": "${form.Tomar Lead}",
+                    "Derivar Lead": "${form.Derivar Lead}",
+                    "Notas sobre el lead": "${form.Notas sobre el lead}"
                   }
                 }
               }
