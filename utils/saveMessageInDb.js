@@ -103,10 +103,19 @@ export const saveMessageInDb = async (
 				// Update Flow Token
 				currentFlow.flow_token = flowToken;
 
-				// Update Flow status
+				// Update Flow status && history
 				if (messageGpt.includes("IMPORTANTE:")) {
-					currentFlow.client_status = "respuesta incompleta";
-					currentFlow.history += `${currentDateTime}: Status Cliente: Respuesta Incompleta. `;
+					if (messageGpt.includes("DNI") && messageGpt.includes("modelo")) {
+						currentFlow.client_status = "faltan modelo y DNI";
+						currentFlow.history += `${currentDateTime}: Status Cliente: Faltan modelo y DNI. `;
+					
+					} else if (messageGpt.includes("modelo")) {
+						currentFlow.client_status = "falta modelo";
+						currentFlow.history += `${currentDateTime}: Status Cliente: Falta Modelo. `;
+					} else if (messageGpt.includes("DNI")) {
+						currentFlow.client_status = "falta DNI";
+						currentFlow.history += `${currentDateTime}: Status Cliente: Falta DNI. `;
+					}
 				} else if (messageGpt.includes("¡Gracias por confiar en Megamoto!")) {
 					currentFlow.client_status = "respuesta";
 					currentFlow.history += `${currentDateTime}: Status Cliente: Respuesta. `;

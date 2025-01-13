@@ -1,5 +1,7 @@
 export const extractFlowToken_1Responses = (userMessage) => {
 	let extraction = "";
+	let model = true;
+	let DNI = true;
 
 	// Definir las marcas a buscar
 	const marcas = ["Benelli", "Suzuki", "Sym", "Motomel", "Keeway", "Tarpan", "Teknial", "TVS"];
@@ -28,10 +30,7 @@ export const extractFlowToken_1Responses = (userMessage) => {
 				.join("");
 	} else {
 	// Caso que el cliente no informa marca y modelo. Se lo notifica y se le vuelve a enviar el flow 
-
-		extraction = "IMPORTANTE: Por favor informanos tu modelo de interes. Para esto te volvemos a enviar el Formulario. ¡Esto nos permitirá atenderte mejor y más rápido 🙂!\n\nPD: Si estas en tu PC y no ves el formulario entrá en tu celular.";
-
-		return extraction
+		model = false;
 	}
 
 	// Extraer el método de pago
@@ -50,13 +49,11 @@ export const extractFlowToken_1Responses = (userMessage) => {
 	if (dniMatch && dniMatch[1]) {
 		extraction += `DNI: ${dniMatch[1]}\n`;
 	} 
-
+	
 	// Verificar si hay un préstamo y el DNI está vacío para volver a enviar el Flow
 	if (metodoPagoArray.includes("Préstamo Personal") || metodoPagoArray.includes("Préstamo Prendario")) {
 		if (!dniMatch || !dniMatch[1]) {
-			extraction = "IMPORTANTE: Por favor si vas a solicitar un préstamo indicanos tu DNI. Para esto te volvemos a enviar el Formulario. ¡Esto nos permitirá atenderte mejor y más rápido 🙂!\n\nPD: Si estas en tu PC y no ves el formulario entrá en tu celular.";
-
-			return extraction
+			DNI = false
 		}
 	}
 
@@ -65,10 +62,25 @@ export const extractFlowToken_1Responses = (userMessage) => {
 	const preguntasMatch = userMessage.match(preguntasRegex);
 	if (preguntasMatch && preguntasMatch[1]) {
 		extraction += `Preguntas o comentarios: ${preguntasMatch[1]}`;
-	}
-
-	extraction = extraction + `\n\n¡Gracias por confiar en Megamoto! 🏍️`;
-
+	}	
+	
 	console.log("Generado en extractFlowToken_1Responses.js",extraction);
-	return extraction;
+	
+	// Send different messages depending customer responses
+	if (model === false && DNI === false){
+		extraction = "IMPORTANTE: Por favor informanos tu modelo de interes y tu DNI si vas a sacar un préstamo. Para esto te volvemos a enviar el Formulario. ¡Esto nos permitirá atenderte mejor y más rápido 🙂!\n\nPD: Si estas en tu PC y no ves el formulario entrá en tu celular.";
+		return extraction
+		
+	} else if (model === false){
+		extraction = "IMPORTANTE: Por favor informanos tu modelo de interes. Para esto te volvemos a enviar el Formulario. ¡Esto nos permitirá atenderte mejor y más rápido 🙂!\n\nPD: Si estas en tu PC y no ves el formulario entrá en tu celular.";
+		return extraction
+		
+	} else if (DNI === false){
+		extraction = "IMPORTANTE: Por favor si vas a solicitar un préstamo indicanos tu DNI. Para esto te volvemos a enviar el Formulario. ¡Esto nos permitirá atenderte mejor y más rápido 🙂!\n\nPD: Si estas en tu PC y no ves el formulario entrá en tu celular.";
+		return extraction
+		
+	} else {
+		extraction = extraction + `\n\n¡Gracias por confiar en Megamoto! 🏍️`;
+		return extraction;
+	}
 };
