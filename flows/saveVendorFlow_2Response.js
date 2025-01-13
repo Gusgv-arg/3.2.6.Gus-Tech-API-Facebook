@@ -41,7 +41,7 @@ export const saveVendorFlow_2Response = async (
 				flowToUpdate.client_status = "vendedor";
 				flowToUpdate.vendor_phone = senderId;
 				flowToUpdate.vendor_name = name;
-				flowToUpdate.history += `${currentDateTime} - Status Cliente: Vendedor `;
+				flowToUpdate.history += `${currentDateTime} - Status Cliente: Vendedor ${name} `;
 				console.log(
 					`El vendedor ${name} aceptó atender al cliente ${lead.name}`
 				);

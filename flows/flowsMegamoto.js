@@ -229,18 +229,6 @@ const flow1 = {   "version": "6.0",
               },
               {
                 "type": "Dropdown",
-                "label": "No sé",
-                "required": false,
-                "name": "No sé",
-                "data-source": [
-                  {
-                    "id": "No se",
-                    "title": "´No sé"
-                  }
-                ]
-              },
-              {
-                "type": "Dropdown",
                 "label": "Teknial motos eléctricas",
                 "required": false,
                 "name": "Teknial motos eléctricas",
@@ -254,6 +242,16 @@ const flow1 = {   "version": "6.0",
                     "title": "TK-RERACE"
                   }
                 ]
+              },
+              {
+                "type": "Dropdown",
+                "label": "No sé",
+                "required": false,
+                "name": "No sé",
+                "data-source": [{
+                    "id": "No sé",
+                    "title": "No sé"
+                  }]
               },
               {
                 "type": "Footer",
@@ -271,8 +269,8 @@ const flow1 = {   "version": "6.0",
                     "TVS": "${form.TVS}",
                     "Keeway": "${form.Keeway_915524}",
                     "SYM": "${form.SYM_69580a}",
-                    "Tarpan":"${form.Tarpan}",
-                    "Teknial":"${form.Teknial}"
+                    "No sé":"${form.No sé}",
+                    "Teknial motos eléctricas":"${form.Teknial motos eléctricas}"
                   }
                 }
               }
@@ -309,11 +307,11 @@ const flow1 = {   "version": "6.0",
           "type": "string",
           "__example__": "Example"
         },
-        "Tarpan": {
+        "No sé": {
           "type": "string",
           "__example__": "Example"
         },
-        "Teknial": {
+        "Teknial motos eléctricas": {
           "type": "string",
           "__example__": "Example"
         }
@@ -366,8 +364,8 @@ const flow1 = {   "version": "6.0",
                     "Keeway": "${data.Keeway}",
                     "SYM": "${data.SYM}",
                     "TVS": "${data.TVS}",
-                    "Tarpan": "${data.Tarpan}",
-                    "Teknial": "${data.Teknial}"
+                    "No sé": "${data.No sé}",
+                    "Teknial motos eléctricas": "${data.Teknial motos eléctricas}"
                   }
                 }
               }
@@ -411,11 +409,11 @@ const flow1 = {   "version": "6.0",
           "type": "string",
           "__example__": "Example"
         },
-        "Tarpan": {
+        "No sé": {
           "type": "string",
           "__example__": "Example"
         },
-        "Teknial": {
+        "Teknial motos eléctricas": {
           "type": "string",
           "__example__": "Example"
         }
@@ -457,8 +455,8 @@ const flow1 = {   "version": "6.0",
                     "Keeway": "${data.Keeway}",
                     "SYM": "${data.SYM}",
                     "TVS": "${data.TVS}",
-                    "Tarpan": "${data.Tarpan}",
-                    "Teknial": "${data.Teknial}"
+                    "No sé": "${data.No sé}",
+                    "Teknial motos eléctricas": "${data.Teknial motos eléctricas}"
                   }
                 }
               }
@@ -506,11 +504,11 @@ const flow1 = {   "version": "6.0",
           "type": "string",
           "__example__": "Example"
         },
-        "Tarpan": {
+        "No sé": {
           "type": "string",
           "__example__": "Example"
         },
-        "Teknial": {
+        "Teknial motos eléctricas": {
           "type": "string",
           "__example__": "Example"
         }
@@ -525,9 +523,10 @@ const flow1 = {   "version": "6.0",
             "children": [
               {
                 "type": "TextArea",
-                "label": "Preguntas - ej.: consultar por otro modelo",
+                "label": "Preguntas",
                 "required": false,
-                "name": "Preguntas_df18e9"
+                "name": "Preguntas_df18e9",
+                "helper-text": "Puede preguntar por ejemplo por otro modelo de una misma marca"
               },
               {
                 "type": "Footer",
@@ -544,8 +543,8 @@ const flow1 = {   "version": "6.0",
                     "Keeway": "${data.Keeway}",
                     "SYM": "${data.SYM}",
                     "TVS": "${data.TVS}",
-                    "Tarpan":"${data.Tarpan}",
-                    "Teknial": "${data.Teknial}"
+                    "No sé":"${data.No sé}",
+                    "Teknial": "${data.Teknial motos eléctricas}"
                   }
                 }
               }

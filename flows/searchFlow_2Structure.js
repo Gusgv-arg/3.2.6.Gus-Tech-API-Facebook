@@ -35,7 +35,7 @@ export const searchFlow_2Structure = (templateName, senderId, notification) => {
 			},
 		];
 
-		language = "es_AR";
+		language = "es";
 
 		return { components, language, flowToken };
 	} else {
