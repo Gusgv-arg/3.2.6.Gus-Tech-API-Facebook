@@ -38,7 +38,7 @@ export const saveVendorFlow_2Response = async (
 		if (flowToUpdate) {
 			// Update existing lead
 			if (notification.includes("Respuesta del Vendedor: Atender") && !notification.includes("más tarde")) {
-				flowToUpdate.messages += `${currentDateTime} - MegaBot: se envió WhatsApp al cliente que será atendido por ${vendorName}`
+				flowToUpdate.messages += `${currentDateTime} - MegaBot: se envió WhatsApp al cliente que será atendido por ${name}`
 				flowToUpdate.client_status = "vendedor";
 				flowToUpdate.vendor_phone = senderId;
 				flowToUpdate.vendor_name = name;
@@ -47,7 +47,7 @@ export const saveVendorFlow_2Response = async (
 					`El vendedor ${name} aceptó atender al cliente ${lead.name}`
 				);
 			} else if (notification.includes("Respuesta del Vendedor: Atender más tarde")) {
-				flowToUpdate.messages += `${currentDateTime} - MegaBot: se envió WhatsApp al cliente que será atendido más tarde por ${vendorName}`
+				flowToUpdate.messages += `${currentDateTime} - MegaBot: se envió WhatsApp al cliente que será atendido más tarde por ${name}`
 				flowToUpdate.client_status = "vendedor más tarde";
 				flowToUpdate.vendor_phone = senderId;
 				flowToUpdate.vendor_name = name;
