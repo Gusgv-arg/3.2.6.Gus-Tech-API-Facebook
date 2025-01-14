@@ -68,7 +68,7 @@ export const adminFunctionsMiddleware = async (req, res, next) => {
 				message =
 					body.entry[0].changes[0].value.messages[0].text.body.toLowerCase();
 			} else if (typeOfWhatsappMessage === "document") {
-				console.log("Entró un document en adminMiddleware.js:", body)
+				console.log("Entró un document en adminMiddleware.js:", body.entry[0].changes[0])
 				message =
 					body.entry[0].changes[0].value.messages[0].document?.caption.toLowerCase();
 				documentId = body.entry[0].changes[0].value.messages[0].document.id;
