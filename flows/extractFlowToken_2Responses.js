@@ -29,4 +29,4 @@ export const extractFlowToken_2Responses = (userMessage) => {
 	return { extraction, flowToken };
 };
 
-extractFlowToken_2Responses('{"Tomar Lead":"Atender más tarde","flow_token":"2e57cdb81-8fd6-4e4d-a1cc-4bd89c673a38"}'); 
+//extractFlowToken_2Responses('{"Tomar Lead":"Atender más tarde","flow_token":"2e57cdb81-8fd6-4e4d-a1cc-4bd89c673a38"}'); 

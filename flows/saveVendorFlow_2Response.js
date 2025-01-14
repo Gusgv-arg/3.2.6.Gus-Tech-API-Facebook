@@ -35,7 +35,7 @@ export const saveVendorFlow_2Response = async (
 			(flow) => flow.flow_token === flowToken
 		);
 
-		let customerQuestion;
+		let customerQuestion=[];
 
 		if (flowToUpdate) {
 			// Update existing lead
@@ -60,7 +60,7 @@ export const saveVendorFlow_2Response = async (
 			} else if (notification.includes("Derivación a Vendedor:")) {
 	
 				// Buscar la consulta del cliente
-				customerQuestion = flowToUpdate.messages.match(/MegaBot: \*¡Hola(.*?)¡Gracias por confiar en Megamoto!/s);
+				customerQuestion = flowToUpdate.messages.match(/Marca(.*?)¡Gracias por confiar en Megamoto!/s)[0];
 				console.log("customerQuestion:", customerQuestion)
     
 				if (notification.includes("Gustavo Glunz")){
