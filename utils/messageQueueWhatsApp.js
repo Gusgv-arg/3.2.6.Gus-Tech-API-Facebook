@@ -184,7 +184,7 @@ export class MessageQueueWhatsApp {
 								newMessage.name
 							);
 
-							const { customerName, customerPhone, vendorPhone, vendorName } =
+							const { customerName, customerPhone, vendorPhone, vendorName, customerQuestion } =
 								customerData;
 
 							let salesNotification;
@@ -199,11 +199,11 @@ export class MessageQueueWhatsApp {
 
 								// Enviar Flow 2 al vendedor derivado
 								// Sacar espacios x restricción de WhatsApp
-								const cleanedNotification = response.notification
+								const cleanedNotification = customerQuestion
 									.replace(/\n/g, " ")
 									.replace(/ +/g, " ");
 
-								// Envío de Flow al vendedor
+								// Envío de Flow al vendedor al que le derivan
 								await salesFlow_2Notification(vendorPhone, cleanedNotification);
 
 							} else if (

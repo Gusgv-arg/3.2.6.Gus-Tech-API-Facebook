@@ -35,6 +35,8 @@ export const saveVendorFlow_2Response = async (
 			(flow) => flow.flow_token === flowToken
 		);
 
+		let customerQuestion;
+
 		if (flowToUpdate) {
 			// Update existing lead
 			if (notification.includes("Respuesta del Vendedor: Atender") && !notification.includes("más tarde")) {
@@ -56,7 +58,11 @@ export const saveVendorFlow_2Response = async (
 					`El vendedor ${name} aceptó atender al cliente ${lead.name} más tarde!!`
 				);
 			} else if (notification.includes("Derivación a Vendedor:")) {
-				
+	
+				// Buscar la consulta del cliente
+				customerQuestion = flowToUpdate.messages.match(/MegaBot: \*¡Hola(.*?)¡Gracias por confiar en Megamoto!/s);
+				console.log("customerQuestion:", customerQuestion)
+    
 				if (notification.includes("Gustavo Glunz")){
 					flowToUpdate.client_status = "vendedor derivado";
 					flowToUpdate.vendor_phone = process.env.PHONE_GUSTAVO_GLUNZ; 
@@ -91,7 +97,7 @@ export const saveVendorFlow_2Response = async (
 		const vendorPhone = flowToUpdate.vendor_phone
 		const vendorName = flowToUpdate.vendor_name
 		
-		return {customerName, customerPhone, vendorPhone, vendorName};
+		return {customerName, customerPhone, vendorPhone, vendorName, customerQuestion};
 
 	} catch (error) {
 		console.error(
