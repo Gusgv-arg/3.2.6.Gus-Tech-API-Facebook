@@ -57,16 +57,16 @@ export const saveVendorFlow_2Response = async (
 				
 				if (notification.includes("Gustavo Glunz")){
 					flowToUpdate.client_status = "vendedor derivado";
-					flowToUpdate.vendor_phone = 5491159911742; 
+					flowToUpdate.vendor_phone = process.env.PHONE_GUSTAVO_GLUNZ; 
 					flowToUpdate.vendor_name = "Gustavo Glunz"; 
 					flowToUpdate.history += `${currentDateTime} - Status Cliente: Vendedor ${name} derivó su cliente a Gustavo Glunz. `;
 					console.log(
-						`El vendedor ${name} derivó su cliente ${lead.name} al vendedor Gustvo Glunz.`
+						`El vendedor ${name} derivó su cliente ${lead.name} al vendedor Gustavo Glunz.`
 					);
 
 				} else if (notification.includes("Gustavo Gómez Villafañe")){
 					flowToUpdate.client_status = "vendedor derivado";
-					flowToUpdate.vendor_phone = 5491161405589; 
+					flowToUpdate.vendor_phone = process.env.MY_PHONE; 
 					flowToUpdate.vendor_name = "Gustavo Gómez Villafañe"; 
 					flowToUpdate.history += `${currentDateTime} - Status Cliente: Vendedor ${name} derivó su cliente a Gustavo Gómez Villafañe. `;
 					console.log(
