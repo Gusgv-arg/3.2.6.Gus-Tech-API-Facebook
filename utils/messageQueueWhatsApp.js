@@ -170,6 +170,7 @@ export class MessageQueueWhatsApp {
 							// Volver a enviar el Flow al cliente
 							const flowName = process.env.FLOW_1;
 							await reSendFlow_1ToCustomer(senderId, flowName, newMessage.name);
+						
 						} else if (
 							response.notification.includes("Respuesta del Vendedor:") || response.notification.includes("Derivación")
 						) {
@@ -204,7 +205,7 @@ export class MessageQueueWhatsApp {
 									.replace(/ +/g, " ");
 
 								// Envío de Flow al vendedor al que le derivan
-								await salesFlow_2Notification(vendorPhone, cleanedNotification);
+								await salesFlow_2Notification(customerPhone, cleanedNotification, senderId);
 
 							} else if (
 								response.notification.includes("Atender") ||
@@ -239,7 +240,7 @@ export class MessageQueueWhatsApp {
 								.replace(/ +/g, " ");
 
 							// Envío de Flow al vendedor
-							await salesFlow_2Notification(senderId, cleanedNotification);
+							await salesFlow_2Notification(customerPhone, cleanedNotification, senderId);
 						}
 					}
 				}

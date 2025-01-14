@@ -2,7 +2,6 @@ import axios from "axios";
 
 const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
-const salesPhone = process.env.MY_PHONE
 
 export const salesWhatsAppNotification = async (senderId, notification) => {
 	try {

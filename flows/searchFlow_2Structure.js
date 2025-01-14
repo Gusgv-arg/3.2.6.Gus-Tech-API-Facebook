@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-export const searchFlow_2Structure = (templateName, senderId, notification) => {
+export const searchFlow_2Structure = (templateName, customerPhone, notification) => {
 	// Generate a flow token && parameters to identify the flow among others
 	let flowToken;
 	let components;
@@ -14,7 +14,7 @@ export const searchFlow_2Structure = (templateName, senderId, notification) => {
 				parameters: [
 					{
 						type: "text",
-						text: senderId,
+						text: customerPhone,
 					},
 				],
 			},

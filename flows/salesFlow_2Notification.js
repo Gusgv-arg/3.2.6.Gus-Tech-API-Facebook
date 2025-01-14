@@ -7,9 +7,9 @@ const whatsappToken = process.env.WHATSAPP_TOKEN;
 const myPhoneNumberId = process.env.WHATSAPP_PHONE_ID;
 const appToken = process.env.WHATSAPP_APP_TOKEN;
 const templateName = process.env.FLOW_2;
-const salesPhone = process.env.MY_PHONE;
 
-export const salesFlow_2Notification = async (senderId, notification) => {
+
+export const salesFlow_2Notification = async (customerPhone, notification, vendorPhone) => {
 	// URL where to post
 	const url = `https://graph.facebook.com/v21.0/${myPhoneNumberId}/messages?access_token=${whatsappToken}`;
 
@@ -17,7 +17,7 @@ export const salesFlow_2Notification = async (senderId, notification) => {
 		// Search Flow structure for post request
 		const flowStructure = searchFlow_2Structure(
 			templateName,
-			senderId,
+			customerPhone,
 			notification
 		);
 		const { components, language, flowToken } = flowStructure;
@@ -26,7 +26,7 @@ export const salesFlow_2Notification = async (senderId, notification) => {
 		const payload = {
 			messaging_product: "whatsapp",
 			recipient_type: "individual",
-			to: salesPhone,
+			to: vendorPhone,
 			type: "template",
 			template: {
 				name: templateName,
@@ -40,7 +40,7 @@ export const salesFlow_2Notification = async (senderId, notification) => {
 			headers: { "Content-Type": "application/json" },
 		});
 		console.log(
-			`Plantilla de Notificación al Vendedor enviada al número: ${salesPhone}`
+			`Plantilla de Notificación al Vendedor enviada al número: ${vendorPhone}`
 		);
 
 		// Obtain current date and hour
@@ -55,16 +55,16 @@ export const salesFlow_2Notification = async (senderId, notification) => {
 		});
 
 		// Looks existent lead
-		let lead = await Leads.findOne({ id_user: senderId });
+		let lead = await Leads.findOne({ id_user: customerPhone });
 
 		// Take last Flow record
 		let currentFlow = lead.flows[lead.flows.length - 1];
 
 		// Change Client Status and History && save flow token and vendor phone
 		currentFlow.client_status = "transferido al vendedor",
-		currentFlow.history += `${currentDateTime}: Status Cliente: Transferido al Vendedor ${salesPhone}. `,
+		currentFlow.history += `${currentDateTime}: Status Cliente: Transferido al Vendedor ${vendorPhone}. `,
 		currentFlow.flow_token = flowToken
-		currentFlow.vendor_phone = salesPhone
+		currentFlow.vendor_phone = vendorPhone
 
 		// Update lead
 		await lead.save();
