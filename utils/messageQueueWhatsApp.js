@@ -171,7 +171,7 @@ export class MessageQueueWhatsApp {
 							const flowName = process.env.FLOW_1;
 							await reSendFlow_1ToCustomer(senderId, flowName, newMessage.name);
 						} else if (
-							response.notification.includes("Respuesta del Vendedor:")
+							response.notification.includes("Respuesta del Vendedor:") || response.notification.includes("Derivación")
 						) {
 							console.log(
 								"entre en el if de includes Respuesta del Vendedor en messageQueueWhatsApp"
@@ -210,7 +210,7 @@ export class MessageQueueWhatsApp {
 								response.notification.includes("Atender") ||
 								response.notification.includes("Atender más tarde")
 							) {
-								// Notificar al vendedor sobre su respuesta
+								// Preparar mensaje según la atención 
 								if (response.notification.includes("Atender más tarde")) {
 									salesNotification = `*NOTIFICACION de Atención de Cliente: ${customerName} - ${customerPhone}*\nAceptaste atender al cliente más tarde.\n\n ¡No lo dejes esperando por mucho tiempo!`;
 
