@@ -205,7 +205,7 @@ export class MessageQueueWhatsApp {
 									.replace(/ +/g, " ");
 
 								// Envío de Flow al vendedor al que le derivan
-								await salesFlow_2Notification(customerPhone, cleanedNotification, senderId);
+								await salesFlow_2Notification(customerPhone, cleanedNotification, vendorPhone);
 
 							} else if (
 								response.notification.includes("Atender") ||
@@ -232,15 +232,20 @@ export class MessageQueueWhatsApp {
 								);
 							}
 						} else {
-							console.log("entre en el ultimo else de messageQueueWhatsApp");
+							//----ACA MODIFICAR PARA VER COMO DISTRIBUIR A LOS VENDEDORES PORQUE EL PRIMER CLIENTE SIEMPRE VA AL MISMO CELULAR-----//
+
+							console.log("El customerPhone toma el valor del senderId (último else de messageQueueWhatsApp.js");
 
 							// Sacar espacios x restricción de WhatsApp
 							const cleanedNotification = response.notification
 								.replace(/\n/g, " ")
 								.replace(/ +/g, " ");
 
+							const customerPhone = senderId
+							const vendorPhone = process.env.MY_PHONE
+							
 							// Envío de Flow al vendedor
-							await salesFlow_2Notification(customerPhone, cleanedNotification, senderId);
+							await salesFlow_2Notification(customerPhone, cleanedNotification, vendorPhone);
 						}
 					}
 				}
