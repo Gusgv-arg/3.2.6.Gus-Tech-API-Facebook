@@ -192,7 +192,7 @@ export class MessageQueueWhatsApp {
 
 							// Derivación del vendedor
 							if (response.notification.includes("Derivación")) {
-								salesNotification = `*NOTIFICACION de Atención de Cliente: ${customerName} - ${customerPhone}*\nDerivaste al cliente a ${vendorName}.`;
+								salesNotification = `*NOTIFICACION de Atención de Cliente: ${customerName} - ${customerPhone}*\nDerivaste el cliente a ${vendorName}.`;
 
 								// Notificar al vendedor que deriva
 								await salesWhatsAppNotification(senderId, salesNotification);

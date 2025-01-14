@@ -22,25 +22,30 @@ export const saveVendorFlow_2Response = async (
 	try {
 		// Looks existent with flowToken
 		let lead = await Leads.findOne({ "flows.flow_token": flowToken });
-		
+
 		// Check if lead and flows exist
 		if (!lead || !lead.flows || lead.flows.length === 0) {
 			console.log("No se encontró el lead o no tiene flujos.");
-			return null; 
+			return null;
 		}
-		console.log("FlowToken recibido en saveVendroFlow_2", flowToken)
-		
+		console.log("FlowToken recibido en saveVendroFlow_2", flowToken);
+
 		// Find the specific flow to update
 		const flowToUpdate = lead.flows.find(
 			(flow) => flow.flow_token === flowToken
 		);
 
-		let customerQuestion=[];
+		let customerQuestion = [];
+		let vendorPhone;
+		let vendorName;
 
 		if (flowToUpdate) {
 			// Update existing lead
-			if (notification.includes("Respuesta del Vendedor: Atender") && !notification.includes("más tarde")) {
-				flowToUpdate.messages += `\n${currentDateTime} - MegaBot: se envió WhatsApp al cliente que será atendido por ${name}`
+			if (
+				notification.includes("Respuesta del Vendedor: Atender") &&
+				!notification.includes("más tarde")
+			) {
+				flowToUpdate.messages += `\n${currentDateTime} - MegaBot: se envió WhatsApp al cliente que será atendido por ${name}`;
 				flowToUpdate.client_status = "vendedor";
 				flowToUpdate.vendor_phone = senderId;
 				flowToUpdate.vendor_name = name;
@@ -48,8 +53,12 @@ export const saveVendorFlow_2Response = async (
 				console.log(
 					`El vendedor ${name} aceptó atender al cliente ${lead.name}`
 				);
-			} else if (notification.includes("Respuesta del Vendedor: Atender más tarde")) {
-				flowToUpdate.messages += `\n${currentDateTime} - MegaBot: se envió WhatsApp al cliente que será atendido más tarde por ${name}`
+				vendorPhone = senderId;
+				vendorName = name;
+			} else if (
+				notification.includes("Respuesta del Vendedor: Atender más tarde")
+			) {
+				flowToUpdate.messages += `\n${currentDateTime} - MegaBot: se envió WhatsApp al cliente que será atendido más tarde por ${name}`;
 				flowToUpdate.client_status = "vendedor más tarde";
 				flowToUpdate.vendor_phone = senderId;
 				flowToUpdate.vendor_name = name;
@@ -57,30 +66,38 @@ export const saveVendorFlow_2Response = async (
 				console.log(
 					`El vendedor ${name} aceptó atender al cliente ${lead.name} más tarde!!`
 				);
+				vendorPhone = senderId;
+				vendorName = name;
 			} else if (notification.includes("Derivación a Vendedor:")) {
-	
 				// Buscar la consulta del cliente
-				customerQuestion = flowToUpdate.messages.match(/Marca(.*?)¡Gracias por confiar en Megamoto!/s)[0];
-				console.log("customerQuestion:", customerQuestion)
-    
-				if (notification.includes("Gustavo Glunz")){
+				customerQuestion = flowToUpdate.messages.match(
+					/Marca(.*?)¡Gracias por confiar en Megamoto!/s
+				)[0];
+				console.log("customerQuestion:", customerQuestion);
+
+				if (notification.includes("Gustavo Glunz")) {
 					flowToUpdate.client_status = "vendedor derivado";
-					flowToUpdate.vendor_phone = process.env.PHONE_GUSTAVO_GLUNZ; 
-					flowToUpdate.vendor_name = "Gustavo Glunz"; 
+					flowToUpdate.vendor_phone = process.env.PHONE_GUSTAVO_GLUNZ;
+					flowToUpdate.vendor_name = "Gustavo Glunz";
 					flowToUpdate.history += `${currentDateTime} - Status Cliente: Vendedor ${name} derivó su cliente a Gustavo Glunz. `;
 					console.log(
 						`El vendedor ${name} derivó su cliente ${lead.name} al vendedor Gustavo Glunz.`
 					);
+					vendorPhone = process.env.PHONE_GUSTAVO_GLUNZ;
+					vendorName = "Gustavo Glunz";
 
-				} else if (notification.includes("Gustavo Gómez Villafañe")){
+				} else if (notification.includes("Gustavo Gómez Villafañe")) {
 					flowToUpdate.client_status = "vendedor derivado";
-					flowToUpdate.vendor_phone = process.env.MY_PHONE; 
-					flowToUpdate.vendor_name = "Gustavo Gómez Villafañe"; 
+					flowToUpdate.vendor_phone = process.env.MY_PHONE;
+					flowToUpdate.vendor_name = "Gustavo Gómez Villafañe";
 					flowToUpdate.history += `${currentDateTime} - Status Cliente: Vendedor ${name} derivó su cliente a Gustavo Gómez Villafañe. `;
 					console.log(
 						`El vendedor ${name} derivó su cliente ${lead.name} al vendedor Gustvo Gómez Villafañe.`
 					);
+					vendorPhone = process.env.MY_PHONE;
+					vendorName = "Gustavo Gómez Villafañe";
 				}
+				
 			} else {
 				console.log(
 					"NO SE ESTA GRABANDO NADA en saveVendorFlow_2Response.js!!"
@@ -91,14 +108,17 @@ export const saveVendorFlow_2Response = async (
 		}
 
 		await lead.save();
-		
-		const customerName = lead.name
-		const customerPhone = lead.id_user
-		const vendorPhone = flowToUpdate.vendor_phone
-		const vendorName = flowToUpdate.vendor_name
-		
-		return {customerName, customerPhone, vendorPhone, vendorName, customerQuestion};
 
+		const customerName = lead.name;
+		const customerPhone = lead.id_user;
+
+		return {
+			customerName,
+			customerPhone,
+			vendorPhone,
+			vendorName,
+			customerQuestion,
+		};
 	} catch (error) {
 		console.error(
 			"Error in saveVendorFlow_2Response.js:",
